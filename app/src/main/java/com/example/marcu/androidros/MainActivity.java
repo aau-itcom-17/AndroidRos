@@ -2,16 +2,20 @@ package com.example.marcu.androidros;
 
 import android.app.Fragment;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    private Button createEventButton;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -51,5 +55,18 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+
+        createEventButton = findViewById(R.id.create_event_button);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCreateEvent();
+            }
+        });
+    }
+
+    public void openCreateEvent(){
+        Intent intent = new Intent(this, CreateEvent.class);
+        startActivity(intent);
     }
 }
