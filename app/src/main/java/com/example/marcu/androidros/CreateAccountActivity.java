@@ -11,17 +11,17 @@ import android.widget.TextView;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    private Intent intent = new Intent();
-    private EditText editFirstName = (EditText)findViewById(R.id.firstNameEdit);
-    private EditText editLastName = (EditText)findViewById(R.id.lastNameEdit);
-    private EditText editEmail = (EditText)findViewById(R.id.emailEdit);
-    private EditText editPassword = (EditText)findViewById(R.id.passEdit);
-    private EditText editConfirmPassword = (EditText)findViewById(R.id.confirmPassEdit);
-    private String firstName = editFirstName.getText().toString();
-    private String lastName = editLastName.getText().toString();
-    private String email = editEmail.getText().toString();
-    private String password =editPassword.getText().toString();
-    private String confirmPassword = editConfirmPassword.getText().toString();
+    public Intent intent = new Intent();
+   // private EditText editFirstName = (EditText)findViewById(R.id.firstNameEdit);
+  //  private EditText editLastName = (EditText)findViewById(R.id.lastNameEdit);
+  //  private EditText editEmail = (EditText)findViewById(R.id.emailEdit);
+ //   private EditText editPassword = (EditText)findViewById(R.id.passEdit);
+ //   private EditText editConfirmPassword = (EditText)findViewById(R.id.confirmPassEdit);
+ //   private String firstName = editFirstName.getText().toString();
+ //   private String lastName = editLastName.getText().toString();
+ //   private String email = editEmail.getText().toString();
+ //   private String password =editPassword.getText().toString();
+ //   private String confirmPassword = editConfirmPassword.getText().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
