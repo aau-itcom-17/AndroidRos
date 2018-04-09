@@ -18,8 +18,8 @@
         </activity>
         <activity
             android:name=".CreateAccountActivity"
-            android:label="@string/create_account_name">
-        </activity>
+            android:label="@string/create_account_name"></activity>
+        <activity android:name=".Test"></activity>
     </application>
 
 </manifest>
