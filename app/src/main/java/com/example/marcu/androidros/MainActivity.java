@@ -1,5 +1,7 @@
 package com.example.marcu.androidros;
 
+import android.app.Fragment;
+import android.app.ListFragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -16,22 +18,26 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            android.support.v4.app.Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_map:
-                    mTextMessage.setText(R.string.title_map);
-                    return true;
+                    selectedFragment = new MapFragment();
+                    break;
                 case R.id.navigation_list:
-                    mTextMessage.setText(R.string.title_list);
-                    return true;
+                    selectedFragment = new com.example.marcu.androidros.ListFragment();
+                    break;
                 case R.id.navigation_favourites:
-                    mTextMessage.setText(R.string.title_favourites);
-                    return true;
+                    selectedFragment = new FavouritesFragment();
+                    break;
                 case R.id.navigation_my_events:
-                    mTextMessage.setText(R.string.title_my_events);
-                    return true;
+                    selectedFragment = new CreateFragment();
+                    break;
 
             }
-            return false;
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    selectedFragment).commit();
+            return true;
         }
     };
 
@@ -40,9 +46,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
     }
 }

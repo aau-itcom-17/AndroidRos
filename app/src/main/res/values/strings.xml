@@ -4,4 +4,6 @@
     <string name="title_list">List</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_my_events">My Events</string>
+    <string name="title_map_fragment">Map</string>
+
 </resources>
