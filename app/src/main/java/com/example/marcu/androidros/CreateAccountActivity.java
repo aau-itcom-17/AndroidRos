@@ -11,17 +11,17 @@ import android.widget.TextView;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    public Intent intent = new Intent();
-   // private EditText editFirstName = (EditText)findViewById(R.id.firstNameEdit);
-  //  private EditText editLastName = (EditText)findViewById(R.id.lastNameEdit);
-  //  private EditText editEmail = (EditText)findViewById(R.id.emailEdit);
- //   private EditText editPassword = (EditText)findViewById(R.id.passEdit);
- //   private EditText editConfirmPassword = (EditText)findViewById(R.id.confirmPassEdit);
- //   private String firstName = editFirstName.getText().toString();
- //   private String lastName = editLastName.getText().toString();
- //   private String email = editEmail.getText().toString();
- //   private String password =editPassword.getText().toString();
- //   private String confirmPassword = editConfirmPassword.getText().toString();
+    Intent intent = new Intent();
+    EditText editFirstName;
+    EditText editLastName;
+    EditText editEmail;
+    EditText editPassword;
+    EditText editConfirmPassword;
+    String firstName;
+    String lastName;
+    String email;
+    String password;
+    String confirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +31,28 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     public void createAccountButtonClicked (View view){
         intent.setClass(this, Test.class);
-      //  User user = new User();
-        //user.setFirstName(firstName);
-        //user.setLastName(lastName);
-        //user.setEmail(email);
-       // user.setPassword(password);
-       // user.setUserID(1);
+        editFirstName =  (EditText)findViewById(R.id.firstNameEdit);
+        editLastName = (EditText)findViewById(R.id.lastNameEdit);
+        editEmail = (EditText)findViewById(R.id.emailEdit);
+        editPassword = (EditText)findViewById(R.id.passEdit);
+        editConfirmPassword = (EditText)findViewById(R.id.confirmPassEdit);
+        firstName = editFirstName.getText().toString();
+        lastName = editLastName.getText().toString();
+        email = editEmail.getText().toString();
+        password =editPassword.getText().toString();
+        confirmPassword = editConfirmPassword.getText().toString();
 
-       // AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-        //        AppDatabase.class, "database-name").build();
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setUserID(1);
 
-       // Log.i("TEST", String.valueOf(db.userDao().getAll()));
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-name").build();
+
+        Log.i("TEST", user.getPassword());
 
         startActivity(intent);
 
