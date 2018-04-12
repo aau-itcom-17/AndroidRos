@@ -5,6 +5,7 @@
     <string name="title_favourites">Favourites</string>
     <string name="title_my_events">My Events</string>
     <string name="title_map_fragment">Map</string>
+    <string name="event_button">Event</string>
     <string name="title_activity_maps">Map</string>
 
 </resources>
