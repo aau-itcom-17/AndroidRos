@@ -3,23 +3,19 @@ package com.example.marcu.androidros;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    Toolbar toolbar;
+/*    Toolbar toolbar;
     TabLayout tabLayout;
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
-
+*/
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -29,15 +25,15 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     selectedFragment = new MapFragment();
-                    try {
+/*                    try {
                         viewPager.setAdapter(null);
                     } catch (Exception e) { //Need to find out the right exception
 
-                    }
+                    }*/
                     break;
                 case R.id.navigation_list:
                     selectedFragment = new com.example.marcu.androidros.ListFragment();
-                    toolbar = (Toolbar)findViewById(R.id.toolBar);
+/*                    toolbar = (Toolbar)findViewById(R.id.toolBar);
                     tabLayout = (TabLayout)findViewById(R.id.tabLayout);
                     viewPager = (ViewPager)findViewById(R.id.viewPager);
                     viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -46,24 +42,16 @@ public class MainActivity extends AppCompatActivity {
 //                    viewPagerAdapter.addFragments(new NearbyEventsFragment(), "Recommended");
                     viewPagerAdapter.addFragments(new NewEventsFragment(), "New");
                     viewPager.setAdapter(viewPagerAdapter);
-                    tabLayout.setupWithViewPager(viewPager);
+                    tabLayout.setupWithViewPager(viewPager);*/
                     break;
                 case R.id.navigation_favourites:
                     selectedFragment = new FavouritesFragment();
-                    try {
-                        viewPager.setAdapter(null);
-                    } catch (Exception e) { //Need to find out the right exception
 
-                    }
                     break;
 
                 case R.id.navigation_my_events:
                     selectedFragment = new CreateFragment();
-                    try {
-                        viewPager.setAdapter(null);
-                    } catch (Exception e) { //Need to find out the right exception
 
-                    }
                     break;
 
             }
