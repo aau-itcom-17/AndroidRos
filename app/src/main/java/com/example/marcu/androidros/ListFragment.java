@@ -2,14 +2,11 @@ package com.example.marcu.androidros;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.example.marcu.androidros.Event;
 
 public class ListFragment extends Fragment implements View.OnClickListener {
 
@@ -18,18 +15,16 @@ public class ListFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_list, container, false);
 
-        Button b = (Button) view.findViewById(R.id.button);
-        b.setOnClickListener(this);
+        Button eventButton = (Button) view.findViewById(R.id.event_button);
+        eventButton.setOnClickListener(this);
         return view;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button:
+            case R.id.event_button:
                 startActivity(new Intent(getActivity(), Event.class));
-
-
                 break;
         }
     }

@@ -12,7 +12,7 @@
         android:layout_centerInParent="true"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/event_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/event_button"
