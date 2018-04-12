@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -28,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     selectedFragment = new MapFragment();
+                    try {
+                        viewPager.setAdapter(null);
+                    } catch (Exception e) {
+
+                    }
                     break;
                 case R.id.navigation_list:
                     selectedFragment = new com.example.marcu.androidros.ListFragment();
@@ -37,19 +43,27 @@ public class MainActivity extends AppCompatActivity {
                     viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
                     viewPagerAdapter.addFragments(new TopEventsFragment(),"Top");
                     viewPagerAdapter.addFragments(new NearbyEventsFragment(), "Nearby");
+                    viewPagerAdapter.addFragments(new NearbyEventsFragment(), "Recommended");
                     viewPagerAdapter.addFragments(new NewEventsFragment(), "New");
                     viewPager.setAdapter(viewPagerAdapter);
                     tabLayout.setupWithViewPager(viewPager);
                     break;
                 case R.id.navigation_favourites:
                     selectedFragment = new FavouritesFragment();
-                    toolbar = null;
-                    tabLayout = null;
-                    viewPager = null;
-                    viewPagerAdapter = null;
+                    try {
+                        viewPager.setAdapter(null);
+                    } catch (Exception e) {
+                        System.out.println("No tabs shown");
+                    }
                     break;
+
                 case R.id.navigation_my_events:
                     selectedFragment = new CreateFragment();
+                    try {
+                        viewPager.setAdapter(null);
+                    } catch (Exception e) {
+                        System.out.println("No tabs shown");
+                    }
                     break;
 
             }
