@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AndroidRos</string>
     <string name="create_account_name">Create Account</string>
+    <string name="facebook_app_id">1063654890449116</string>
+    <string name="fb_login_protocol_scheme">fb1063654890449116</string>
 </resources>

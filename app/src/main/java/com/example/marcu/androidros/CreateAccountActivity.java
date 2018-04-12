@@ -30,7 +30,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     public void createAccountButtonClicked (View view){
-        intent.setClass(this, Test.class);
+        //intent.setClass(this, Test.class);
         editFirstName =  (EditText)findViewById(R.id.firstNameEdit);
         editLastName = (EditText)findViewById(R.id.lastNameEdit);
         editEmail = (EditText)findViewById(R.id.emailEdit);
