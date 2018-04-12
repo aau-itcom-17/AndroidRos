@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new MapFragment();
                     try {
                         viewPager.setAdapter(null);
-                    } catch (Exception e) {
+                    } catch (Exception e) { //Need to find out the right exception
 
                     }
                     break;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                     viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
                     viewPagerAdapter.addFragments(new TopEventsFragment(),"Top");
                     viewPagerAdapter.addFragments(new NearbyEventsFragment(), "Nearby");
-                    viewPagerAdapter.addFragments(new NearbyEventsFragment(), "Recommended");
+//                    viewPagerAdapter.addFragments(new NearbyEventsFragment(), "Recommended");
                     viewPagerAdapter.addFragments(new NewEventsFragment(), "New");
                     viewPager.setAdapter(viewPagerAdapter);
                     tabLayout.setupWithViewPager(viewPager);
@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new FavouritesFragment();
                     try {
                         viewPager.setAdapter(null);
-                    } catch (Exception e) {
-                        System.out.println("No tabs shown");
+                    } catch (Exception e) { //Need to find out the right exception
+
                     }
                     break;
 
@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new CreateFragment();
                     try {
                         viewPager.setAdapter(null);
-                    } catch (Exception e) {
-                        System.out.println("No tabs shown");
+                    } catch (Exception e) { //Need to find out the right exception
+
                     }
                     break;
 
