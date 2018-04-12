@@ -23,7 +23,7 @@ public class NewEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_paid, container, false);
+        return inflater.inflate(R.layout.new_event_fragment, container, false);
     }
 
 }

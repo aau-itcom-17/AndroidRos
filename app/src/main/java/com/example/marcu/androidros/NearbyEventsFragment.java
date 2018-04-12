@@ -23,7 +23,7 @@ public class NearbyEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_free, container, false);
+        return inflater.inflate(R.layout.nearby_fragment, container, false);
     }
 
 }
