@@ -2,12 +2,25 @@ package com.example.marcu.androidros;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity ()
+import java.util.List;
+import java.util.UUID;
+
+@Entity (tableName = "user")
 public class User {
-    @PrimaryKey
+
+    public User(String firstName, String lastName, String email, String password){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
+
+    @PrimaryKey (autoGenerate = true)
+    @ColumnInfo(name = "user_id")
     private int userID;
 
     @ColumnInfo(name = "first_name")
@@ -22,7 +35,27 @@ public class User {
     @ColumnInfo(name = "password")
     private String password;
 
+    @ColumnInfo (name = "location")
+    private String location;
 
+    @ColumnInfo (name = "profile_picture")
+    private String profilePicture;
+
+//    @ColumnInfo (name = "friends")
+//    private List<User> friends;
+
+    // using ignore to not get error.
+    @Ignore
+    List<Event> events;
+
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
 
     public int getUserID() {
         return userID;
@@ -63,5 +96,22 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getLocation() {
+        return location;
     }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+}
 

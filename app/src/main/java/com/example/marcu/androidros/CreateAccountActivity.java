@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.List;
+import java.util.UUID;
+
 public class CreateAccountActivity extends AppCompatActivity {
 
     Intent intent = new Intent();
@@ -30,7 +33,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     public void createAccountButtonClicked (View view){
-        intent.setClass(this, Test.class);
+        intent.setClass(this, MainActivity.class);
         editFirstName =  (EditText)findViewById(R.id.firstNameEdit);
         editLastName = (EditText)findViewById(R.id.lastNameEdit);
         editEmail = (EditText)findViewById(R.id.emailEdit);
@@ -42,38 +45,37 @@ public class CreateAccountActivity extends AppCompatActivity {
         password =editPassword.getText().toString();
         confirmPassword = editConfirmPassword.getText().toString();
 
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setUserID(1);
+        startActivity(intent);
+
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "database-name").build();
+                AppDatabase.class, "users1")
+                .allowMainThreadQueries()   // apparently bad implementation
+                .build();
 
-        Log.i("TEST", user.getPassword());
+        String uniqueID = UUID.randomUUID().toString();
+        User user = new User(firstName,lastName,email,password);
+        db.userDao().insert(user);
 
+        List<User> users = db.userDao().getAllUsers();
+        for (int i = 0; i < users.size(); i++) {
+            Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
+        }
+
+        Log.i("TEST", db.userDao().findByName(firstName, lastName).getPassword());
+
+
+        //db.clearAllTables(); or db.userDao().nukeTable(); clears the table
+        db.userDao().nukeTable();
+
+
+        db.close();
         startActivity(intent);
 
     }
+
+
 }
 
-
-
-
-      /*
-        editFirstName = (EditText) findViewById(R.id.firstNameField); // first name
-        firstName = editFirstName.getText().toString();
-        editLastName = (EditText) findViewById(R.id.lastNameField); // last name
-        lastName = editLastName.getText().toString();
-        editEmail= (EditText) findViewById(R.id.emailField); // email
-        email = editEmail.getText().toString();
-        editPassword = (EditText) findViewById(R.id.passField);// password
-        password = editPassword.getText().toString();
-        editConfirmPassword = (EditText) findViewById(R.id.confirmPassField); //confirm password
-        confirmPassword = editConfirmPassword.getText().toString();
-*/
-// if password == confirm && if email exists.
 
 
