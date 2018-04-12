@@ -1,7 +1,5 @@
 package com.example.marcu.androidros;
 
-import android.app.Fragment;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openCreateEvent(){
-        Intent intent = new Intent(this, CreateEvent.class);
+        Intent intent = new Intent(this, CreateEventActivity.class);
         startActivity(intent);
     }
 }
