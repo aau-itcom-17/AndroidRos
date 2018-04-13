@@ -1,10 +1,10 @@
-<merge xmlns:android="http://schemes.android.com/apk/res/android">
-
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignPartnerTops="true">
+        android:layout_alignParentTop="true">
+
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -13,13 +13,20 @@
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                android:id="@+id/tabs">
+                android:layout_height="wrap_content"
+                android:id="@+id/tabs"
+                android:background="@color/colorPrimary">
+
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 
 
+
+
     </RelativeLayout>
+
+
+
 
 </merge>
