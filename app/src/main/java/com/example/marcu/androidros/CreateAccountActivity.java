@@ -1,8 +1,12 @@
 package com.example.marcu.androidros;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +20,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+import java.util.UUID;
+
 public class CreateAccountActivity extends AppCompatActivity {
+
+    private CreateAccountViewModel viewModel;
+
 
     Intent intent = new Intent();
     EditText editFirstName;
@@ -34,10 +44,13 @@ public class CreateAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+
+        // getting the viewmodel:
+        //viewModel = ViewModelProviders.of(this).get(CreateAccountViewModel.class);
     }
 
     public void createAccountButtonClicked (View view){
-        //intent.setClass(this, Test.class);
+        intent.setClass(this, MainActivity.class);
         editFirstName =  (EditText)findViewById(R.id.firstNameEdit);
         editLastName = (EditText)findViewById(R.id.lastNameEdit);
         editEmail = (EditText)findViewById(R.id.emailEdit);
@@ -49,21 +62,45 @@ public class CreateAccountActivity extends AppCompatActivity {
         password =editPassword.getText().toString();
         confirmPassword = editConfirmPassword.getText().toString();
 
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setUserID(1);
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "database-name").build();
-
-        Log.i("TEST", user.getPassword());
-
+        AppDatabase appDatabase = AppDatabase.getDatabase(getApplicationContext());
+        User user = new User(firstName,lastName,email,password);
+        appDatabase.userDao().insert(user);
+        List<User> users = appDatabase.userDao().getAllUsers();
+        for (int i = 0; i < users.size(); i++) {
+            Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
+        }
+        appDatabase.close();
         startActivity(intent);
+        /*
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "users1")
+                .allowMainThreadQueries()   // apparently bad implementation
+                .build();
+
+        String uniqueID = UUID.randomUUID().toString();
+        User user = new User(firstName,lastName,email,password);
+        db.userDao().insert(user);
+
+        List<User> users = db.userDao().getAllUsers();
+        for (int i = 0; i < users.size(); i++) {
+            Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
+        }
+
+        Log.i("TEST", db.userDao().findByName(firstName, lastName).getPassword());
+
+
+        //db.clearAllTables(); or db.userDao().nukeTable(); clears the table
+        db.userDao().nukeTable();
+
+
+        db.close();
+        startActivity(intent);
+        */
+
 
     }
+
 
     public void createUser () {
         MainActivity.mAuth.createUserWithEmailAndPassword(email, password)
@@ -95,18 +132,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
 
 
-      /*
-        editFirstName = (EditText) findViewById(R.id.firstNameField); // first name
-        firstName = editFirstName.getText().toString();
-        editLastName = (EditText) findViewById(R.id.lastNameField); // last name
-        lastName = editLastName.getText().toString();
-        editEmail= (EditText) findViewById(R.id.emailField); // email
-        email = editEmail.getText().toString();
-        editPassword = (EditText) findViewById(R.id.passField);// password
-        password = editPassword.getText().toString();
-        editConfirmPassword = (EditText) findViewById(R.id.confirmPassField); //confirm password
-        confirmPassword = editConfirmPassword.getText().toString();
-*/
-// if password == confirm && if email exists.
+}
+
 
 
