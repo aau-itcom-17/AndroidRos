@@ -9,7 +9,7 @@ import android.arch.persistence.room.PrimaryKey;
 import java.util.List;
 import java.util.UUID;
 
-@Entity (tableName = "user")
+@Entity (tableName = "user", indices = {@Index(value = "email", unique = true)})
 public class User {
 
     public User(String firstName, String lastName, String email, String password){

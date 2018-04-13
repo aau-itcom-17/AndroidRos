@@ -1,7 +1,11 @@
 package com.example.marcu.androidros;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +17,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class CreateAccountActivity extends AppCompatActivity {
+
+    private CreateAccountViewModel viewModel;
+
 
     Intent intent = new Intent();
     EditText editFirstName;
@@ -30,6 +37,9 @@ public class CreateAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+
+        // getting the viewmodel:
+        //viewModel = ViewModelProviders.of(this).get(CreateAccountViewModel.class);
     }
 
     public void createAccountButtonClicked (View view){
@@ -45,9 +55,17 @@ public class CreateAccountActivity extends AppCompatActivity {
         password =editPassword.getText().toString();
         confirmPassword = editConfirmPassword.getText().toString();
 
+
+        AppDatabase appDatabase = AppDatabase.getDatabase(getApplicationContext());
+        User user = new User(firstName,lastName,email,password);
+        appDatabase.userDao().insert(user);
+        List<User> users = appDatabase.userDao().getAllUsers();
+        for (int i = 0; i < users.size(); i++) {
+            Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
+        }
+        appDatabase.close();
         startActivity(intent);
-
-
+        /*
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "users1")
                 .allowMainThreadQueries()   // apparently bad implementation
@@ -71,8 +89,11 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         db.close();
         startActivity(intent);
+        */
+
 
     }
+
 
 
 }

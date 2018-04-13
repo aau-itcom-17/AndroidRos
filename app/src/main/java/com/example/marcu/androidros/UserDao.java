@@ -1,5 +1,6 @@
 package com.example.marcu.androidros;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Ignore;
@@ -21,8 +22,7 @@ public interface UserDao {
 
     // find user by id
     @Query("SELECT * FROM user WHERE user_id = (:userID)")
-    List<User> getFromID(int userID);
-
+    User getFromID(int userID);
 
 
     // find user by first and last name
@@ -48,10 +48,10 @@ public interface UserDao {
 
     @Query("DELETE FROM user " +
             "WHERE user_id LIKE :userID")
-    int deleteByID(int userID);
+    void deleteByID(int userID);
 
     @Query("DELETE FROM user " + "WHERE email LIKE :email AND " + "password LIKE :pass")
-    int deleteByEmailAndPass(String email, String pass);
+    void deleteByEmailAndPass(String email, String pass);
 
 
 }

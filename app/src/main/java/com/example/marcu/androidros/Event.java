@@ -2,9 +2,15 @@ package com.example.marcu.androidros;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity (tableName = "event")
+@Entity (tableName = "event", foreignKeys = @ForeignKey(
+        entity = User.class,
+        childColumns = "event_id",
+        parentColumns = "user_id",
+        onDelete = ForeignKey.CASCADE)
+)
 public class Event {
 
     public Event(String name, String description, String photoPath, String time, String date, String location) {

@@ -14,11 +14,11 @@ import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 public interface EventDao {
 
     @Query("SELECT * FROM event")
-    List<User> getAllEvents();
+    List<Event> getAllEvents();
 
     // find event by id
     @Query("SELECT * FROM event WHERE event_id = (:eventID)")
-    List<User> getFromID(int eventID);
+    List<Event> getFromID(int eventID);
 
     @Query("DELETE FROM event " +
             "WHERE event_id LIKE :eventID")
