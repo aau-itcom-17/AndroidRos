@@ -1,4 +1,4 @@
-package com.example.marcu.androidros;
+package com.example.marcu.androidros.List;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MapFragment extends Fragment {
+import com.example.marcu.androidros.R;
 
+public class NearbyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_nearby, container, false);
+        return view;
     }
 }
