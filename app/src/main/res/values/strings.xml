@@ -9,5 +9,6 @@
     <string name="title_fragment_top">Top Fragment</string>
     <string name="title_fragment_nearby">Nearby Fragment</string>
     <string name="title_fragment_new">New Fragment</string>
+    <string name="pop_up">Event</string>
 
 </resources>
