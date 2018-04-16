@@ -4,19 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/title_fragment_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_top"
+        android:text="@string/title_my_invites"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:textSize="20sp"/>
-
-    <Button
-        android:id="@+id/event_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pop_up"
-        android:layout_below="@+id/title_fragment_top"/>
 
 </RelativeLayout>

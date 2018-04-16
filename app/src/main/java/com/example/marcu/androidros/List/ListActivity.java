@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
+import com.example.marcu.androidros.Utils.SectionsPagerAdapter;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class ListActivity extends AppCompatActivity {
@@ -35,9 +36,9 @@ public class ListActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("Top");
-        tabLayout.getTabAt(1).setText("Neaby");
-        tabLayout.getTabAt(2).setText("New");
+        tabLayout.getTabAt(0).setText(R.string.title_top);
+        tabLayout.getTabAt(1).setText(R.string.title_nearby);
+        tabLayout.getTabAt(2).setText(R.string.title_new);
 
 
     }
