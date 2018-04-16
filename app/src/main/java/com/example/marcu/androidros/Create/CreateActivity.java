@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -100,75 +101,6 @@ public class CreateActivity extends AppCompatActivity {
                     }
                 }
                 startActivity(takePictureIntent);
-            }
-        });
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        configureButtonGetLocation();
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                // called when a new location is found by the network provider
-                updateLocation(location);
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                Intent i= new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-        };
-
-    }
-
-    public void updateLocation(Location location) {
-        if(location != null){
-            int lat = (int) (location.getLatitude());
-            int lng = (int) (location.getLongitude());
-            locationCoordinates.setText(String.valueOf(lat) + " " + String.valueOf(lng));
-        } else{
-            locationCoordinates.setText("Provider not available");
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case 10:
-                    configureButtonGetLocation();
-                    break;
-                default:
-                    break;
-        }
-    }
-
-    public void configureButtonGetLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.INTERNET
-                }, 10);
-            }
-            return;
-        }
-
-        getLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
             }
         });
 
