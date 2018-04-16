@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ic_map"
+        android:icon="@drawable/ic_map_black_24dp"
+        android:title=""/>
+   <item
+        android:id="@+id/ic_list"
+        android:icon="@drawable/ic_list_black_24dp"
+        android:title=""/>
+   <item
+        android:id="@+id/ic_favorite"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title=""/>
+
+   <item
+        android:id="@+id/ic_add"
+        android:icon="@drawable/ic_add_circle_outline_black_24dp"
+        android:title=""/>
+
+
+</menu>

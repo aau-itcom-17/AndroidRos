@@ -4,11 +4,10 @@
     <string name="title_list">List</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_my_events">My Events</string>
-    <string name="title_map_fragment">Map</string>
     <string name="event_button">Event</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_list_fragment2">ListFragment2</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_fragment_top">Top Fragment</string>
+    <string name="title_fragment_nearby">Nearby Fragment</string>
+    <string name="title_fragment_new">New Fragment</string>
 
 </resources>
