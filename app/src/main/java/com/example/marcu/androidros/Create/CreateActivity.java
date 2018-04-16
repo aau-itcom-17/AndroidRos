@@ -56,11 +56,6 @@ public class CreateActivity extends AppCompatActivity {
     private EditText nameOfEventEdit;
     private EditText eventDescriptionEdit;
 
-    private Location location;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-
-    @TargetApi(23)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
