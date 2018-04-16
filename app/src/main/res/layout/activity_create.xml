@@ -11,23 +11,136 @@
 
         <!--Body-->
         <RelativeLayout
+            android:id="@+id/rellayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/rellayout2">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
 
-            <include layout="@layout/layout_center_viewpager"/>
+            <include layout="@layout/layout_center_viewpager" />
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/get_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="137dp"
+                android:text="@string/location_of_user"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/take_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/photo"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="57dp"
+                android:text="@string/take_photo"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/finish_new_event_creation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="56dp"
+                android:text="@string/create_event"
+                android:textSize="10sp" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/title_my_events"/>
+                android:id="@+id/location_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/location_text_view" />
+
+            <TextView
+                android:id="@+id/location_coordinates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="74dp"
+                android:text="@string/location_coordinates"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/name_of_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="45dp"
+                android:text="@string/enter_name_of_event" />
+
+            <TextView
+                android:id="@+id/photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="240dp"
+                android:text="@string/attach_a_photo" />
+
+            <TextView
+                android:id="@+id/event_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="248dp"
+                android:text="@string/description_text_view" />
+
+            <TextView
+                android:id="@+id/time_of_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="113dp"
+                android:text="@string/time_of_event" />
+
+            <TextView
+                android:id="@+id/date_of_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="168dp"
+                android:text="@string/date_of_event" />
+
+            <EditText
+                android:id="@+id/name_input"
+                android:layout_width="214dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/name_of_event"
+                android:background="@android:color/white" />
+
+            <EditText
+                android:id="@+id/enter_event_description"
+                android:layout_width="330dp"
+                android:layout_height="103dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="125dp"
+                android:layout_marginEnd="30dp"
+                android:background="@android:color/white" />
 
 
         </RelativeLayout>
 
 
         <!--Botton navigtaion-->
-        <include layout="@layout/layout_bottom_navigation_view"/>
+        <include layout="@layout/layout_bottom_navigation_view" />
 
 
     </RelativeLayout>
