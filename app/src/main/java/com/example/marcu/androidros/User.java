@@ -48,6 +48,15 @@ public class User {
     @Ignore
     List<Event> events;
 
+    private boolean isLoggedIn;
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
 
     public List<Event> getEvents() {
         return events;

@@ -27,6 +27,8 @@ public interface UserDao {
     @Query("SELECT * FROM user WHERE email = :email")
     User getFromEmail(String email);
 
+    @Query("SELECT * FROM user WHERE email = :email AND " + "password LIKE :pass LIMIT 1" )
+    User getFromEmailAndPass (String email, String pass);
 
     // find user by first and last name
     @Query("SELECT * FROM user WHERE first_name LIKE :first AND "

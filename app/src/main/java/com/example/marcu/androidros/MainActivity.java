@@ -122,7 +122,12 @@ public class MainActivity extends AppCompatActivity {
     public void nextActivityButtonClicked (View view){
         intent.setClass(this, CreateAccountActivity.class);
         startActivity(intent);
-        Log.i("Hej", "Going to CreateAccount");
+        Log.i("TEST", "Going to CreateAccount");
 
+    }
+    public void loginActivityButtonClicked (View view){
+        intent.setClass(this,LoginActivity.class);
+        startActivity(intent);
+        Log.i("TEST", "Going to Login Page");
     }
 }
