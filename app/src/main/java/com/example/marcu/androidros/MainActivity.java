@@ -119,9 +119,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_link_account).setEnabled(isSignedIn);*/
     }
 
-
-
-
     public void nextActivityButtonClicked (View view){
         intent.setClass(this, CreateAccountActivity.class);
         startActivity(intent);

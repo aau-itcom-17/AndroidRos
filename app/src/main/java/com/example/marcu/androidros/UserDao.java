@@ -24,6 +24,9 @@ public interface UserDao {
     @Query("SELECT * FROM user WHERE user_id = (:userID)")
     User getFromID(int userID);
 
+    @Query("SELECT * FROM user WHERE email = :email")
+    User getFromEmail(String email);
+
 
     // find user by first and last name
     @Query("SELECT * FROM user WHERE first_name LIKE :first AND "

@@ -39,9 +39,13 @@ public class CreateAccountActivity extends AppCompatActivity {
     Context context;
     CharSequence missingInfoError = "Please fill out all the fields above...";
     CharSequence passwordNotMatching = "Passwords are not matching...";
+    CharSequence emailNotValid = "Please provide a valid email...";
+    CharSequence emailAlreadyExist = "The email provided already exists...";
     int toastDuration = Toast.LENGTH_LONG;
     Toast missingInfoToast;
     Toast wrongPasswordToast;
+    Toast emailNotValidToast;
+    Toast emailAlreadyExistToast;
     EditText editFirstName;
     EditText editLastName;
     EditText editEmail;
@@ -77,17 +81,24 @@ public class CreateAccountActivity extends AppCompatActivity {
         context = getApplicationContext();
         missingInfoToast = Toast.makeText(context, missingInfoError, toastDuration);
         wrongPasswordToast = Toast.makeText(context, passwordNotMatching, toastDuration);
-
+        emailAlreadyExistToast = Toast.makeText(context, emailAlreadyExist, toastDuration);
+        emailNotValidToast = Toast.makeText(context, emailNotValid, toastDuration);
+        AppDatabase appDatabase = AppDatabase.getDatabase(context);
 
         if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")){
             missingInfoToast.show();
-        }else if (!password.equals(confirmPassword)){
+        }else if (!password.equals(confirmPassword)) {
             editPassword.setText("");
             editConfirmPassword.setText("");
-            editPassword.setError("Password doesn't match"); //(text, Drawable icon)
+            editPassword.setError("Password doesn't match."); //(text, Drawable icon)
             wrongPasswordToast.show();
+        }else if (!isValidEmail(email)) {
+            editEmail.setError("This is not a valid email."); // Does not check if the email exist. Only the format example@123.aaa
+            emailNotValidToast.show();
+        }else if(appDatabase.userDao().getFromEmail(email) != null){
+            editEmail.setError("This email is already registered.");
+            emailAlreadyExistToast.show();
         }else {
-            AppDatabase appDatabase = AppDatabase.getDatabase(context);
             User user = new User(firstName, lastName, email, password);
             appDatabase.userDao().insert(user);
             List<User> users = appDatabase.userDao().getAllUsers();
@@ -97,6 +108,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
             startActivity(intent);
         }
+
 
 
 
@@ -124,6 +136,13 @@ public class CreateAccountActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+    public static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
     }
 
 
