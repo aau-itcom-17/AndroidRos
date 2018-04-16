@@ -27,9 +27,15 @@
 
         </activity>
 
-        <activity android:name=".List.ListActivity"></activity>
-        <activity android:name=".Favourites.FavouriteActivity"></activity>
-        <activity android:name=".Create.CreateActivity"></activity>
+        <activity
+            android:name=".List.ListActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Favourites.FavouriteActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Create.CreateActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity android:name=".Utils.EventPopUp"
             android:theme="@style/AppTheme.CustomTheme"

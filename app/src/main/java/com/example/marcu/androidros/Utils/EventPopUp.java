@@ -23,7 +23,7 @@ public class EventPopUp extends Activity implements View.OnClickListener{
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width*.85), (int) (height*.85));
+        getWindow().setLayout((int) (width*.9), (int) (height*.9));
 
         ImageView closeButton = (ImageView) findViewById(R.id.close_button);
         closeButton.setOnClickListener(this);

@@ -10,5 +10,7 @@
     <string name="title_fragment_nearby">Nearby Fragment</string>
     <string name="title_fragment_new">New Fragment</string>
     <string name="pop_up">Event</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
 </resources>
