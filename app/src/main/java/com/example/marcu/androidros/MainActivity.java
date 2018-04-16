@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void nextActivityButtonClicked (View view){
-        intent.setClass(this,CreateAccountActivity.class);
+        intent.setClass(this, CreateAccountActivity.class);
         startActivity(intent);
         Log.i("Hej", "Going to CreateAccount");
 

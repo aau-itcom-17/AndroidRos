@@ -18,7 +18,13 @@
         </activity>
         <activity
             android:name=".CreateAccountActivity"
-            android:label="@string/create_account_name"></activity>
+            android:label="@string/create_account_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.marcu.androidros.MainActivity"
+
+                />
+        </activity>
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
