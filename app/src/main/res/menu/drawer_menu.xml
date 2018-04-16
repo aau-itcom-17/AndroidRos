@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/drawer1"
+        android:title="Drawer1" />
+    <item
+        android:id="@+id/drawer2"
+        android:title="Drawer2"/>
+    <item
+        android:id="@+id/drawer3"
+        android:title="Drawer3"/>
+
+    <item
+        android:id="@+id/drawer4"
+        android:title="Drawer4"/>
+
+</menu>
