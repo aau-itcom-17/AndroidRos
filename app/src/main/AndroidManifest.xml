@@ -22,7 +22,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.marcu.androidros.MainActivity"
-
                 />
         </activity>
         <meta-data android:name="com.facebook.sdk.ApplicationId"
