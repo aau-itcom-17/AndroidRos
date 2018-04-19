@@ -22,6 +22,9 @@
     <string name="date_of_event">Select date</string>
     <string name="location_of_user">Get Location</string>
     <string name="location_text_view">Get Location</string>
-    <string name="location_coordinates">coordinates</string>
+    <string name="location_longitude">Longitude</string>
+    <string name="location_latitude">Latitude</string>
+    <string name="pause_location_tracking">pause</string>
+    <string name="resume_location_tracking">Track location</string>
 
 </resources>

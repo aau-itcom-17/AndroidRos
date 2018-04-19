@@ -2,6 +2,8 @@ package com.example.marcu.androidros.Create;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,6 +21,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
@@ -46,28 +50,34 @@ public class CreateActivity extends AppCompatActivity {
     private Button takePhoto;
     private Button getLocation;
 
+    double longitudeGPS, latitudeGPS;
+
     private static final int REQUEST_TAKE_PHOTO = 1;
     private static final int CAMERA_REQUEST = 1;
     private Bitmap imageBitmap;
     private String currentPhotoPath;
     private ImageView imageView;
 
-    private TextView locationCoordinates;
+    private TextView locationLatitude;
+    private TextView locationLongitude;
     private EditText nameOfEventEdit;
     private EditText eventDescriptionEdit;
+
+    private Location location;
+
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         setUpBottomNavigationView();
 
         getLocation = (Button) findViewById(R.id.get_location);
-        finishEvent = findViewById(R.id.finish_new_event_creation);
-
-
-        locationCoordinates = (TextView) findViewById(R.id.location_coordinates);
+        finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
+        locationLongitude = (TextView) findViewById(R.id.location_longitude);
+        locationLatitude = (TextView) findViewById(R.id.location_latitude);
         nameOfEventEdit = findViewById(R.id.name_input);
 
         eventDescriptionEdit = findViewById(R.id.enter_event_description);
@@ -96,6 +106,18 @@ public class CreateActivity extends AppCompatActivity {
                     }
                 }
                 startActivity(takePictureIntent);
+            }
+        });
+
+        getLocation.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(isLocationEnabled() == true){
+                    toggleGPSUpdates(getLocation);
+
+                } else{
+                    isLocationEnabled() = false;
+                }
             }
         });
 
@@ -168,4 +190,88 @@ public class CreateActivity extends AppCompatActivity {
         MenuItem menuItem = menu.getItem(3);
         menuItem.setChecked(true);
     }
+
+    private boolean checkLocation(){
+        if(!isLocationEnabled())
+            showAlert();
+        return isLocationEnabled();
+    }
+
+    private boolean isLocationEnabled(){
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    private void showAlert(){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Enable Location").setMessage("Your Locations setting is set to 'Off'. \nPlease Enable Location to use this app")
+                .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(myIntent);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        dialog.show();
+    }
+
+    public void toggleGPSUpdates(View view){
+        if(!checkLocation())
+            return;
+
+        getLocation = (Button) view;
+        if(getLocation.getText().equals(getResources().getString(R.string.pause_location_tracking))){
+            locationManager.removeUpdates(locationListenerGPS);
+            getLocation.setText(R.string.resume_location_tracking);
+        } else{
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setAltitudeRequired(false);
+            criteria.setBearingRequired(false);
+            criteria.setCostAllowed(true);
+            criteria.setPowerRequirement(Criteria.POWER_LOW);
+            String provider = locationManager.getBestProvider(criteria, true);
+            if (provider != null){
+                locationManager.requestLocationUpdates(provider, 2 * 60 * 1000, 10, locationListenerGPS);
+                getLocation.setText(R.string.pause_location_tracking);
+                Toast.makeText(this, "GPS location acquired", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private final LocationListener locationListenerGPS = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            longitudeGPS = location.getLongitude();
+            latitudeGPS = location.getLatitude();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    locationLongitude.setText(longitudeGPS + "");
+                    locationLatitude.setText(latitudeGPS + "");
+                    Toast.makeText(CreateActivity.this, "GPS location update", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 }

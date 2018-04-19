@@ -31,7 +31,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="137dp"
-                android:text="@string/location_of_user"
+                android:text="@string/resume_location_tracking"
                 android:textSize="10sp" />
 
             <Button
@@ -63,13 +63,22 @@
                 android:text="@string/location_text_view" />
 
             <TextView
-                android:id="@+id/location_coordinates"
-                android:layout_width="wrap_content"
+                android:id="@+id/location_longitude"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="74dp"
-                android:text="@string/location_coordinates"
+                android:layout_alignTop="@+id/get_location"
+                android:layout_marginEnd="75dp"
+                android:text="@string/location_longitude"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/location_latitude"
+                android:layout_width="61dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/get_location"
+                android:layout_alignEnd="@+id/location_longitude"
+                android:text="@string/location_latitude"
                 android:textSize="10sp" />
 
             <TextView
