@@ -115,8 +115,6 @@ public class CreateActivity extends AppCompatActivity {
                 if(isLocationEnabled() == true){
                     toggleGPSUpdates(getLocation);
 
-                } else{
-                    isLocationEnabled() = false;
                 }
             }
         });
