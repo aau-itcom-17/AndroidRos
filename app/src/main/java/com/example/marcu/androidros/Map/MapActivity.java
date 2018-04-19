@@ -20,10 +20,17 @@ import android.widget.Toast;
 
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback{
@@ -38,6 +45,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private LocationListener locationListener;
     private boolean mPermissionDenied = false;
+
+    private static final LatLng AAU = new LatLng(55.649114, 12.542689);
+    private static final LatLng ROSKILDE = new LatLng(55.616885, 12.077064);
+    private static final LatLng HOME = new LatLng(55.650661, 12.525810);
+
+    private Marker mAAU;
+    private Marker mRoskilde;
+    private Marker mHome;
 
 
 
@@ -77,12 +92,46 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(
                 this, R.raw.style);
        map.setMapStyle(style);
+
         mMap = map;
 
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(
+                new LatLng(55.616885, 12.077064)).zoom(15).build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        // Add some markers to the map, and add a data object to each marker.
+
+        mAAU = mMap.addMarker(new MarkerOptions()
+                .position(AAU)
+                .title("AAU")
+                .snippet("The university")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+        mAAU.setTag(0);
+
+        // Example on how to put in a customisable icon for a marker.
+        mRoskilde = mMap.addMarker(new MarkerOptions()
+                .position(ROSKILDE)
+                .snippet("For more information go to www.roskilde-festival.dk/")
+                .title("Roskilde Festival")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        mRoskilde.setTag(0);
+
+        mHome = mMap.addMarker(new MarkerOptions()
+                .position(HOME)
+                .title("Home")
+                .snippet("The location of my home")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        mHome.setTag(0);
+
+        // Set a listener for marker click.
+       // mMap.setOnInfoWindowClickListener(this);
     }
+
 
     /**
      * Enables the My Location layer if the fine location permission has been granted.
@@ -101,7 +150,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "This is your current location", Toast.LENGTH_SHORT).show();
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;
@@ -154,9 +203,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 //    @Override
 //    public void onMapReady(GoogleMap map) {
-//        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(
-//                this, R.raw.style);
-//        map.setMapStyle(style);
 //        mMap = map;
 //        // TODO: Before enabling the My Location layer, you must request
 //        // location permission from the user. This sample does not include
@@ -231,5 +277,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+
+
+    // A small box with information when clicking on the markers information.
+   // @Override
+   // public void onInfoWindowClick(Marker marker) {
+    //    Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
+    //}
 }
