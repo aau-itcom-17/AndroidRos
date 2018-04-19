@@ -1,11 +1,9 @@
 package com.example.marcu.androidros.Create;
 
-import android.Manifest;
-import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
@@ -13,21 +11,17 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,7 +33,9 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class CreateActivity extends AppCompatActivity {
@@ -66,6 +62,11 @@ public class CreateActivity extends AppCompatActivity {
     private Location location;
 
     private LocationManager locationManager;
+
+    TextView mTv;
+    Button mBtn;
+    Calendar calendar;
+    DatePickerDialog datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,38 @@ public class CreateActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
+        // Calendar implementation
+
+        mTv = (TextView) findViewById(R.id.date);
+        mBtn = (Button) findViewById(R.id.choose_date);
+
+        mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calendar = Calendar.getInstance();
+
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+                datePickerDialog = new DatePickerDialog(CreateActivity.this, new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int mYear, int mMonth, int mDay) {
+                        mTv.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
+                    }
+
+
+                }, day, month, year);
+        datePickerDialog.show();
+
+
+            }
+        });
+
 
     }
 
