@@ -8,6 +8,8 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
     <application
         android:allowBackup="true"
@@ -27,9 +29,15 @@
 
         </activity>
 
-        <activity android:name=".List.ListActivity"></activity>
-        <activity android:name=".Favourites.FavouriteActivity"></activity>
-        <activity android:name=".Create.CreateActivity"></activity>
+        <activity
+            android:name=".List.ListActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Favourites.FavouriteActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Create.CreateActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity android:name=".Utils.EventPopUp"
             android:theme="@style/AppTheme.CustomTheme"
@@ -46,11 +54,11 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
 
-        <!--
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-            -->
+
 
 
     </application>
