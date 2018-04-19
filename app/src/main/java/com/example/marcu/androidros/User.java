@@ -12,11 +12,12 @@ import java.util.UUID;
 @Entity (tableName = "user", indices = {@Index(value = "email", unique = true)})
 public class User {
 
-    public User(String firstName, String lastName, String email, String password){
+    public User(String firstName, String lastName, String email, String password, boolean isLoggedIn){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.isLoggedIn = isLoggedIn;
     }
 
     @PrimaryKey (autoGenerate = true)
@@ -48,6 +49,16 @@ public class User {
     @Ignore
     List<Event> events;
 
+    @ColumnInfo (name = "logged_in")
+    private boolean isLoggedIn;
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
 
     public List<Event> getEvents() {
         return events;
