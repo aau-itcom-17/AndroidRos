@@ -42,7 +42,7 @@ public class CreateActivity extends AppCompatActivity {
     private Button takePhoto;
     private Button getLocation;
 
-    double longitudeGPS, latitudeGPS;
+    double longitudeGPS, latitudeGPS, latitude, longitude;
 
     private static final int REQUEST_TAKE_PHOTO = 1;
     private static final int CAMERA_REQUEST = 1;
@@ -105,11 +105,6 @@ public class CreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 if(isLocationEnabled() == true){
-                    double latitude, longitude;
-
-                    latitude = getLatitudeGPS(latitudeGPS);
-                    longitude = getLongitudeGPS(longitudeGPS);
-
                     toggleGPSUpdates(getLocation);
 
                     locationLatitude.setText(latitude + "");
@@ -265,15 +260,6 @@ public class CreateActivity extends AppCompatActivity {
 
             setLatitudeGPS(latitudeGPS);
             setLongitudeGPS(longitudeGPS);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    locationLongitude.setText(longitudeGPS + "");
-                    locationLatitude.setText(latitudeGPS + "");
-                    Toast.makeText(CreateActivity.this, "GPS location update", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
         @Override
