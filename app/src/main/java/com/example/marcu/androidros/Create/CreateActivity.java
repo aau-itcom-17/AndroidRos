@@ -1,11 +1,8 @@
 package com.example.marcu.androidros.Create;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
@@ -13,17 +10,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -113,7 +105,15 @@ public class CreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 if(isLocationEnabled() == true){
+                    double latitude, longitude;
+
+                    latitude = getLatitudeGPS(latitudeGPS);
+                    longitude = getLongitudeGPS(longitudeGPS);
+
                     toggleGPSUpdates(getLocation);
+
+                    locationLatitude.setText(latitude + "");
+                    locationLongitude.setText(longitude + "");
 
                 }
             }
@@ -241,11 +241,30 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
+    private double getLongitudeGPS(double longitudeGPS){
+        return longitudeGPS;
+    }
+
+    private void setLongitudeGPS(double longitudeGPS){
+        this.longitudeGPS = longitudeGPS;
+    }
+
+    private double getLatitudeGPS(double latitudeGPS){
+        return latitudeGPS;
+    }
+
+    private void setLatitudeGPS(double latitudeGPS){
+        this.latitudeGPS = latitudeGPS;
+    }
+
     private final LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             longitudeGPS = location.getLongitude();
             latitudeGPS = location.getLatitude();
+
+            setLatitudeGPS(latitudeGPS);
+            setLongitudeGPS(longitudeGPS);
 
             runOnUiThread(new Runnable() {
                 @Override
