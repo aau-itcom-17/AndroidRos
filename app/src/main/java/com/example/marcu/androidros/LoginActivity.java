@@ -2,6 +2,7 @@ package com.example.marcu.androidros;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +13,13 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
 
     Intent intent = new Intent();
+    public static SharedPreferences sp;
     EditText emailEdit;
     EditText passEdit;
     String email;
     String pass;
     Context context;
-    AppDatabase appDatabase;
-    User user;
+    //AppDatabase appDatabase;
     User user1;
     Toast wrongEmailToast;
     Toast wrongPassToast;
@@ -35,21 +36,21 @@ public class LoginActivity extends AppCompatActivity {
         emailEdit = findViewById(R.id.emailEdit1);
         passEdit = findViewById(R.id.passEdit1);
         context = getApplicationContext();
-        appDatabase = AppDatabase.getDatabase(context);
+        //appDatabase = AppDatabase.getDatabase(context);
 
     }
 
     public void loginButton (View view){
-        intent.setClass(this,MainActivity.class);
+        intent.setClass(this, MapTestActivity.class);
         wrongEmailToast = Toast.makeText(context, wrongEmail, toastDuration);
         wrongPassToast = Toast.makeText(context, wrongPass,toastDuration);
         email = emailEdit.getText().toString();
         pass = passEdit.getText().toString();
 
-        user = appDatabase.userDao().getFromEmailAndPass(email,pass);
-        user1 = appDatabase.userDao().getFromEmail(email);
+        SplashActivity.user = SplashActivity.appDatabase.userDao().getFromEmailAndPass(email,pass);
+        user1 = SplashActivity.appDatabase.userDao().getFromEmail(email);
 
-        if (user == null){
+        if (SplashActivity.user == null){
             Log.i("TEST", "Login failed....." + email + " " + pass);
             if (user1 == null){
                 emailEdit.setError("Email does not exist.");
@@ -59,7 +60,14 @@ public class LoginActivity extends AppCompatActivity {
                 wrongPassToast.show();
             }
         }else {
-            user.setLoggedIn(true);
+           // MainActivity.sp.edit().putBoolean("logged",true).apply();
+            SplashActivity.user.setLoggedIn(true);
+            SplashActivity.appDatabase.userDao().update(SplashActivity.user);
+            SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edt = pref.edit();
+            edt.putBoolean("activity_executed", true);
+//            edt.putInt("userÍd", SplashActivity.user.getUserID());
+            edt.apply();
             startActivity(intent);
             Log.i("TEST", "Winner winner you locked in bitch..");
         }

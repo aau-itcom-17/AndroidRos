@@ -48,7 +48,7 @@ public interface UserDao {
     @Query("DELETE FROM user")
     void nukeTable();
 
-    @Update
+    @Update (onConflict = REPLACE)
     void update(User user);
 
     @Query("DELETE FROM user " +

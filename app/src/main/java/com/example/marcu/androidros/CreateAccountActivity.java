@@ -99,7 +99,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             editEmail.setError("This email is already registered.");
             emailAlreadyExistToast.show();
         }else {
-            User user = new User(firstName, lastName, email, password);
+            User user = new User(firstName, lastName, email, password, false);
             appDatabase.userDao().insert(user);
             List<User> users = appDatabase.userDao().getAllUsers();
             for (int i = 0; i < users.size(); i++) {

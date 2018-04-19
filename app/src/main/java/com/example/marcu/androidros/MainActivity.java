@@ -1,7 +1,9 @@
 package com.example.marcu.androidros;
 
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,13 +38,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+
+
         onStart();
+        // checking if already logged in
+//        sp = getSharedPreferences("login",MODE_PRIVATE);
+//        if(sp.getBoolean("logged",false)){
+//            intent.setClass(this, MapTestActivity.class);
+//            startActivity(intent);
+//        }
+
+
+
 
         setContentView(R.layout.activity_main);
         CallbackManager callbackManager = CallbackManager.Factory.create();
-
-
-
 
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -84,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             // Pass the activity result back to the Facebook SDK
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }*/
+
 
 
 
