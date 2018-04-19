@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -18,6 +19,12 @@ public class LoginActivity extends AppCompatActivity {
     Context context;
     AppDatabase appDatabase;
     User user;
+    User user1;
+    Toast wrongEmailToast;
+    Toast wrongPassToast;
+    int toastDuration = Toast.LENGTH_LONG;
+    CharSequence wrongEmail = "The Email does not exist.";
+    CharSequence wrongPass = "The entered password is not correct.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +41,23 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginButton (View view){
         intent.setClass(this,MainActivity.class);
+        wrongEmailToast = Toast.makeText(context, wrongEmail, toastDuration);
+        wrongPassToast = Toast.makeText(context, wrongPass,toastDuration);
         email = emailEdit.getText().toString();
         pass = passEdit.getText().toString();
 
         user = appDatabase.userDao().getFromEmailAndPass(email,pass);
+        user1 = appDatabase.userDao().getFromEmail(email);
 
         if (user == null){
-            Log.i("TEST", "Login failed....." + email + pass);
-
+            Log.i("TEST", "Login failed....." + email + " " + pass);
+            if (user1 == null){
+                emailEdit.setError("Email does not exist.");
+                wrongEmailToast.show();
+            }else {
+                passEdit.setError("Password is not correct.");
+                wrongPassToast.show();
+            }
         }else {
             user.setLoggedIn(true);
             startActivity(intent);
