@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
+
+import java.util.List;
 
 public class MyEventFragment extends Fragment {
 
 
-    public static List<Events> events, myEvents, newestEvents, byNameEvents;
+    public static List<Event> events, myEvents, newestEvents, byNameEvents;
 
 
 
