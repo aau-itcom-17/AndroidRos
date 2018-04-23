@@ -167,16 +167,17 @@ public class CreateActivity extends AppCompatActivity {
         tBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Calendar calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
                 int tMinute = calendar.get(Calendar.MINUTE);
                 int tHour = calendar.get(Calendar.HOUR_OF_DAY);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        tTv.setText(hourOfDay + ":" + minute);
+                    public void onTimeSet(TimePicker view, int hourSelected, int minuteSelected) {
+                        tTv.setText(hourSelected + ":" + minuteSelected);
                     }
                 }, tHour, tMinute, true);
+
                 timePickerDialog.show();
 
 

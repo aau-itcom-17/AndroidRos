@@ -142,21 +142,21 @@
 
             <TextView
                 android:id="@+id/date"
-                android:layout_width="214dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/date_of_event"
-                android:text="date"
+                android:text="DD/MM/YYYY"
                 android:textSize="20sp"
                 />
 
             <TextView
                 android:id="@+id/time"
-                android:layout_width="214dp"
+                android:layout_width="225dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/time_of_event"
-                android:text="Time"
+                android:text="HH:MM"
                 android:textSize="20sp"
                 />
 
