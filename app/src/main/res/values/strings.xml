@@ -19,4 +19,19 @@
     <string name="email">Email</string>
     <string name="login">Login</string>
     <string name="login_page_text">Login with existing Email and Password</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">Start Now</string>
+
+    <string name="slide_1_title">Find people</string>
+    <string name="slide_1_desc">The easiest way to find some party ppl</string>
+
+    <string name="slide_2_title">Find events</string>
+    <string name="slide_2_desc">Dont miss out the best events</string>
+
+    <string name="slide_3_title">Make action yourself</string>
+    <string name="slide_3_desc">Make some action yourself and meet new people</string>
+
+    <string name="home_title">Welcome to Application</string>
+    <string name="home_desc">make friends and have fun.</string>
 </resources>
