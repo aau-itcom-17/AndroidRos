@@ -148,8 +148,27 @@
                 android:layout_alignTop="@+id/date_of_event"
                 android:text="date"
                 android:textSize="20sp"
-
                 />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="214dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/time_of_event"
+                android:text="Time"
+                android:textSize="20sp"
+                />
+
+            <Button
+                android:id="@+id/choose_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/time_of_event"
+                android:drawableLeft="@drawable/ic_time"
+                android:text="choose time"
+                android:textSize="10sp" />
 
 
 

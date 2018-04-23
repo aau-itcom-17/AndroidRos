@@ -1,6 +1,7 @@
 package com.example.marcu.androidros.Create;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,8 +25,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.R;
@@ -34,7 +35,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -65,17 +65,22 @@ public class CreateActivity extends AppCompatActivity {
     private LocationManager locationManager;
 
     // Date implementation variables
-    private TextView mTv;
-    private Button mBtn;
+    private TextView dTv;
+    private Button dBtn;
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
-    //
+    //Time implementation
+    private TextView tTv;
+    private Button tBtn;
+    private TimePicker timePicker;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         setUpBottomNavigationView();
 
         getLocation = (Button) findViewById(R.id.get_location);
@@ -113,10 +118,10 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-        getLocation.setOnClickListener(new View.OnClickListener(){
+        getLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                if(isLocationEnabled() == true){
+            public void onClick(View v) {
+                if (isLocationEnabled() == true) {
                     toggleGPSUpdates(getLocation);
 
                 }
@@ -124,13 +129,11 @@ public class CreateActivity extends AppCompatActivity {
         });
 
 
+        // Date implementation
+        dTv = (TextView) findViewById(R.id.date);
+        dBtn = (Button) findViewById(R.id.choose_date);
 
-        // Calendar implementation
-
-        mTv = (TextView) findViewById(R.id.date);
-        mBtn = (Button) findViewById(R.id.choose_date);
-
-        mBtn.setOnClickListener(new View.OnClickListener() {
+        dBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 calendar = Calendar.getInstance();
@@ -140,20 +143,41 @@ public class CreateActivity extends AppCompatActivity {
                 int year = calendar.get(Calendar.YEAR);
 
 
-
                 datePickerDialog = new DatePickerDialog(CreateActivity.this, new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, int mYear, int mMonth, int mDay) {
-                        mTv.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
+                        dTv.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
                     }
 
 
                 }, day, month, year);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000); //Disable the possibility to choose earlier dates
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000); //Disable the possibility to choose earlier dates
 
 
-        datePickerDialog.show();
+                datePickerDialog.show();
+
+            }
+        });
+
+// Implementing time
+        tTv = (TextView) findViewById(R.id.time);
+        tBtn = (Button) findViewById(R.id.choose_time);
+
+        tBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                int tMinute = calendar.get(Calendar.MINUTE);
+                int tHour = calendar.get(Calendar.HOUR_OF_DAY);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        tTv.setText(hourOfDay + ":" + minute);
+                    }
+                }, tHour, tMinute, true);
+                timePickerDialog.show();
 
 
             }
