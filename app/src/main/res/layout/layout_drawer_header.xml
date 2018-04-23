@@ -13,9 +13,10 @@
         android:background="@color/colorAccent"/>
 
     <TextView
+        android:id="@+id/drawer_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="name lName"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
 
 </RelativeLayout>
