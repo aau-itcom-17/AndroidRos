@@ -82,7 +82,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         wrongPasswordToast = Toast.makeText(context, passwordNotMatching, toastDuration);
         emailAlreadyExistToast = Toast.makeText(context, emailAlreadyExist, toastDuration);
         emailNotValidToast = Toast.makeText(context, emailNotValid, toastDuration);
-        AppDatabase appDatabase = AppDatabase.getDatabase(context);
+
 
         if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")){
             missingInfoToast.show();
@@ -94,13 +94,13 @@ public class CreateAccountActivity extends AppCompatActivity {
         }else if (!isValidEmail(email)) {
             editEmail.setError("This is not a valid email."); // Does not check if the email exist. Only the format example@123.aaa
             emailNotValidToast.show();
-        }else if(appDatabase.userDao().getFromEmail(email) != null){
+        }else if(SplashActivity.appDatabase.userDao().getFromEmail(email) != null){
             editEmail.setError("This email is already registered.");
             emailAlreadyExistToast.show();
         }else {
             User user = new User(firstName, lastName, email, password, false);
-            appDatabase.userDao().insert(user);
-            List<User> users = appDatabase.userDao().getAllUsers();
+            SplashActivity.appDatabase.userDao().insert(user);
+            List<User> users = SplashActivity.appDatabase.userDao().getAllUsers();
             for (int i = 0; i < users.size(); i++) {
                 Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
             }
