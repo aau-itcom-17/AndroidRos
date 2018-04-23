@@ -72,7 +72,6 @@ public class CreateActivity extends AppCompatActivity {
     //Time implementation
     private TextView tTv;
     private Button tBtn;
-    private TimePicker timePicker;
 
 
 
@@ -177,7 +176,6 @@ public class CreateActivity extends AppCompatActivity {
                         tTv.setText(hourSelected + ":" + minuteSelected);
                     }
                 }, tHour, tMinute, true);
-
                 timePickerDialog.show();
 
 
