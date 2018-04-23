@@ -10,5 +10,13 @@
     <string name="title_fragment_nearby">Nearby Fragment</string>
     <string name="title_fragment_new">New Fragment</string>
     <string name="pop_up">Event</string>
-
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="create_account_name">Create Account</string>
+    <string name="facebook_app_id">1063654890449116</string>
+    <string name="fb_login_protocol_scheme">fb1063654890449116</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login">Login</string>
+    <string name="login_page_text">Login with existing Email and Password</string>
 </resources>
