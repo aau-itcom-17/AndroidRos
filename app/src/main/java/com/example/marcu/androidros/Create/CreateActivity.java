@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,10 +64,12 @@ public class CreateActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
 
-    TextView mTv;
-    Button mBtn;
-    Calendar calendar;
-    DatePickerDialog datePickerDialog;
+    // Date implementation variables
+    private TextView mTv;
+    private Button mBtn;
+    private Calendar calendar;
+    private DatePickerDialog datePickerDialog;
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +139,8 @@ public class CreateActivity extends AppCompatActivity {
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
 
+
+
                 datePickerDialog = new DatePickerDialog(CreateActivity.this, new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -145,6 +150,9 @@ public class CreateActivity extends AppCompatActivity {
 
 
                 }, day, month, year);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000); //Disable the possibility to choose earlier dates
+
+
         datePickerDialog.show();
 
 

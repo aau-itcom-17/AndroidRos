@@ -134,6 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/date_of_event"
+                android:drawableLeft="@drawable/ic_date"
                 android:text="choose date"
                 android:textSize="10sp" />
 
@@ -146,7 +147,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/date_of_event"
                 android:text="date"
-                android:textSize="15sp"
+                android:textSize="20sp"
 
                 />
 
