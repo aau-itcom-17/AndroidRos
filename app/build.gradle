@@ -38,6 +38,11 @@ dependencies {
     //  implementation "android.arch.paging:runtime:1.0.0-beta1"
     //  testImplementation "android.arch.core:core-testing:1.1.1"
     //   testImplementation "android.arch.persistence.room:testing:1.0.0"
+    compile 'com.android.support:design:24.2.1'
+    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 
 
 }
