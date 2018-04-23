@@ -10,6 +10,7 @@ import java.util.List;
 
 import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 
+
 @Dao
 public interface EventDao {
 
