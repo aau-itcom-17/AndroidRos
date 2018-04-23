@@ -3,26 +3,12 @@
     <string name="title_map">Map</string>
     <string name="title_list">List</string>
     <string name="title_favourites">Favourites</string>
-    <string name="title_my_events">Events</string>
-    <string name="title_my_invites">Invites</string>
+    <string name="title_my_events">My Events</string>
     <string name="event_button">Event</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_top">Top</string>
-    <string name="title_nearby">Nearby</string>
-    <string name="title_new">New</string>
+    <string name="title_fragment_top">Top Fragment</string>
+    <string name="title_fragment_nearby">Nearby Fragment</string>
+    <string name="title_fragment_new">New Fragment</string>
     <string name="pop_up">Event</string>
-
-   <!-- &lt;!&ndash;ListActivity&ndash;&gt;
-    <string name="top_event">Top</string>
-    <string name="nearby_event">Nearby</string>
-    <string name="new_event">New</string>
-
-    &lt;!&ndash;FavouriteActivity&ndash;&gt;
-    <string name="my_events">My Event</string>
-    <string name="favourites">Favourites</string>
-    <string name="invites">Invites</string>-->
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

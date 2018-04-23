@@ -12,7 +12,7 @@
             android:id="@+id/bottomNavViewBar"
             android:background="@color/colorPrimary"
             app:menu="@menu/navigation"
-            app:itemIconTint="@color/iconColor">
+            app:itemIconTint="@color/white">
 
         </com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx>
 
