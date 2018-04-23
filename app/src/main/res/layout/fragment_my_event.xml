@@ -22,7 +22,8 @@
         android:layout_centerVertical="true"
         android:background="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="#CCCCCC"
+        android:divider="#FF9800"
+        android:listSelector="#FF9800"
         android:dividerHeight="1dp"
         android:paddingLeft="2dp"
         android:layout_alignParentLeft="true"></ListView>

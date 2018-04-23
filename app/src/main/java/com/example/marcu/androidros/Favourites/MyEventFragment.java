@@ -25,6 +25,8 @@ public class MyEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_event, container, false);
         return view;
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.activity_listview, R.id.textView, countryList);
+        simpleList.setAdapter(arrayAdapter);
     }
 
     public static List<Event> events = new ArrayList<>();
