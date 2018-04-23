@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
@@ -34,7 +31,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private TextView mTextMessage;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -49,7 +45,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Marker mAAU;
     private Marker mRoskilde;
     private Marker mHome;
-
 
 
     @Override
@@ -72,16 +67,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setUpBottomNavigationView();
     }
 
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (mToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -96,7 +88,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         enableMyLocation();
-
 
         // Add some markers to the map, and add a data object to each marker.
 
@@ -124,7 +115,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mHome.setTag(0);
 
     }
-
 
     /**
      * Enables the My Location layer if the fine location permission has been granted.
@@ -189,8 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
 
-
-    private void setUpBottomNavigationView(){
+    private void setUpBottomNavigationView() {
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(MapActivity.this, bottomNavigationViewEx);
@@ -199,17 +188,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         menuItem.setChecked(true);
     }
 
-
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
-
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if(marker.equals(mRoskilde)) {
-            Intent intent = new Intent(MapActivity.this,EventPopUp.class);
+        if (marker.equals(mRoskilde)) {
+            Intent intent = new Intent(MapActivity.this, EventPopUp.class);
             startActivity(intent);
         }
     }
