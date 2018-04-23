@@ -10,6 +10,7 @@
 
     <android.support.design.widget.NavigationView
         app:headerLayout="@layout/layout_drawer_header"
+        android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
