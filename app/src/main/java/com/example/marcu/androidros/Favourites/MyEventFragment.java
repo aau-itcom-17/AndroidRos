@@ -11,14 +11,14 @@ import android.widget.ArrayAdapter;
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyEventFragment extends Fragment {
 
 
-    public static List<Event> events, myEvents, newestEvents, byNameEvents;
-
-
+    //public static List<Event> events, myEvents, newestEvents, byNameEvents;
+    
 
     @Nullable
     @Override
@@ -27,12 +27,11 @@ public class MyEventFragment extends Fragment {
         return view;
     }
 
-    events = new ArrayList<>();
-    myEvents = new ArrayList<>();
-    newestEvents = new ArrayList<>();
-    byNameEvents = new ArrayList<>();
+    public static List<Event> events = new ArrayList<>();
+    public static List<Event> myEvents = new ArrayList<>();
+    public static List<Event> newestEvents = new ArrayList<>();
+    public static List<Event> byNameEvents = new ArrayList<>();
 
-    myEvents = new ArrayList<>();
     ArrayAdapter<myEvents> adaptor;
 
 

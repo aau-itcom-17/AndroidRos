@@ -1,5 +1,7 @@
 package com.example.marcu.androidros.Utils;
 
+import com.example.marcu.androidros.Database.Event;
+
 import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.util.List;
