@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginButton (View view){
-        intent.setClass(this, MapActivity.class);
+        intent.setClass(this, SplashActivity.class);
         wrongEmailToast = Toast.makeText(context, wrongEmail, toastDuration);
         wrongPassToast = Toast.makeText(context, wrongPass,toastDuration);
         email = emailEdit.getText().toString();

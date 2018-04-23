@@ -8,16 +8,20 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marcu.androidros.Login.SplashActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +44,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
+    private NavigationView navigationView;
+    private View headerView;
+    private TextView textView;
+    private String username;
 
     private GoogleMap mMap;
     private LocationManager locationManager;
@@ -61,12 +69,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
+
+        //setting username in the drawer for user logged in.
+        username = SplashActivity.user.getFirstName() + " " + SplashActivity.user.getLastName();
+        Log.i("USER_IN_MAP_ACTIVITY", username);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+        textView = (TextView) headerView.findViewById(R.id.drawer_textview);
+        textView.setText(username);
 
 
       SupportMapFragment mapFragment =
