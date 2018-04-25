@@ -80,16 +80,16 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.profilePictureView);
         imageButton = (ImageButton) findViewById(R.id.addProfilePictureButton);
-    }
-
-
-    public void createAccountButtonClicked (View view){
-        intent.setClass(this, MainActivity.class);
         editFirstName =  (EditText)findViewById(R.id.firstNameEdit);
         editLastName = (EditText)findViewById(R.id.lastNameEdit);
         editEmail = (EditText)findViewById(R.id.emailEdit);
         editPassword = (EditText)findViewById(R.id.passEdit);
         editConfirmPassword = (EditText)findViewById(R.id.confirmPassEdit);
+    }
+
+
+    public void createAccountButtonClicked (View view){
+        intent.setClass(this, MainActivity.class);
         firstName = editFirstName.getText().toString();
         lastName = editLastName.getText().toString();
         email = editEmail.getText().toString();
@@ -116,7 +116,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             editEmail.setError("This email is already registered.");
             emailAlreadyExistToast.show();
         }else {
-            User user = new User(firstName, lastName, email, password, false);
+            User user = new User(firstName, lastName, email, password, false, picturePath);
             SplashActivity.appDatabase.userDao().insert(user);
             List<User> users = SplashActivity.appDatabase.userDao().getAllUsers();
             for (int i = 0; i < users.size(); i++) {
