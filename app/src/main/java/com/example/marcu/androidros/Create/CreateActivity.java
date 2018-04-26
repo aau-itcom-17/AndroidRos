@@ -1,10 +1,12 @@
 package com.example.marcu.androidros.Create;
 
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
@@ -12,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -36,18 +39,21 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class CreateActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateEventActivity";
+
+    private Button getLocation;
     private Button finishEvent;
     private Button uploadPhoto;
     private Button takePhoto;
-    private Button getLocation;
-
-    double longitudeGPS, latitudeGPS;
 
     private static final int REQUEST_TAKE_PHOTO = 1;
     private static final int CAMERA_REQUEST = 1;
@@ -60,10 +66,6 @@ public class CreateActivity extends AppCompatActivity {
     private EditText nameOfEventEdit;
     private EditText eventDescriptionEdit;
 
-    private Location location;
-
-    private LocationManager locationManager;
-
     // Date implementation variables
     private TextView dTv;
     private Button dBtn;
@@ -73,16 +75,27 @@ public class CreateActivity extends AppCompatActivity {
     private TextView tTv;
     private Button tBtn;
 
+    private ArrayList permissionsToRequest;
+    private ArrayList permissionsRejected = new ArrayList();
+    private ArrayList permissions = new ArrayList();
+
+    private LocationTracker locationTracker;
+
+    double longitude, latitude;
+
+    private final static int ALL_PERMISSIONS_RESULT = 101;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         setUpBottomNavigationView();
 
-        getLocation = (Button) findViewById(R.id.get_location);
+        permissions.add(ACCESS_FINE_LOCATION);
+        permissions.add(ACCESS_COARSE_LOCATION);
+
         finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
         locationLongitude = (TextView) findViewById(R.id.location_longitude);
         locationLatitude = (TextView) findViewById(R.id.location_latitude);
@@ -117,15 +130,33 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        getLocation = (Button) findViewById(R.id.get_location);
         getLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLocationEnabled() == true) {
-                    toggleGPSUpdates(getLocation);
 
+                locationTracker = new LocationTracker(CreateActivity.this);
+
+                if(locationTracker.canGetLocation()){
+
+                    longitude = locationTracker.getLongitude();
+                    latitude = locationTracker.getLatitude();
+
+                    locationLongitude.setText(Double.toString(longitude));
+                    locationLatitude.setText(Double.toString(latitude));
+
+
+                    Toast.makeText(getApplicationContext(), "Longitude: " + Double.toString(longitude) + "\nLatitude: " + Double.toString(latitude), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    locationTracker.showSettingsAlert();
                 }
+
             }
         });
+
+
+
 
 
         // Date implementation
@@ -183,6 +214,22 @@ public class CreateActivity extends AppCompatActivity {
         });
 
 
+    }
+
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(CreateActivity.this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationTracker.stopListener();
     }
 
     private void galleryAddPic() {
@@ -253,87 +300,6 @@ public class CreateActivity extends AppCompatActivity {
         menuItem.setChecked(true);
     }
 
-    private boolean checkLocation(){
-        if(!isLocationEnabled())
-            showAlert();
-        return isLocationEnabled();
-    }
 
-    private boolean isLocationEnabled(){
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
 
-    private void showAlert(){
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Enable Location").setMessage("Your Locations setting is set to 'Off'. \nPlease Enable Location to use this app")
-                .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(myIntent);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        dialog.show();
-    }
-
-    public void toggleGPSUpdates(View view){
-        if(!checkLocation())
-            return;
-
-        getLocation = (Button) view;
-        if(getLocation.getText().equals(getResources().getString(R.string.pause_location_tracking))){
-            locationManager.removeUpdates(locationListenerGPS);
-            getLocation.setText(R.string.resume_location_tracking);
-        } else{
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            criteria.setAltitudeRequired(false);
-            criteria.setBearingRequired(false);
-            criteria.setCostAllowed(true);
-            criteria.setPowerRequirement(Criteria.POWER_LOW);
-            String provider = locationManager.getBestProvider(criteria, true);
-            if (provider != null){
-                locationManager.requestLocationUpdates(provider, 2 * 60 * 1000, 10, locationListenerGPS);
-                getLocation.setText(R.string.pause_location_tracking);
-                Toast.makeText(this, "GPS location acquired", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private final LocationListener locationListenerGPS = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            longitudeGPS = location.getLongitude();
-            latitudeGPS = location.getLatitude();
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    locationLongitude.setText(longitudeGPS + "");
-                    locationLatitude.setText(latitudeGPS + "");
-                    Toast.makeText(CreateActivity.this, "GPS location update", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
 }
