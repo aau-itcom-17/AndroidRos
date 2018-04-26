@@ -132,6 +132,8 @@ public class LocationTrack extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
+
+    //Method to bring up settings menu if the location isn't enabled by the user
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
