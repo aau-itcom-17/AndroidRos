@@ -13,6 +13,9 @@ import android.widget.Toast;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 

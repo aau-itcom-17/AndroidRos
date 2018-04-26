@@ -48,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -160,6 +161,22 @@ public class CreateAccountActivity extends AppCompatActivity {
             userIdString = Integer.toString(userID);
             myDatabaseRef.child("users").child(userIdString).setValue(firebaseUser);
             createUserFirebase(email, password);
+            myDatabaseRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.i(TAG, "User " + dataSnapshot.getValue());
+
+                    Map<String, String> map = dataSnapshot.getValue(Map.class);
+                    String user = map.get("1");
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Log.w(TAG, "Failed to read value.", error.toException());
+
+                }
+            });
 
             startActivity(intent);
         }
