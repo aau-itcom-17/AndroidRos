@@ -1,4 +1,4 @@
-package com.example.marcu.androidros.List;
+package com.example.marcu.androidros.Utils;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

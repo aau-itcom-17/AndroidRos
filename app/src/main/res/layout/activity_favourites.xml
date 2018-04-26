@@ -9,6 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <!--Top ToolBar-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rellayout1">
+
+            <include layout="@layout/layout_top_tabs"/>
+
+        </RelativeLayout>
+
         <!--Body-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -17,10 +28,10 @@
 
             <include layout="@layout/layout_center_viewpager"/>
 
-            <TextView
+           <!-- <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/title_favourites"/>
+                android:text="@string/title_favourites"/>-->
 
 
         </RelativeLayout>
