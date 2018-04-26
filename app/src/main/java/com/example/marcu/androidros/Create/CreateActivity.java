@@ -79,7 +79,7 @@ public class CreateActivity extends AppCompatActivity {
     private ArrayList permissionsRejected = new ArrayList();
     private ArrayList permissions = new ArrayList();
 
-    private LocationTracker locationTracker;
+    private LocationTrack locationTracker;
 
     double longitude, latitude;
 
@@ -135,7 +135,7 @@ public class CreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                locationTracker = new LocationTracker(CreateActivity.this);
+                locationTracker = new LocationTrack(CreateActivity.this);
 
                 if(locationTracker.canGetLocation()){
 
