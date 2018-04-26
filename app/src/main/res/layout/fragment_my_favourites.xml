@@ -14,7 +14,7 @@
         android:textSize="20sp"/>
 
     <ListView
-        android:id="@+id/sampleListView"
+        android:id="@+id/favouritesList"
         android:layout_width="fill_parent"
         android:layout_height="412dp"
         android:layout_alignParentStart="true"

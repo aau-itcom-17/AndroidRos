@@ -48,6 +48,8 @@ public class User {
     // using ignore to not get error.
     @Ignore
     List<Event> events;
+    List<Event> favourites;
+    List<Event> invites;
 
     @ColumnInfo (name = "logged_in")
     private boolean isLoggedIn;
@@ -64,8 +66,24 @@ public class User {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(List<Event> favourites) {
         this.events = events;
+    }
+
+    public List<Event> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<Event> favourites) {
+        this.favourites = favourites;
+    }
+
+    public List<Event> getInvites() {
+        return invites;
+    }
+
+    public void setInvites(List<Event> invites) {
+        this.invites = invites;
     }
 
     public int getUserID() {
