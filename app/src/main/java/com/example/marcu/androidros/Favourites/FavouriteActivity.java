@@ -27,7 +27,6 @@ public class FavouriteActivity extends AppCompatActivity {
     //This is setting up the 3 tabs at the top
     private void setUpViewPager (){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MyEventFragment());
         adapter.addFragment(new MyFavouritesFragment());
         adapter.addFragment(new MyInvitesFragment());
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
@@ -36,9 +35,8 @@ public class FavouriteActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText(R.string.title_my_events);
-        tabLayout.getTabAt(1).setText(R.string.title_favourites);
-        tabLayout.getTabAt(2).setText(R.string.title_my_invites);
+        tabLayout.getTabAt(0).setText(R.string.title_favourites);
+        tabLayout.getTabAt(1).setText(R.string.title_my_invites);
 
 
     }

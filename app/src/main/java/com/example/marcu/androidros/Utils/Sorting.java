@@ -11,16 +11,16 @@ public class Sorting {
 
 
 
-    public static void sortByMyEvents(List<Event> events, List<Event> myEvents, List<Event> newestEvents, String selection) throws ParserConfigurationException, SAXException, IOException {
+    /*public static void sortByMyEvents(List<Event> events, List<Event> myEvents, List<Event> newestEvents, String selection) throws ParserConfigurationException, SAXException, IOException {
         myEvents.clear();
 
         for (int i = 0; i < events.size(); i++) {
 
-                if (events.get(i).getNAME().equals("THE USER") {
+                if (events.get(i).getNAME().equals("THE USER")) {
                     myEvents.add(events.get(i));
                 }
             }
-    }
+    }*/
 
 
 

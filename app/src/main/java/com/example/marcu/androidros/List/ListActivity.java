@@ -36,9 +36,9 @@ public class ListActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText(R.string.title_top);
-        tabLayout.getTabAt(1).setText(R.string.title_nearby);
-        tabLayout.getTabAt(2).setText(R.string.title_new);
+        tabLayout.getTabAt(0).setText(R.string.title_fragment_top);
+        tabLayout.getTabAt(1).setText(R.string.title_fragment_nearby);
+        tabLayout.getTabAt(2).setText(R.string.title_fragment_new);
 
 
     }
