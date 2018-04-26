@@ -79,7 +79,7 @@ public class CreateActivity extends AppCompatActivity {
     private ArrayList permissionsRejected = new ArrayList();
     private ArrayList permissions = new ArrayList();
 
-    private LocationTracker locationTracker;
+    private LocationTrack locationTracker;
 
     double longitude, latitude;
 
@@ -135,7 +135,7 @@ public class CreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                locationTracker = new LocationTracker(CreateActivity.this);
+                locationTracker = new LocationTrack(CreateActivity.this);
 
                 if(locationTracker.canGetLocation()){
 
@@ -260,6 +260,11 @@ public class CreateActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
         }
+    }
+
+    public void getPic(String photopath){
+        this.currentPhotoPath = photopath;
+
     }
 
     // Method handling image scaling
