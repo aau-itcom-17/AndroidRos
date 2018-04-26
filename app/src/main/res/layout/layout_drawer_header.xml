@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="176dp"
     android:background="@color/colorPrimaryDark"
-    android:padding="20dp">
+    android:gravity="bottom"
+    android:padding="16dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:background="@color/colorAccent"/>
-
-    <TextView
-        android:id="@+id/drawer_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="name lName"
-        android:textColor="@color/white" />
+        android:src="@mipmap/ic_launcher_round"/>
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="Name LName"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="yourmail@mail.com"/>
+
+
+
+</LinearLayout>
