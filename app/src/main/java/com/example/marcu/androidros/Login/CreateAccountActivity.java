@@ -41,6 +41,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -51,11 +52,14 @@ public class CreateAccountActivity extends AppCompatActivity {
     CharSequence passwordNotMatching = "Passwords are not matching...";
     CharSequence emailNotValid = "Please provide a valid email...";
     CharSequence emailAlreadyExist = "The email provided already exists...";
+    CharSequence nothing = "";
+    CharSequence permission = "Please allow the app to use your gallery if you wish to select a profile picture for your profile";
     int toastDuration = Toast.LENGTH_LONG;
     Toast missingInfoToast;
     Toast wrongPasswordToast;
     Toast emailNotValidToast;
     Toast emailAlreadyExistToast;
+    Toast permissionToast;
     EditText editFirstName;
     EditText editLastName;
     EditText editEmail;
@@ -67,6 +71,8 @@ public class CreateAccountActivity extends AppCompatActivity {
     String password;
     String confirmPassword;
     String picturePath;
+    TextView uploadPhotoView;
+
 
     private static int RESULT_LOAD_IMAGE = 1;
     ImageView imageView;
@@ -85,6 +91,8 @@ public class CreateAccountActivity extends AppCompatActivity {
         editEmail = (EditText)findViewById(R.id.emailEdit);
         editPassword = (EditText)findViewById(R.id.passEdit);
         editConfirmPassword = (EditText)findViewById(R.id.confirmPassEdit);
+        uploadPhotoView = (TextView)findViewById(R.id.uploadPhotoView);
+        context = getApplicationContext();
     }
 
 
@@ -95,7 +103,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         email = editEmail.getText().toString();
         password =editPassword.getText().toString();
         confirmPassword = editConfirmPassword.getText().toString();
-        context = getApplicationContext();
         missingInfoToast = Toast.makeText(context, missingInfoError, toastDuration);
         wrongPasswordToast = Toast.makeText(context, passwordNotMatching, toastDuration);
         emailAlreadyExistToast = Toast.makeText(context, emailAlreadyExist, toastDuration);
@@ -127,16 +134,18 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
     }
     public void addProfilePictureButtonClicked(View view){
-        checkGalleryPermissions();
         Intent i = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
+
+        permissionToast = Toast.makeText(context,permission,toastDuration);
+        permissionToast.show();
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -150,12 +159,11 @@ public class CreateAccountActivity extends AppCompatActivity {
             cursor.close();
 
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
+            uploadPhotoView.setText(nothing);
         }
     }
-
-    private void checkGalleryPermissions(){
-        // Here, thisActivity is the current activity
+    public void checkGalleryPermissions(){
+        // Here, this is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
