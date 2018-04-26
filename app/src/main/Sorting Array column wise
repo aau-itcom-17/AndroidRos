@@ -1,0 +1,59 @@
+package com.example.marcu.androidros.List;
+
+import java.util.Arrays;
+
+public class EventArrayTest {
+    public static void main(String[] args) {
+
+        double temp;
+
+        double[][] event = {{5.0, 4.0, 3.5}, {1.0, 1.0, 1.7}, {4.0, 6.0, 2.8}, {2.0, 3.0, 1.8}, {4.0, 3.0, 9.8},{0.0, 2.0, 4.5}};
+        System.out.println(Arrays.deepToString(event));
+
+        // Writes the descending order of first column
+        for (int i=0; i<event.length; i++) {
+            for (int j=i+1; j<event.length; j++) {
+                if (event[i][0] < event[j][0]) { //The three lines inside the if-statement changes the order of the array
+                    temp = event[i][0];
+                    event[i][0] = event[j][0];
+                    event[j][0] = temp;
+                }
+            }
+        }
+        for (int i=0; i<event.length; i++) {
+            System.out.println(event[i][0]);
+        }
+
+        System.out.println();
+
+        //This writes the descending order of second column
+        for (int i=0; i<event.length; i++) {
+            for (int j=i+1; j<event.length; j++) {
+                if (event[i][1] < event[j][1]) {
+                    temp = event[i][1];
+                    event[i][1] = event[j][1];
+                    event[j][1] = temp;
+                }
+            }
+        }
+        for (int i=0; i<event.length; i++) {
+            System.out.println(event[i][1]);
+        }
+
+        System.out.println();
+
+        //This writes the descending order of third column
+        for (int i=0; i<event.length; i++) {
+            for (int j=i+1; j<event.length; j++) {
+                if (event[i][2] < event[j][2]) {
+                    temp = event[i][2];
+                    event[i][2] = event[j][2]; //Change the '2' to 1 or 0 if second or first column is needed to be sorted
+                    event[j][2] = temp; // Same here
+                }
+            }
+        }
+        for (int i=0; i<event.length; i++) {
+            System.out.println(event[i][2]);
+        }
+    }
+}
