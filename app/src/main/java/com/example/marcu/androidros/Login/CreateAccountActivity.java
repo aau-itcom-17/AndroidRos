@@ -138,8 +138,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
 
-        permissionToast = Toast.makeText(context,permission,toastDuration);
-        permissionToast.show();
+        //permissionToast = Toast.makeText(context,permission,toastDuration);
+       // permissionToast.show();
 
     }
 
