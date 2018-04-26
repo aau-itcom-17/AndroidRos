@@ -35,7 +35,7 @@ public class LocationTrack extends Service implements LocationListener {
     // Sets the LocationManager to update every time the user moves 10 meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
-    // Sets the LoationManager to update every minute
+    // Sets the LocationManager to update every minute
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     protected LocationManager locationManager;
 
@@ -47,12 +47,10 @@ public class LocationTrack extends Service implements LocationListener {
     protected LatLng getLocation() {
 
         try {
-            locationManager = (LocationManager) mContext
-                    .getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // get GPS status
-            checkGPS = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            checkGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             // Method should be implemented if we use the network provider to find the location
             /*

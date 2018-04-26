@@ -3,6 +3,7 @@ package com.example.marcu.androidros.Database;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.location.Location;
 
@@ -16,15 +17,17 @@ import com.google.android.gms.maps.model.LatLng;
 )
 public class Event {
 
-    public Event(String name, String description, String photoPath, String time, String date, LatLng location) {
+    public Event(String name, String description, String photoPath, String time, String date, Double latitude, Double longitude) {
         this.name = name;
         this.description = description;
         this.photoPath = photoPath;
         this.time = time;
         this.date = date;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
+    @Ignore
     public Event(){
         super();
     }
@@ -48,8 +51,11 @@ public class Event {
     @ColumnInfo (name = "date")
     private String date;
 
-    @ColumnInfo (name = "location")
-    private LatLng location;
+    @ColumnInfo (name = "latitude")
+    private Double latitude;
+
+    @ColumnInfo (name = "longitude")
+    private Double longitude;
 
     @ColumnInfo (name = "likes")
     private int likes;
@@ -105,12 +111,20 @@ public class Event {
         this.date = date;
     }
 
-    public LatLng getLocation() {
-        return location;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(LatLng location) {
-        this.location = location;
+    public void setLatitude(Double latitude){
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public int getLikes() {

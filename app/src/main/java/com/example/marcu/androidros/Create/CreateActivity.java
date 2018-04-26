@@ -35,7 +35,9 @@ import android.widget.Toast;
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
@@ -217,7 +219,7 @@ public class CreateActivity extends AppCompatActivity{
         finishEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), loc);
+                Event event = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude);
 
             }
         });
