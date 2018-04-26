@@ -262,6 +262,11 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
+    public void getPic(String photopath){
+        this.currentPhotoPath = photopath;
+
+    }
+
     // Method handling image scaling
     private void setPic() {
         // Get the dimensions of the View
