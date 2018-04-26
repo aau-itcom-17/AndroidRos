@@ -75,15 +75,11 @@ public class CreateActivity extends AppCompatActivity {
     private TextView tTv;
     private Button tBtn;
 
-    private ArrayList permissionsToRequest;
-    private ArrayList permissionsRejected = new ArrayList();
     private ArrayList permissions = new ArrayList();
 
     private LocationTrack locationTracker;
 
     double longitude, latitude;
-
-    private final static int ALL_PERMISSIONS_RESULT = 101;
 
 
 
@@ -105,6 +101,7 @@ public class CreateActivity extends AppCompatActivity {
 
         this.imageView = (ImageView) this.findViewById(R.id.image_view);
 
+        // Makes the button open the camera
         takePhoto = findViewById(R.id.take_photo);
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +127,7 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        //Gets the location of the user
         getLocation = (Button) findViewById(R.id.get_location);
         getLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,22 +210,14 @@ public class CreateActivity extends AppCompatActivity {
 
     }
 
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(CreateActivity.this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
+    // Stops the listener for location to save power
     @Override
     protected void onDestroy() {
         super.onDestroy();
         locationTracker.stopListener();
     }
 
+    // Adds the picture as a file
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);
@@ -236,6 +226,8 @@ public class CreateActivity extends AppCompatActivity {
         this.sendBroadcast(mediaScanIntent);
     }
 
+
+    // Creates the image file,get the photo from here
     private File createImageFile() throws IOException{
         // create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -252,6 +244,7 @@ public class CreateActivity extends AppCompatActivity {
         currentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -287,6 +280,8 @@ public class CreateActivity extends AppCompatActivity {
         imageView.setImageBitmap(bitmap);
     }
 
+
+    // Method handling the buttom navigation view
     private void setUpBottomNavigationView(){
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
