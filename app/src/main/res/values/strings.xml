@@ -4,20 +4,50 @@
     <string name="title_list">List</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_my_events">My Events</string>
-    <string name="title_my_invites">Invites</string>
     <string name="event_button">Event</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_fragment_top">Top</string>
-    <string name="title_fragment_nearby">Nearby</string>
-    <string name="title_fragment_new">New</string>
+    <string name="title_fragment_top">Top Fragment</string>
+    <string name="title_fragment_nearby">Nearby Fragment</string>
+    <string name="title_fragment_new">New Fragment</string>
     <string name="pop_up">Event</string>
-
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="login_page_text">Login</string>
+    <string name="create_event_button">+</string>
+    <string name="create_new_event_label">Create new event</string>
+    <string name="take_photo">Take new photo</string>
+    <string name="upload_photo">Upload photo from gallery</string>
+    <string name="create_event">Create Event</string>
+    <string name="enter_name_of_event">Enter the name of your event</string>
+    <string name="attach_a_photo">Take a photo or upload one</string>
+    <string name="description_text_view">Enter descritption of the event</string>
+    <string name="time_of_event">Enter time</string>
+    <string name="date_of_event">Select date</string>
+    <string name="location_of_user">Get Location</string>
+    <string name="location_text_view">Get Location</string>
+    <string name="location_longitude">Longitude</string>
+    <string name="location_latitude">Latitude</string>
+    <string name="pause_location_tracking">pause</string>
+    <string name="resume_location_tracking">Track location</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="create_account_name">Create Account</string>
+    <string name="facebook_app_id">1063654890449116</string>
+    <string name="fb_login_protocol_scheme">fb1063654890449116</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login">Login</string>
+    <string name="login_page_text">Login with existing Email and Password</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">Start Now</string>
 
+    <string name="slide_1_title">Find people</string>
+    <string name="slide_1_desc">The easiest way to find some party ppl</string>
 
+    <string name="slide_2_title">Find events</string>
+    <string name="slide_2_desc">Dont miss out the best events</string>
+
+    <string name="slide_3_title">Make action yourself</string>
+    <string name="slide_3_desc">Make some action yourself and meet new people</string>
+
+    <string name="home_title">Welcome to Application</string>
+    <string name="home_desc">make friends and have fun.</string>
 </resources>

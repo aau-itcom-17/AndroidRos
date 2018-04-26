@@ -7,5 +7,33 @@
     <color name="eggWhite">#F0F0F0</color>
     <color name="colorLogin">#00ff9d00</color>
     <color name="colorAccentLogin">#ed7303</color>
+
+
+    <!-- Screens background color-->
+    <color name="bg_screen1">#e55d34</color>
+    <color name="bg_screen2">#c64821</color>
+    <color name="bg_screen3">#d6532a</color>
+
+    <!-- dots inactive colors -->
+    <color name="pager_dark_screen1">#c64821</color>
+    <color name="pager_dark_screen2">#a03616</color>
+    <color name="pager_dark_screen3">#c64821</color>
+
+    <!-- dots active colors -->
+    <color name="pager_light_screen1">#FB8C00</color>
+    <color name="pager_light_screen2">#d17502</color>
+    <color name="pager_light_screen3">#FB8C00</color>
+
+    <array name="array_pager_active">
+        <item>@color/pager_light_screen1</item>
+        <item>@color/pager_light_screen2</item>
+        <item>@color/pager_light_screen3</item>
+    </array>
+
+    <array name="array_pager_inactive">
+        <item>@color/pager_dark_screen1</item>
+        <item>@color/pager_dark_screen2</item>
+        <item>@color/pager_dark_screen3</item>
+    </array>
 </resources>
 
