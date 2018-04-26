@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.EventPopUp;
@@ -21,7 +23,33 @@ public class TopFragment extends Fragment implements View.OnClickListener{
         Button eventButton = (Button) view.findViewById(R.id.event_button);
         eventButton.setOnClickListener(this);
 
+        CheckBox checkBox = (CheckBox) view.findViewById(R.id.likeIcon);
+        int count = 1;
+
+        if (checkBox.isSelected() == true) {
+            count++;
+            TextView textView= (TextView) view.findViewById(R.id.likesCount);
+            try {
+                textView.setText(""+count);
+
+            } catch (Exception e) {
+                System.out.println("Exception occurred");
+            }
+        } else {
+            count=0;
+            TextView textView= (TextView) view.findViewById(R.id.likesCount);
+            try {
+                textView.setText(""+count);
+
+            } catch (Exception e) {
+                System.out.println("Exception occurred");
+            }
+        }
+
+
+
         return view;
+
     }
 
     @Override
@@ -31,6 +59,12 @@ public class TopFragment extends Fragment implements View.OnClickListener{
                 startActivity(new Intent(getActivity(), EventPopUp.class));
                 break;
         }
+
+
     }
+
+
+
+
 
 }

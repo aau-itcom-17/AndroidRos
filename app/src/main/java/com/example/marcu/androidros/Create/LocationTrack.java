@@ -27,7 +27,6 @@ public class LocationTrack extends Service implements LocationListener {
     double latitude;
     double longitude;
 
-
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="event">
+        <item>Cat</item>
+        <item>Dog</item>
+        <item>Fish</item>
+        <item>Horse</item>
+        <item>Rabbit</item>
+        <item>Parrot</item>
+        <item>Pigeon</item>
+        <item>Duck</item>
+
+    </string-array>
+
+
+</resources>

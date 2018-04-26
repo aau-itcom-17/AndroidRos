@@ -1,25 +1,17 @@
 package com.example.marcu.androidros.Create;
 
-import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,7 +100,7 @@ public class CreateActivity extends AppCompatActivity {
         takePhoto = findViewById(R.id.take_photo);
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //When take photo button is clicked
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // ensure there is a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -133,7 +125,7 @@ public class CreateActivity extends AppCompatActivity {
         getLocation = (Button) findViewById(R.id.get_location);
         getLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //When get Location button is clicked
 
                 locationTracker = new LocationTrack(CreateActivity.this);
 
@@ -161,7 +153,7 @@ public class CreateActivity extends AppCompatActivity {
 
         dBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) { // When date button is clicked
                 calendar = Calendar.getInstance();
 
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -192,7 +184,7 @@ public class CreateActivity extends AppCompatActivity {
 
         tBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) { // When time button is clicked
                 Calendar calendar = Calendar.getInstance();
                 int tMinute = calendar.get(Calendar.MINUTE);
                 int tHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -208,6 +200,18 @@ public class CreateActivity extends AppCompatActivity {
 
             }
         });
+
+        //implementing create button array
+
+        //String[][] eventArray = new String[][];
+        String[] labels;
+        Resources res = getResources();
+        labels = res.getStringArray(R.array.event);
+
+
+
+
+
 
 
     }
