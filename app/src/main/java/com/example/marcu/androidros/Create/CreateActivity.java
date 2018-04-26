@@ -212,16 +212,6 @@ public class CreateActivity extends AppCompatActivity {
 
     }
 
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(CreateActivity.this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
