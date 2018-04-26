@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.example.marcu.androidros.Utils.EventPopUp;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -32,7 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-public class MapActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -45,6 +46,7 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
     private static final LatLng AAU = new LatLng(55.649114, 12.542689);
     private static final LatLng ROSKILDE = new LatLng(55.616885, 12.077064);
     private static final LatLng HOME = new LatLng(55.650661, 12.525810);
+    private static final LatLng DK = new LatLng(55.641010, 12.081299);
 
     private Marker mAAU;
     private Marker mRoskilde;
@@ -95,12 +97,13 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(
-                this, R.raw.style);
+                this, R.raw.roskilde);
         map.setMapStyle(style);
 
         mMap = map;
@@ -110,6 +113,10 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
         //mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         enableMyLocation();
+
+
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DK, 8));
 
         // Add some markers to the map, and add a data object to each marker.
 

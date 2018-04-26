@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.marcu.androidros.Intro.Application;
 import com.example.marcu.androidros.Login.MainActivity;
+import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.Prefs;
 
 public class IntroActivity extends AppCompatActivity {
