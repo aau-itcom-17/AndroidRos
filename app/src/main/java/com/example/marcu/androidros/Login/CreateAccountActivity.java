@@ -38,12 +38,21 @@ import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 public class CreateAccountActivity extends AppCompatActivity {
+
 
 
     Intent intent = new Intent();
@@ -70,8 +79,16 @@ public class CreateAccountActivity extends AppCompatActivity {
     String email;
     String password;
     String confirmPassword;
-    String picturePath;
+    String picturePath = "null";
     TextView uploadPhotoView;
+
+    private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
+    private String TAG = "Firebase";
+    private FirebaseDatabase database;
+    private DatabaseReference myDatabaseRef;
+    String userIdString;
+    int userID = 0;
 
 
     private static int RESULT_LOAD_IMAGE = 1;
@@ -93,6 +110,13 @@ public class CreateAccountActivity extends AppCompatActivity {
         editConfirmPassword = (EditText)findViewById(R.id.confirmPassEdit);
         uploadPhotoView = (TextView)findViewById(R.id.uploadPhotoView);
         context = getApplicationContext();
+
+        //Firebase
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        myDatabaseRef = database.getReference();
+
+        // make app update data in real time.
     }
 
 
@@ -123,12 +147,19 @@ public class CreateAccountActivity extends AppCompatActivity {
             editEmail.setError("This email is already registered.");
             emailAlreadyExistToast.show();
         }else {
-            User user = new User(firstName, lastName, email, password, false, picturePath);
+            User user = new User(firstName, lastName, email, password,false, picturePath);
             SplashActivity.appDatabase.userDao().insert(user);
             List<User> users = SplashActivity.appDatabase.userDao().getAllUsers();
             for (int i = 0; i < users.size(); i++) {
                 Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
+                userID = i;
             }
+
+            userID++;
+            User firebaseUser = new User(firstName, lastName, email, password, userID, false, picturePath);
+            userIdString = Integer.toString(userID);
+            myDatabaseRef.child("users").child(userIdString).setValue(firebaseUser);
+            createUserFirebase(email, password);
 
             startActivity(intent);
         }
@@ -162,7 +193,8 @@ public class CreateAccountActivity extends AppCompatActivity {
             uploadPhotoView.setText(nothing);
         }
     }
-    public void checkGalleryPermissions(){
+
+    private void checkGalleryPermissions(){
         // Here, this is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -223,6 +255,25 @@ public class CreateAccountActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void createUserFirebase(String email, String password){
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            firebaseUser = auth.getCurrentUser();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(context, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
 }
