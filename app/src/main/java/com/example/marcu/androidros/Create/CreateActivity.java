@@ -155,10 +155,6 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
         // Date implementation
         dTv = (TextView) findViewById(R.id.date);
         dBtn = (Button) findViewById(R.id.choose_date);
