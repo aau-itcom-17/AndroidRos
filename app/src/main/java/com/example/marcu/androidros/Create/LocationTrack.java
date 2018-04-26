@@ -16,6 +16,8 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class LocationTrack extends Service implements LocationListener {
     private final Context mContext;
@@ -28,6 +30,8 @@ public class LocationTrack extends Service implements LocationListener {
     double latitude;
     double longitude;
 
+    LatLng location;
+
     // Sets the LocationManager to update every time the user moves 10 meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
@@ -35,17 +39,12 @@ public class LocationTrack extends Service implements LocationListener {
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     protected LocationManager locationManager;
 
-    /**
-     * Tracks the Location of the user
-     * @param mContext implements the interface "Context" to check if permissions are enabled and to create an alert dialog
-     */
-
     public LocationTrack(Context mContext) {
         this.mContext = mContext;
         getLocation();
     }
 
-    private Location getLocation() {
+    protected LatLng getLocation() {
 
         try {
             locationManager = (LocationManager) mContext
@@ -82,6 +81,8 @@ public class LocationTrack extends Service implements LocationListener {
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
+
+                            location = new LatLng(latitude, longitude);
                         }
                     }
 
@@ -121,7 +122,7 @@ public class LocationTrack extends Service implements LocationListener {
             e.printStackTrace();
         }
 
-        return loc;
+        return location;
     }
 
     public double getLongitude() {

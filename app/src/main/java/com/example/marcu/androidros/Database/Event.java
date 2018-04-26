@@ -4,6 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
 
 @Entity (tableName = "event", foreignKeys = @ForeignKey(
         entity = User.class,
@@ -13,13 +16,17 @@ import android.arch.persistence.room.PrimaryKey;
 )
 public class Event {
 
-    public Event(String name, String description, String photoPath, String time, String date, String location) {
+    public Event(String name, String description, String photoPath, String time, String date, LatLng location) {
         this.name = name;
         this.description = description;
         this.photoPath = photoPath;
         this.time = time;
         this.date = date;
         this.location = location;
+    }
+
+    public Event(){
+        super();
     }
 
     @PrimaryKey (autoGenerate = true)
@@ -42,7 +49,7 @@ public class Event {
     private String date;
 
     @ColumnInfo (name = "location")
-    private String location;
+    private LatLng location;
 
     @ColumnInfo (name = "likes")
     private int likes;
@@ -98,11 +105,11 @@ public class Event {
         this.date = date;
     }
 
-    public String getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 

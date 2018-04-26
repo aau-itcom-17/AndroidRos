@@ -32,8 +32,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
+import com.google.android.gms.maps.model.LatLng;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
@@ -46,7 +48,7 @@ import java.util.Date;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class CreateActivity extends AppCompatActivity {
+public class CreateActivity extends AppCompatActivity{
 
     private static final String TAG = "CreateEventActivity";
 
@@ -78,6 +80,7 @@ public class CreateActivity extends AppCompatActivity {
     private ArrayList permissions = new ArrayList();
 
     private LocationTrack locationTracker;
+    private LatLng loc;
 
     double longitude, latitude;
 
@@ -140,13 +143,17 @@ public class CreateActivity extends AppCompatActivity {
                     longitude = locationTracker.getLongitude();
                     latitude = locationTracker.getLatitude();
 
+                    loc = new LatLng(latitude, longitude);
+
                     locationLongitude.setText(Double.toString(longitude));
                     locationLatitude.setText(Double.toString(latitude));
 
 
+
+
+
                     Toast.makeText(getApplicationContext(), "Longitude: " + Double.toString(longitude) + "\nLatitude: " + Double.toString(latitude), Toast.LENGTH_SHORT).show();
                 } else {
-
                     locationTracker.showSettingsAlert();
                 }
 
@@ -203,6 +210,14 @@ public class CreateActivity extends AppCompatActivity {
                 }, tHour, tMinute, true);
                 timePickerDialog.show();
 
+
+            }
+        });
+
+        finishEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Event event = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), loc);
 
             }
         });
