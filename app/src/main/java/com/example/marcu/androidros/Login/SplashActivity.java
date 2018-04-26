@@ -11,6 +11,8 @@ import com.example.marcu.androidros.Database.AppDatabase;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class SplashActivity extends AppCompatActivity {
     Context context;
     public static User user;
     List<User> users;
+    FirebaseUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +34,18 @@ public class SplashActivity extends AppCompatActivity {
         context = getApplicationContext();
         appDatabase = AppDatabase.getDatabase(context);
         SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null){
+            Intent intent = new Intent(this, MapActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
-
+/* ROOM IMPLEMENTATION
         if (pref.getBoolean("activity_executed", false)) {
             users = appDatabase.userDao().getAllUsers();
             for (int i = 0; i < users.size(); i++){
@@ -49,6 +63,7 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+        */
     }
 }
 

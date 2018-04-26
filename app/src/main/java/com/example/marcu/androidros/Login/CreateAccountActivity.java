@@ -141,7 +141,10 @@ public class CreateAccountActivity extends AppCompatActivity {
             editConfirmPassword.setText("");
             editPassword.setError("Password doesn't match."); //(text, Drawable icon)
             wrongPasswordToast.show();
-        }else if (!isValidEmail(email)) {
+        }else if (password.length() < 6 ){
+            editPassword.setError("Password must contain at least 6 characters.");
+        }
+        else if (!isValidEmail(email)) {
             editEmail.setError("This is not a valid email."); // Does not check if the email exist. Only the format example@123.aaa
             emailNotValidToast.show();
         }else if(SplashActivity.appDatabase.userDao().getFromEmail(email) != null){
@@ -165,12 +168,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.i(TAG, "User " + dataSnapshot.getValue());
-
-                    Map<String, String> map = dataSnapshot.getValue(Map.class);
-                    String user = map.get("1");
-
                 }
-
                 @Override
                 public void onCancelled(DatabaseError error) {
                     Log.w(TAG, "Failed to read value.", error.toException());
