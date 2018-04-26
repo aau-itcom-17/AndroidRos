@@ -83,9 +83,6 @@ public class CreateActivity extends AppCompatActivity {
 
     double longitude, latitude;
 
-    private final static int ALL_PERMISSIONS_RESULT = 101;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
