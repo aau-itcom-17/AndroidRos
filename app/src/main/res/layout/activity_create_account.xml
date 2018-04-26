@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="First Name"
         android:inputType="textPersonName"
@@ -94,10 +94,64 @@
         android:id="@+id/createAccountButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="50dp"
         android:onClick="createAccountButtonClicked"
         android:text="Create New Account"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/profilePictureView"
+        android:layout_width="62dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        android:src="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/createAccountButton"
+        app:layout_constraintEnd_toStartOf="@+id/addProfilePictureButton"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmPassEdit" />
+
+    <ImageButton
+        android:id="@+id/addProfilePictureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginLeft="66dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="8dp"
+        android:onClick="addProfilePictureButtonClicked"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toTopOf="@+id/createAccountButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profilePictureView"
+        app:layout_constraintTop_toBottomOf="@+id/confirmPassEdit" />
+
+    <TextView
+        android:id="@+id/uploadPhotoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="8dp"
+        android:text="Upload Profile Picture"
+        app:layout_constraintBottom_toTopOf="@+id/createAccountButton"
+        app:layout_constraintEnd_toStartOf="@+id/addProfilePictureButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirmPassEdit" />
+
+
 </android.support.constraint.ConstraintLayout>
