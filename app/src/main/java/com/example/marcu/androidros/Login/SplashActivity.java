@@ -22,6 +22,7 @@ public class SplashActivity extends AppCompatActivity {
     Context context;
     public static User user;
     List<User> users;
+    FirebaseAuth auth;
     FirebaseUser currentUser;
 
     @Override
@@ -34,7 +35,10 @@ public class SplashActivity extends AppCompatActivity {
         context = getApplicationContext();
         appDatabase = AppDatabase.getDatabase(context);
         SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
+
         if (currentUser != null){
             Intent intent = new Intent(this, MapActivity.class);
             startActivity(intent);

@@ -38,6 +38,7 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
 
     String TAG = "Firebase";
     FirebaseAuth auth;
+    public static FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,9 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
         emailEdit = findViewById(R.id.emailEdit1);
         passEdit = findViewById(R.id.passEdit1);
         context = getApplicationContext();
+
+        auth = FirebaseAuth.getInstance();
+
         //appDatabase = AppDatabase.getDatabase(context);
 
 
@@ -73,7 +77,8 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = auth.getCurrentUser();
+                            firebaseUser = auth.getCurrentUser();
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -87,5 +92,16 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                     }
                 });
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        //FirebaseUser currentUser = auth.getCurrentUser();
+        //updateUI(currentUser);
+    }
+    private void updateUI(FirebaseUser user) {
+
+    }
+
 }
 
