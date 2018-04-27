@@ -22,50 +22,48 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginWithFirebaseActivity extends AppCompatActivity {
 
     Intent intent = new Intent();
-    public static SharedPreferences sp;
     EditText emailEdit;
     EditText passEdit;
     String email;
     String password;
     Context context;
-    //AppDatabase appDatabase;
-    User user1;
-    Toast wrongEmailToast;
-    Toast wrongPassToast;
     int toastDuration = Toast.LENGTH_LONG;
     CharSequence wrongEmailAndPass = "The Email and/or Password does not exist.";
 
 
     String TAG = "Firebase";
     FirebaseAuth auth;
-    public static FirebaseUser firebaseUser;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_with_firebase);
-        CreateAccountActivity.setHideKeyboardOnTouch(this, findViewById(R.id.activity_login));
 
+        CreateAccountActivity.setHideKeyboardOnTouch(this, findViewById(R.id.activity_login));
         emailEdit = findViewById(R.id.emailEdit1);
         passEdit = findViewById(R.id.passEdit1);
         context = getApplicationContext();
 
         auth = FirebaseAuth.getInstance();
 
-        //appDatabase = AppDatabase.getDatabase(context);
-
-
 
     }
+
 
     public void loginButton (View view){
         intent.setClass(this, SplashActivity.class);
         email = emailEdit.getText().toString();
         password = passEdit.getText().toString();
 
-
         signInWithFirebase(email, password);
-        startActivity(intent);
+        
+        if (firebaseUser != null) {
+            startActivity(intent);
+        }else{
+            Toast.makeText(context, wrongEmailAndPass, toastDuration).show();
+            emailEdit.setError(wrongEmailAndPass);
+        }
 
     }
 
@@ -91,13 +89,6 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                         // ...
                     }
                 });
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        //FirebaseUser currentUser = auth.getCurrentUser();
-        //updateUI(currentUser);
     }
     private void updateUI(FirebaseUser user) {
 

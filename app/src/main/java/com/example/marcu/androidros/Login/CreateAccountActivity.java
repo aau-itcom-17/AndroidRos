@@ -47,6 +47,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -117,6 +118,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         myDatabaseRef = database.getReference();
 
+
         // make app update data in real time.
     }
 
@@ -133,6 +135,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         emailAlreadyExistToast = Toast.makeText(context, emailAlreadyExist, toastDuration);
         emailNotValidToast = Toast.makeText(context, emailNotValid, toastDuration);
 
+        firebaseUser = auth.getCurrentUser();
 
         if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")){
             missingInfoToast.show();
@@ -147,22 +150,26 @@ public class CreateAccountActivity extends AppCompatActivity {
         else if (!isValidEmail(email)) {
             editEmail.setError("This is not a valid email."); // Does not check if the email exist. Only the format example@123.aaa
             emailNotValidToast.show();
-        }else if(SplashActivity.appDatabase.userDao().getFromEmail(email) != null){
-            editEmail.setError("This email is already registered.");
-            emailAlreadyExistToast.show();
-        }else {
-            User user = new User(firstName, lastName, email, password,false, picturePath);
-            SplashActivity.appDatabase.userDao().insert(user);
-            List<User> users = SplashActivity.appDatabase.userDao().getAllUsers();
-            for (int i = 0; i < users.size(); i++) {
-                Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
-                userID = i;
-            }
+        }
+//        else if(fire != null){
+//            editEmail.setError("This email is already registered.");
+//            emailAlreadyExistToast.show();
+//        }
+        else {
+//            User user = new User(firstName, lastName, email, password,false, picturePath);
+//            SplashActivity.appDatabase.userDao().insert(user);
+//            List<User> users = SplashActivity.appDatabase.userDao().getAllUsers();
+//            for (int i = 0; i < users.size(); i++) {
+//                Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
+//                userID = i;
+//            }
+            // temporary
+            SecureRandom random = new SecureRandom();
+            userID = random.nextInt();
 
-            userID++;
-            User firebaseUser = new User(firstName, lastName, email, password, userID, false, picturePath);
+            User user = new User(firstName, lastName, email, password, userID, false, picturePath);
             userIdString = Integer.toString(userID);
-            myDatabaseRef.child("users").child(userIdString).setValue(firebaseUser);
+            myDatabaseRef.child("users").child(userIdString).setValue(user);
             createUserFirebase(email, password);
             myDatabaseRef.addValueEventListener(new ValueEventListener() {
                 @Override

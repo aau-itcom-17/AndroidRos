@@ -18,10 +18,10 @@ import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static AppDatabase appDatabase;
-    Context context;
-    public static User user;
-    List<User> users;
+//    public static AppDatabase appDatabase;
+//    Context context;
+//    public static User user;
+//    List<User> users;
     FirebaseAuth auth;
     FirebaseUser currentUser;
 
@@ -31,11 +31,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
 
-        // decide here whether to navigate to Login or Main Activity
-        context = getApplicationContext();
-        appDatabase = AppDatabase.getDatabase(context);
-        SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
-
+        // checking if logged in
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
 
@@ -48,6 +44,12 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+
+        // decide here whether to navigate to Login or Main Activity
+//        context = getApplicationContext();
+//        appDatabase = AppDatabase.getDatabase(context);
+//        SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
 
 /* ROOM IMPLEMENTATION
         if (pref.getBoolean("activity_executed", false)) {

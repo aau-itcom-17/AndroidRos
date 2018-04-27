@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         //appDatabase = AppDatabase.getDatabase(context);
 
     }
-
+/*
     public void loginButton (View view){
         intent.setClass(this, SplashActivity.class);
         wrongEmailToast = Toast.makeText(context, wrongEmail, toastDuration);
@@ -82,5 +82,5 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
+*/
 }
