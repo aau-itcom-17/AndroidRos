@@ -16,6 +16,9 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+
 public class LocationTrack extends Service implements LocationListener {
     private final Context mContext;
 
@@ -27,9 +30,11 @@ public class LocationTrack extends Service implements LocationListener {
     double latitude;
     double longitude;
 
+    LatLng location;
 
+    // Sets the LocationManager to update every time the user moves 10 meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-
+  
     // Sets the update time in the location listener to one minute (60000 miliseconds)
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     protected LocationManager locationManager;
@@ -39,22 +44,24 @@ public class LocationTrack extends Service implements LocationListener {
         getLocation();
     }
 
-    private Location getLocation() {
+    protected LatLng getLocation() {
 
         try {
-            locationManager = (LocationManager) mContext
-                    .getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // get GPS status
-            checkGPS = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            checkGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
+            // Method should be implemented if we use the network provider to find the location
+           
             // get network provider status
-            /*checkNetwork = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);*/
+            checkNetwork = locationManager
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            //Can add "&& !checkNetwork" in the if statement if we want to use the network provider
-            if (!checkGPS) {
+            checkNetwork = locationManager
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if (!checkGPS && !checkNetwork) {
                 Toast.makeText(mContext, "No Service Provider is available", Toast.LENGTH_SHORT).show();
             } else {
                 this.canGetLocation = true;
@@ -74,6 +81,8 @@ public class LocationTrack extends Service implements LocationListener {
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
+
+                            location = new LatLng(latitude, longitude);
                         }
                     }
 
@@ -81,8 +90,7 @@ public class LocationTrack extends Service implements LocationListener {
                 }
 
                 // Method should be implemented if we use the network provider to find the location
-                /*if (checkNetwork) {
-
+                if (checkNetwork) {
 
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -102,7 +110,7 @@ public class LocationTrack extends Service implements LocationListener {
                         latitude = loc.getLatitude();
                         longitude = loc.getLongitude();
                     }
-                }*/
+                }
 
             }
 
@@ -111,7 +119,7 @@ public class LocationTrack extends Service implements LocationListener {
             e.printStackTrace();
         }
 
-        return loc;
+        return location;
     }
 
     public double getLongitude() {
@@ -132,6 +140,8 @@ public class LocationTrack extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
+
+    // Shows an alert box if user doesn't have gps location permission enabled on the device
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
@@ -160,6 +170,7 @@ public class LocationTrack extends Service implements LocationListener {
     }
 
 
+    // Stops the LocationListener
     public void stopListener() {
         if (locationManager != null) {
 
@@ -169,6 +180,7 @@ public class LocationTrack extends Service implements LocationListener {
             locationManager.removeUpdates(LocationTrack.this);
         }
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {

@@ -4,17 +4,21 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class Event {
 
-    public Event(String eventID, String name, String description, String photoPath, String time, String date, String location, int likes, int comments) {
+    public Event(String eventID, String name, String description, String photoPath, String time, String date, Double latitude, Double longitude, int likes, int comments) {
         this.eventID = eventID;
         this.name = name;
         this.description = description;
         this.photoPath = photoPath;
         this.time = time;
         this.date = date;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.likes = likes;
         this.comments = comments;
     }
@@ -35,7 +39,9 @@ public class Event {
 
     private String date;
 
-    private String location;
+    private Double latitude;
+
+    private Double longitude;
 
     private int likes;
 
@@ -89,12 +95,20 @@ public class Event {
         this.date = date;
     }
 
-    public String getLocation() {
-        return location;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLatitude(Double latitude){
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public int getLikes() {
