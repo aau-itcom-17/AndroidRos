@@ -12,12 +12,13 @@ import java.util.UUID;
 @Entity (tableName = "user", indices = {@Index(value = "email", unique = true)})
 public class User {
 
-    public User(String firstName, String lastName, String email, String password, boolean isLoggedIn){
+    public User(String firstName, String lastName, String email, String password, boolean isLoggedIn, String profilePicture){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.isLoggedIn = isLoggedIn;
+        this.profilePicture = profilePicture;
     }
 
     @PrimaryKey (autoGenerate = true)

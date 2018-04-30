@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.Intro.Application;
+
 import com.example.marcu.androidros.IntroActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.Prefs;
@@ -60,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (prefs.getBoolean("firstrun", true)) {
-            intent.setClass(this, IntroActivity.class);
-            startActivity(intent);
-            prefs.edit().putBoolean("firstrun", false).commit();
+           intent.setClass(MainActivity.this, IntroActivity.class);
+           startActivity(intent);
+           prefs.edit().putBoolean("firstrun", false).apply();
         }
     }
 }

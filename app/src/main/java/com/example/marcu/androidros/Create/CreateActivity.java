@@ -32,8 +32,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
@@ -46,7 +50,7 @@ import java.util.Date;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class CreateActivity extends AppCompatActivity {
+public class CreateActivity extends AppCompatActivity{
 
     private static final String TAG = "CreateEventActivity";
 
@@ -75,14 +79,12 @@ public class CreateActivity extends AppCompatActivity {
     private TextView tTv;
     private Button tBtn;
 
-    private ArrayList permissionsToRequest;
-    private ArrayList permissionsRejected = new ArrayList();
     private ArrayList permissions = new ArrayList();
 
     private LocationTrack locationTracker;
+    private LatLng loc;
 
     double longitude, latitude;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class CreateActivity extends AppCompatActivity {
 
         this.imageView = (ImageView) this.findViewById(R.id.image_view);
 
+        // Makes the button open the camera
         takePhoto = findViewById(R.id.take_photo);
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +130,7 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        //Gets the location of the user
         getLocation = (Button) findViewById(R.id.get_location);
         getLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,13 +143,17 @@ public class CreateActivity extends AppCompatActivity {
                     longitude = locationTracker.getLongitude();
                     latitude = locationTracker.getLatitude();
 
+                    loc = new LatLng(latitude, longitude);
+
                     locationLongitude.setText(Double.toString(longitude));
                     locationLatitude.setText(Double.toString(latitude));
 
 
+
+
+
                     Toast.makeText(getApplicationContext(), "Longitude: " + Double.toString(longitude) + "\nLatitude: " + Double.toString(latitude), Toast.LENGTH_SHORT).show();
                 } else {
-
                     locationTracker.showSettingsAlert();
                 }
 
@@ -206,15 +214,22 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        finishEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Event userEvent = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude);
 
+            }
+        });
     }
-
+  
     @Override
     protected void onDestroy() {
         super.onDestroy();
         locationTracker.stopListener();
     }
 
+    // Adds the picture as a file
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);
@@ -223,6 +238,8 @@ public class CreateActivity extends AppCompatActivity {
         this.sendBroadcast(mediaScanIntent);
     }
 
+
+    // Creates the image file,get the photo from here
     private File createImageFile() throws IOException{
         // create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -231,7 +248,7 @@ public class CreateActivity extends AppCompatActivity {
                 Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName, /* prefix */
-                ".jpg", /*suffix */
+                ".jpeg", /*suffix */
                 storageDir /* directory */
         );
 
@@ -239,6 +256,7 @@ public class CreateActivity extends AppCompatActivity {
         currentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -279,6 +297,8 @@ public class CreateActivity extends AppCompatActivity {
         imageView.setImageBitmap(bitmap);
     }
 
+
+    // Method handling the buttom navigation view
     private void setUpBottomNavigationView(){
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);

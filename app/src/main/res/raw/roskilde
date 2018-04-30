@@ -1,4 +1,14 @@
 [
+
+
+
+
+
+
+
+
+
+
   {
     "elementType": "geometry",
     "stylers": [
@@ -34,14 +44,6 @@
   },
   {
     "featureType": "administrative.land_parcel",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
     "elementType": "geometry.stroke",
     "stylers": [
       {
@@ -55,14 +57,6 @@
     "stylers": [
       {
         "color": "#ae9e90"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.neighborhood",
-    "stylers": [
-      {
-        "visibility": "off"
       }
     ]
   },
@@ -86,27 +80,10 @@
   },
   {
     "featureType": "poi",
-    "elementType": "labels.text",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
     "elementType": "labels.text.fill",
     "stylers": [
       {
         "color": "#93817c"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.business",
-    "stylers": [
-      {
-        "visibility": "off"
       }
     ]
   },
@@ -138,32 +115,6 @@
     ]
   },
   {
-    "featureType": "road",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.arterial",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
     "featureType": "road.arterial",
     "elementType": "geometry",
     "stylers": [
@@ -191,15 +142,6 @@
     ]
   },
   {
-    "featureType": "road.highway",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
     "featureType": "road.highway.controlled_access",
     "elementType": "geometry",
     "stylers": [
@@ -219,26 +161,10 @@
   },
   {
     "featureType": "road.local",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
     "elementType": "labels.text.fill",
     "stylers": [
       {
         "color": "#806b63"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "stylers": [
-      {
-        "visibility": "off"
       }
     ]
   },
@@ -283,22 +209,10 @@
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#6e9ad7"
+        "color": "#b9d3c2"
       }
     ]
   },
-  {
-    "featureType": "water",
-    "elementType": "labels.text",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-
-
-
   {
     "featureType": "water",
     "elementType": "labels.text.fill",
@@ -308,14 +222,4 @@
       }
     ]
   }
-
-
-
-
 ]
-
-
-
-
-
-
