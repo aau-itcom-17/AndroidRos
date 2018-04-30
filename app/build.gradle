@@ -41,6 +41,10 @@ dependencies {
     //  testImplementation "android.arch.core:core-testing:1.1.1"
     //   testImplementation "android.arch.persistence.room:testing:1.0.0"
     //facebook
+    implementation 'com.google.firebase:firebase-database:12.0.1'
+    implementation 'com.google.firebase:firebase-auth:12.0.1'
 
 
 }
+
+apply plugin: 'com.google.gms.google-services'

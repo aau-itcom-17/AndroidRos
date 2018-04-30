@@ -3,21 +3,15 @@ package com.example.marcu.androidros.Database;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
-@Entity (tableName = "event", foreignKeys = @ForeignKey(
-        entity = User.class,
-        childColumns = "event_id",
-        parentColumns = "user_id",
-        onDelete = ForeignKey.CASCADE)
-)
 public class Event {
 
-    public Event(String name, String description, String photoPath, String time, String date, Double latitude, Double longitude) {
+    public Event(String eventID, String name, String description, String photoPath, String time, String date, Double latitude, Double longitude, int likes, int comments) {
+        this.eventID = eventID;
         this.name = name;
         this.description = description;
         this.photoPath = photoPath;
@@ -25,49 +19,39 @@ public class Event {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.likes = likes;
+        this.comments = comments;
     }
 
-    @Ignore
     public Event(){
-        super();
+
     }
 
-    @PrimaryKey (autoGenerate = true)
-    @ColumnInfo (name = "event_id")
-    private int eventID;
+    private String eventID;
 
-    @ColumnInfo (name = "name")
     private String name;
 
-    @ColumnInfo (name = "description")
     private String description;
 
-    @ColumnInfo (name = "photo_path")
     private String photoPath;
 
-    @ColumnInfo (name = "time")
     private String time;
 
-    @ColumnInfo (name = "date")
     private String date;
 
-    @ColumnInfo (name = "latitude")
     private Double latitude;
 
-    @ColumnInfo (name = "longitude")
     private Double longitude;
 
-    @ColumnInfo (name = "likes")
     private int likes;
 
-    @ColumnInfo (name = "comments")
     private int comments;
 
-    public int getEventID() {
+    public String getEventID() {
         return eventID;
     }
 
-    public void setEventID(int eventID) {
+    public void setEventID(String eventID) {
         this.eventID = eventID;
     }
 
