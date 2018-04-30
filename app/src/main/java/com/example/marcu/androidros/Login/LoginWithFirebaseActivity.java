@@ -48,7 +48,6 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-
     }
 
 
@@ -72,22 +71,14 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
 
-                            if (firebaseUser != null) {
-                                startActivity(intent);
-                            }else{
-                                Toast.makeText(context, wrongEmailAndPass, toastDuration).show();
-                                emailEdit.setError(wrongEmailAndPass);
-                            }
-                            //updateUI(user);
+                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginWithFirebaseActivity.this, wrongEmailAndPass ,
-                                    toastDuration).show();
-                            //updateUI(null);
+                            Toast.makeText(context, wrongEmailAndPass, toastDuration).show();
+                            emailEdit.setError(wrongEmailAndPass);
                         }
 
-                        // ...
                     }
                 });
     }

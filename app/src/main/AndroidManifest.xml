@@ -68,19 +68,17 @@
             android:theme="@style/LoginTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="Login.MainActivity"></meta-data>
+                android:value=".Login.MainActivity">
+            </meta-data>
         </activity>
-        <activity android:name=".Login.SplashActivity">
-        </activity>
-        <activity
-            android:name=".Login.LoginActivity"
+        <activity android:name=".Login.LoginWithFirebaseActivity"
             android:label="Login"
             android:theme="@style/LoginTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="Login.MainActivity" />
+                android:value=".Login.MainActivity">
+            </meta-data>
         </activity>
-        <activity android:name=".Login.LoginWithFirebaseActivity"></activity>
     </application>
 
 </manifest>
