@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginWithFirebaseActivity extends AppCompatActivity {
 
@@ -35,18 +37,22 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
     String TAG = "Firebase";
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
+    FirebaseDatabase database;
+    DatabaseReference myDatabaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_with_firebase);
 
-        CreateAccountActivity.setHideKeyboardOnTouch(this, findViewById(R.id.activity_login));
+        CreateAccountActivity.setHideKeyboardOnTouch(this, findViewById(R.id.activity_login_with_firebase));
         emailEdit = findViewById(R.id.emailEdit1);
         passEdit = findViewById(R.id.passEdit1);
         context = getApplicationContext();
 
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        myDatabaseRef = database.getReference();
 
     }
 
@@ -57,6 +63,7 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
         password = passEdit.getText().toString();
 
         signInWithFirebase(email, password);
+
         // ...
 
 

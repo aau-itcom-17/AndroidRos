@@ -258,7 +258,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUser:onComplete:" + task.isSuccessful());
                             onAuthSuccess(task.getResult().getUser());
-
+                            // signing out so it doesn't think a user is logged in...
+                            auth.signOut();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -272,7 +273,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         // Write new user
         writeNewUser(firstName, lastName, email, password, user.getUid(), false, picturePath);
         // Go to MainActivity
-        startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(this, LoginWithFirebaseActivity.class));
         finish();
     }
 
