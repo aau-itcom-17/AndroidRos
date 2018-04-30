@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/drawer1"
-        android:title="Drawer1" />
-    <item
-        android:id="@+id/drawer2"
-        android:title="Drawer2"/>
-    <item
-        android:id="@+id/drawer3"
-        android:title="Drawer3"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_userpage"
+            android:title="User Page" />
+        <item
+            android:id="@+id/nav_page2"
+            android:title="Page 2" />
+        <item
+            android:id="@+id/nav_page3"
+            android:title="Page 3" />
 
-    <item
-        android:id="@+id/drawer4"
-        android:title="Drawer4"/>
+
+    </group>
 
 </menu>

@@ -86,8 +86,6 @@ public class CreateActivity extends AppCompatActivity{
 
     double longitude, latitude;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,11 +221,8 @@ public class CreateActivity extends AppCompatActivity{
 
             }
         });
-
-
     }
-
-    // Stops the listener for location to save power
+  
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -270,6 +265,11 @@ public class CreateActivity extends AppCompatActivity{
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
         }
+    }
+
+    public void getPic(String photopath){
+        this.currentPhotoPath = photopath;
+
     }
 
     // Method handling image scaling
