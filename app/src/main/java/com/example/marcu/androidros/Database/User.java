@@ -9,9 +9,21 @@ import android.arch.persistence.room.PrimaryKey;
 import java.util.List;
 import java.util.UUID;
 
-@Entity (tableName = "user", indices = {@Index(value = "email", unique = true)})
+
 public class User {
 
+    public User(String firstName, String lastName, String email, String password, String userID, boolean isLoggedIn, String profilePicture){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.isLoggedIn = isLoggedIn;
+        this.profilePicture = profilePicture;
+        this.userID = userID;
+    }
+
+    public User (){
+    }
     public User(String firstName, String lastName, String email, String password, boolean isLoggedIn, String profilePicture){
         this.firstName = firstName;
         this.lastName = lastName;
@@ -21,36 +33,28 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
-    @PrimaryKey (autoGenerate = true)
-    @ColumnInfo(name = "user_id")
-    private int userID;
 
-    @ColumnInfo(name = "first_name")
+    private String userID;
+
     private String firstName;
 
-    @ColumnInfo(name = "last_name")
     private String lastName;
 
-    @ColumnInfo(name = "email")
     private String email;
 
-    @ColumnInfo(name = "password")
     private String password;
 
-    @ColumnInfo (name = "location")
     private String location;
 
-    @ColumnInfo (name = "profile_picture")
     private String profilePicture;
 
 //    @ColumnInfo (name = "friends")
 //    private List<User> friends;
 
     // using ignore to not get error.
-    @Ignore
+
     List<Event> events;
 
-    @ColumnInfo (name = "logged_in")
     private boolean isLoggedIn;
 
     public boolean isLoggedIn() {
@@ -69,11 +73,11 @@ public class User {
         this.events = events;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 

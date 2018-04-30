@@ -15,8 +15,11 @@ import android.widget.Toast;
 import com.example.marcu.androidros.Intro.Application;
 
 import com.example.marcu.androidros.IntroActivity;
+import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.Prefs;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     //private Prefs prefs;
 
     SharedPreferences prefs = null;
+    FirebaseAuth auth;
+    FirebaseUser firebaseUser;
 
 
 
@@ -40,8 +45,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         prefs = getSharedPreferences("com.example.marcu.androidros", MODE_PRIVATE);
-
         setContentView(R.layout.activity_main);
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+
+        if (firebaseUser != null){
+            startActivity(new Intent(this, MapActivity.class));
+            finish();
+        }
+
+
     }
 
     public void nextActivityButtonClicked (View view){
@@ -51,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void loginActivityButtonClicked (View view){
-        intent.setClass(this,LoginActivity.class);
+        intent.setClass(this,LoginWithFirebaseActivity.class);
         startActivity(intent);
         Log.i("TEST", "Going to Login Page");
     }
