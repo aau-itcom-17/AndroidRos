@@ -75,6 +75,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mToggle.syncState();
 
 
+        //Access data in database
         database = FirebaseDatabase.getInstance();
         database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -95,6 +96,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 // ...
             }
         });
+        // access done.
 
 
         SupportMapFragment mapFragment =
