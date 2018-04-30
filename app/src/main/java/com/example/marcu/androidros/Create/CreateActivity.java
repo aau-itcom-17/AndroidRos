@@ -219,7 +219,7 @@ public class CreateActivity extends AppCompatActivity{
         finishEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude);
+                Event userEvent = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude);
 
             }
         });
@@ -253,7 +253,7 @@ public class CreateActivity extends AppCompatActivity{
                 Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName, /* prefix */
-                ".jpg", /*suffix */
+                ".jpeg", /*suffix */
                 storageDir /* directory */
         );
 
