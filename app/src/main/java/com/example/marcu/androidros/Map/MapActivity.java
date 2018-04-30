@@ -40,7 +40,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private DrawerLayout drawer;
     private ActionBarDrawerToggle mToggle;
 
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private boolean mPermissionDenied = false;
 
     private static final LatLng AAU = new LatLng(55.649114, 12.542689);
