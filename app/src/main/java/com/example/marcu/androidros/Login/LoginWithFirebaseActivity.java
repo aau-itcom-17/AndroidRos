@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.User;
+import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,18 +53,13 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
 
 
     public void loginButton (View view){
-        intent.setClass(this, SplashActivity.class);
+        intent.setClass(this, MapActivity.class);
         email = emailEdit.getText().toString();
         password = passEdit.getText().toString();
 
         signInWithFirebase(email, password);
-        
-        if (firebaseUser != null) {
-            startActivity(intent);
-        }else{
-            Toast.makeText(context, wrongEmailAndPass, toastDuration).show();
-            emailEdit.setError(wrongEmailAndPass);
-        }
+        // ...
+
 
     }
 
@@ -75,8 +71,13 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            firebaseUser = auth.getCurrentUser();
 
+                            if (firebaseUser != null) {
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(context, wrongEmailAndPass, toastDuration).show();
+                                emailEdit.setError(wrongEmailAndPass);
+                            }
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -93,6 +94,7 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
 
     }
+
 
 }
 

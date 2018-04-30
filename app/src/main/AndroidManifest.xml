@@ -56,7 +56,12 @@
 
         <activity
             android:name=".Login.MainActivity"
-            android:theme="@style/LoginTheme"></activity>
+            android:theme="@style/LoginTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Login.CreateAccountActivity"
             android:label="@string/create_account_name"
@@ -66,11 +71,6 @@
                 android:value="Login.MainActivity"></meta-data>
         </activity>
         <activity android:name=".Login.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Login.LoginActivity"

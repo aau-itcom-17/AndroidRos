@@ -33,7 +33,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.marcu.androidros.Database.AppDatabase;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -124,7 +123,6 @@ public class CreateAccountActivity extends AppCompatActivity {
 
 
     public void createAccountButtonClicked (View view){
-        intent.setClass(this, MainActivity.class);
         firstName = editFirstName.getText().toString();
         lastName = editLastName.getText().toString();
         email = editEmail.getText().toString();
@@ -135,7 +133,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         emailAlreadyExistToast = Toast.makeText(context, emailAlreadyExist, toastDuration);
         emailNotValidToast = Toast.makeText(context, emailNotValid, toastDuration);
 
-        firebaseUser = auth.getCurrentUser();
 
         if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")){
             missingInfoToast.show();
@@ -156,34 +153,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 //            emailAlreadyExistToast.show();
 //        }
         else {
-//            User user = new User(firstName, lastName, email, password,false, picturePath);
-//            SplashActivity.appDatabase.userDao().insert(user);
-//            List<User> users = SplashActivity.appDatabase.userDao().getAllUsers();
-//            for (int i = 0; i < users.size(); i++) {
-//                Log.i("HEJ", users.get(i).getFirstName() + " " + users.get(i).getUserID());
-//                userID = i;
-//            }
-            // temporary
-            SecureRandom random = new SecureRandom();
-            userID = random.nextInt();
-
-            User user = new User(firstName, lastName, email, password, userID, false, picturePath);
-            userIdString = Integer.toString(userID);
-            myDatabaseRef.child("users").child(userIdString).setValue(user);
             createUserFirebase(email, password);
-            myDatabaseRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.i(TAG, "User " + dataSnapshot.getValue());
-                }
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Log.w(TAG, "Failed to read value.", error.toException());
-
-                }
-            });
-
-            startActivity(intent);
         }
     }
     public void addProfilePictureButtonClicked(View view){
@@ -286,16 +256,30 @@ public class CreateAccountActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            firebaseUser = auth.getCurrentUser();
+                            Log.d(TAG, "createUser:onComplete:" + task.isSuccessful());
+                            onAuthSuccess(task.getResult().getUser());
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(context, "Authentication failed.",
+                            Toast.makeText(context, "Create account failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+    private void onAuthSuccess(FirebaseUser user) {
+        // Write new user
+        writeNewUser(firstName, lastName, email, password, user.getUid(), false, picturePath);
+        // Go to MainActivity
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
+    }
+
+    private void writeNewUser(String firstName, String lastName, String email, String password, String userID, boolean isLoggedIn, String profilePicture) {
+        User user = new User(firstName, lastName, email, password, userID, isLoggedIn, profilePicture);
+
+        myDatabaseRef.child("users").child(userID).setValue(user);
     }
 
 }
