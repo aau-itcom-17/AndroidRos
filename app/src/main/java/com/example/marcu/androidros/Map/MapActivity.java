@@ -1,10 +1,14 @@
 package com.example.marcu.androidros.Map;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +18,19 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.marcu.androidros.Database.User;
+import com.example.marcu.androidros.Login.CreateAccountActivity;
+import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.example.marcu.androidros.Utils.EventPopUp;
@@ -44,6 +54,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.io.File;
+import java.util.Map;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -58,6 +71,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Marker mAAU;
     private Marker mRoskilde;
     private Marker mHome;
+
+
+    private TextView drawerName;
+    private TextView drawerEmail;
+    private NavigationView navigationView;
+    View headerView;
+    private ImageView drawerImage;
+    private String profilePictureRef;
+    private String fullName;
+    private String email;
+    private File profilePicFile;
+
     FirebaseUser firebaseUser;
     FirebaseDatabase database;
     DatabaseReference myDatabaseRef;
@@ -72,7 +97,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+        drawerEmail = (TextView) headerView.findViewById(R.id.drawerEmail);
+        drawerImage = (ImageView) headerView.findViewById(R.id.drawerImage);
+        drawerName = (TextView) headerView.findViewById(R.id.drawerName);
+
         navigationView.setNavigationItemSelectedListener(this);
 
         mToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
@@ -88,16 +118,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 // Get Post object and use the values to update the UI
                 firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = firebaseUser.getUid();
-                Log.i("Bitch", uid);
+                Log.i("Firebase", "uid: " + uid);
                 User user = dataSnapshot.child(uid).getValue(User.class);
-                Log.i("BITCH", user.getFirstName() + " " + user.getLastName());
-                // ...
+                fullName = user.getFirstName() + " " + user.getLastName();
+                email = user.getEmail();
+                profilePictureRef = user.getProfilePicture();
+                Log.i("Firebase", "Profile picture reference: " + profilePictureRef);
+                Log.i("Firebase", "Full name: " + fullName);
+
+                drawerName.setText(fullName);
+                drawerEmail.setText(email);
+                if (profilePictureRef != null){
+                    profilePicFile = new File(profilePictureRef);
+                    if(profilePicFile.exists()) {
+                        drawerImage.setImageBitmap(BitmapFactory.decodeFile(profilePictureRef));
+                    }else{
+                        Toast.makeText(MapActivity.this, "Couldn't load profile picture... please change your profile picture in account settings.", Toast.LENGTH_SHORT);
+                    }
+                }
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.w("BITCH", "loadPost:onCancelled", databaseError.toException());
+                Log.w("Firebase", "loadPost:onCancelled", databaseError.toException());
                 // ...
             }
         });
@@ -112,11 +157,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
+    // method controlling the menu buttons under the user info in the drawer.
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_userpage:
                 getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPageFragment()).commit();
+                break;
+            case R.id.nav_logout:
+                // logging out
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(MapActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(MapActivity.this);
+                }
+                builder.setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(MapActivity.this, MainActivity.class));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
