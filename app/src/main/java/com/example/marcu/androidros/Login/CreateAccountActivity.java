@@ -1,10 +1,6 @@
 package com.example.marcu.androidros.Login;
 
 import android.Manifest;
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
