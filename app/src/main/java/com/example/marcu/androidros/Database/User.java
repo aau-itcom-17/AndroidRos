@@ -9,22 +9,33 @@ import android.arch.persistence.room.PrimaryKey;
 import java.util.List;
 import java.util.UUID;
 
-@Entity (tableName = "user", indices = {@Index(value = "email", unique = true)})
+
 public class User {
 
-    public User(String firstName, String lastName, String email, String password, boolean isLoggedIn){
+    public User(String firstName, String lastName, String email, String password, String userID, boolean isLoggedIn, String profilePicture){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.isLoggedIn = isLoggedIn;
+        this.profilePicture = profilePicture;
+        this.userID = userID;
     }
 
-    @PrimaryKey (autoGenerate = true)
-    @ColumnInfo(name = "user_id")
-    private int userID;
+    public User (){
+    }
+    public User(String firstName, String lastName, String email, String password, boolean isLoggedIn, String profilePicture){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.isLoggedIn = isLoggedIn;
+        this.profilePicture = profilePicture;
+    }
 
-    @ColumnInfo(name = "first_name")
+
+    private String userID;
+
     private String firstName;
 
     @ColumnInfo(name = "last_name")
@@ -51,7 +62,6 @@ public class User {
     List<Event> favourites;
     List<Event> invites;
 
-    @ColumnInfo (name = "logged_in")
     private boolean isLoggedIn;
 
     public boolean isLoggedIn() {
@@ -66,7 +76,7 @@ public class User {
         return events;
     }
 
-    public void setEvents(List<Event> favourites) {
+    public void setEvents(List<Event> events) {
         this.events = events;
     }
 
@@ -86,11 +96,11 @@ public class User {
         this.invites = invites;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 

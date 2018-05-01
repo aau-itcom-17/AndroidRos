@@ -3,21 +3,28 @@ package com.example.marcu.androidros.Map;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.example.marcu.androidros.Utils.EventPopUp;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -26,25 +33,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-
-    private DrawerLayout mDrawerLayout;
+    private DrawerLayout drawer;
     private ActionBarDrawerToggle mToggle;
-
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private boolean mPermissionDenied = false;
-
     private static final LatLng AAU = new LatLng(55.649114, 12.542689);
     private static final LatLng ROSKILDE = new LatLng(55.616885, 12.077064);
     private static final LatLng HOME = new LatLng(55.650661, 12.525810);
-
+    private static final LatLng DK = new LatLng(55.641010, 12.081299);
     private Marker mAAU;
     private Marker mRoskilde;
     private Marker mHome;
+    FirebaseUser firebaseUser;
+    FirebaseDatabase database;
+    DatabaseReference myDatabaseRef;
 
 
     @Override
@@ -52,12 +68,40 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
-        mDrawerLayout.addDrawerListener(mToggle);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        mToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
+        drawer.addDrawerListener(mToggle);
         mToggle.syncState();
+
+
+        //Access data in database
+        database = FirebaseDatabase.getInstance();
+        database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = firebaseUser.getUid();
+                Log.i("Bitch", uid);
+                User user = dataSnapshot.child(uid).getValue(User.class);
+                Log.i("BITCH", user.getFirstName() + " " + user.getLastName());
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("BITCH", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+        // access done.
 
 
         SupportMapFragment mapFragment =
@@ -67,30 +111,64 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setUpBottomNavigationView();
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mToggle.onOptionsItemSelected(item)) {
-            return true;
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.nav_userpage:
+                getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPageFragment()).commit();
+                break;
         }
-        return super.onOptionsItemSelected(item);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    //When the back button is pressed on the drawer only the drawer will close and not the activity you have chosen
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(
-                this, R.raw.style);
+                this, R.raw.roskilde);
         map.setMapStyle(style);
 
         mMap = map;
-
+        // Here you can set the different types of map types. OOPS! If you do this we loose our custom map type.
+        // map.setMapType(map.MAP_TYPE_SATELLITE);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         //mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         enableMyLocation();
 
-        // Add some markers to the map, and add a data object to each marker.
+        // Move the camera to location everytime you open up the page.
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DK, 8));
 
+
+
+        //Creates a polygon around roskilde festival.
+        PolygonOptions roskilde = new PolygonOptions()
+                .add(new LatLng(55.624404, 12.065872),
+                new LatLng(55.616147, 12.065023),
+                new LatLng(55.610281, 12.061161),
+                new LatLng(55.608612, 12.084448),
+                new LatLng(55.610256, 12.095493),
+                new LatLng(55.624845, 12.091416),
+                new LatLng(55.623390, 12.074894))
+                .strokeColor(Color.argb(255, 255, 152, 0));
+
+        Polygon polygon = map.addPolygon(roskilde);
+
+
+        //Creating three simple markers.
         mAAU = mMap.addMarker(new MarkerOptions()
                 .position(AAU)
                 .title("AAU")
@@ -131,6 +209,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+
+    //Click listener for my location button.
     @Override
     public boolean onMyLocationButtonClick() {
         Toast.makeText(this, "This is your current location", Toast.LENGTH_SHORT).show();
