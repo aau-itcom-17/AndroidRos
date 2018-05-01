@@ -1,11 +1,13 @@
 package com.example.marcu.androidros.Map;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Login.CreateAccountActivity;
+import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.example.marcu.androidros.Utils.EventPopUp;
@@ -154,11 +158,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
+    // method controlling the menu buttons under the user info in the drawer.
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_userpage:
                 getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPageFragment()).commit();
+                break;
+            case R.id.nav_logout:
+                // logging out
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(MapActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(MapActivity.this);
+                }
+                builder.setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(MapActivity.this, MainActivity.class));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
