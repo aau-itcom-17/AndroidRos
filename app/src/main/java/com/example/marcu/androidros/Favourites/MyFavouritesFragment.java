@@ -21,6 +21,7 @@ public class MyFavouritesFragment extends Fragment {
 
     //public static List<Event> events, myEvents, newestEvents, byNameEvents;
     private static User user;
+    private static Event event;
 
     /*public static List<User> users;
     public static List<Event> myEvents = new ArrayList<>();
@@ -39,11 +40,19 @@ public class MyFavouritesFragment extends Fragment {
         String[] favouriteEvents = new String[user.getFavourites().size()];
         List list = new ArrayList();
 
-        for (int i = 0; i < user.getFavourites().size(); i++)
+
+        if (user.getFavourites().size() == 0)
         {
-            list.add(user.getFavourites().get(i).getName());
+            list.add("No Favourites");
+        }
+        else
+        {
+            for (int i = 0; i < user.getFavourites().size(); i++) {
+                list.add(user.getFavourites().get(i).getName());
+            }
         }
         list.toArray(favouriteEvents);
+
 
 
 

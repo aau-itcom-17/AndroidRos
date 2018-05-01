@@ -27,9 +27,15 @@ public class MyInvitesFragment extends Fragment {
         String[] invites = new String[user.getInvites().size()];
         List listOfInvites = new ArrayList();
 
-        for (int i = 0; i < user.getInvites().size(); i++)
+        if (user.getInvites().size() == 0)
         {
-            listOfInvites.add(user.getInvites().get(i).getName());
+            listOfInvites.add("No Invites");
+        }
+        else
+        {
+            for (int i = 0; i < user.getInvites().size(); i++) {
+                listOfInvites.add(user.getInvites().get(i).getName());
+            }
         }
         listOfInvites.toArray(invites);
 
