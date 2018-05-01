@@ -3,6 +3,7 @@ package com.example.marcu.androidros.Map;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,6 +33,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,22 +47,17 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-
     private DrawerLayout drawer;
     private ActionBarDrawerToggle mToggle;
-
     public GoogleMap mMap;
     private boolean mPermissionDenied = false;
-
     private static final LatLng AAU = new LatLng(55.649114, 12.542689);
     private static final LatLng ROSKILDE = new LatLng(55.616885, 12.077064);
     private static final LatLng HOME = new LatLng(55.650661, 12.525810);
     private static final LatLng DK = new LatLng(55.641010, 12.081299);
-
     private Marker mAAU;
     private Marker mRoskilde;
     private Marker mHome;
-
     FirebaseUser firebaseUser;
     FirebaseDatabase database;
     DatabaseReference myDatabaseRef;
@@ -143,19 +141,34 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.setMapStyle(style);
 
         mMap = map;
-
+        // Here you can set the different types of map types. OOPS! If you do this we loose our custom map type.
+        // map.setMapType(map.MAP_TYPE_SATELLITE);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         //mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         enableMyLocation();
 
-
-
+        // Move the camera to location everytime you open up the page.
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(DK, 8));
 
-        // Add some markers to the map, and add a data object to each marker.
 
+
+        //Creates a polygon around roskilde festival.
+        PolygonOptions roskilde = new PolygonOptions()
+                .add(new LatLng(55.624404, 12.065872),
+                new LatLng(55.616147, 12.065023),
+                new LatLng(55.610281, 12.061161),
+                new LatLng(55.608612, 12.084448),
+                new LatLng(55.610256, 12.095493),
+                new LatLng(55.624845, 12.091416),
+                new LatLng(55.623390, 12.074894))
+                .strokeColor(Color.argb(255, 255, 152, 0));
+
+        Polygon polygon = map.addPolygon(roskilde);
+
+
+        //Creating three simple markers.
         mAAU = mMap.addMarker(new MarkerOptions()
                 .position(AAU)
                 .title("AAU")
@@ -196,6 +209,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+
+    //Click listener for my location button.
     @Override
     public boolean onMyLocationButtonClick() {
         Toast.makeText(this, "This is your current location", Toast.LENGTH_SHORT).show();

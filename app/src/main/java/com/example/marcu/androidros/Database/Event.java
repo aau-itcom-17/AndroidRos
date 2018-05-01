@@ -23,7 +23,7 @@ public class Event {
         this.comments = comments;
     }
 
-    public Event(){
+    public Event(String s, String toString, String currentPhotoPath, String string, String s1, double latitude, double longitude){
 
     }
 
