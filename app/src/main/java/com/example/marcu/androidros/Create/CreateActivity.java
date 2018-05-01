@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -38,6 +39,10 @@ import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
@@ -46,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -53,6 +59,8 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 public class CreateActivity extends AppCompatActivity{
 
     private static final String TAG = "CreateEventActivity";
+
+    private DatabaseReference mDatabase;
 
     private Button getLocation;
     private Button finishEvent;
@@ -91,6 +99,8 @@ public class CreateActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
         setUpBottomNavigationView();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Events");
 
         permissions.add(ACCESS_FINE_LOCATION);
         permissions.add(ACCESS_COARSE_LOCATION);
@@ -217,7 +227,28 @@ public class CreateActivity extends AppCompatActivity{
         finishEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event userEvent = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude);
+
+                Event userEvent = new Event(nameOfEventEdit.toString().trim(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude, 0, 0);
+
+                HashMap<String, Object> eventMap = new HashMap<String, Object>();
+
+                eventMap.put("Name", nameOfEventEdit.toString());
+                eventMap.put("Event", userEvent);
+
+                mDatabase.push().setValue(eventMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if (task.isSuccessful()) {
+
+                            Toast.makeText(CreateActivity.this, "Event saved", Toast.LENGTH_SHORT).show();
+                        } else{
+
+                            Toast.makeText(CreateActivity.this, "An error ocurred, try again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
 
             }
         });

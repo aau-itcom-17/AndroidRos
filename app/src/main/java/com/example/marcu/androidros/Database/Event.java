@@ -10,8 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Event {
 
-    public Event(String eventID, String name, String description, String photoPath, String time, String date, Double latitude, Double longitude, int likes, int comments) {
-        this.eventID = eventID;
+    public Event(String name, String description, String photoPath, String time, String date, Double latitude, Double longitude, int likes, int comments) {
         this.name = name;
         this.description = description;
         this.photoPath = photoPath;
@@ -26,8 +25,6 @@ public class Event {
     public Event(){
 
     }
-
-    private String eventID;
 
     private String name;
 
@@ -47,13 +44,6 @@ public class Event {
 
     private int comments;
 
-    public String getEventID() {
-        return eventID;
-    }
-
-    public void setEventID(String eventID) {
-        this.eventID = eventID;
-    }
 
     public String getName() {
         return name;
