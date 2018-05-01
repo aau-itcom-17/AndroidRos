@@ -34,6 +34,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.Event;
+import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,6 +42,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -60,7 +62,9 @@ public class CreateActivity extends AppCompatActivity{
 
     private static final String TAG = "CreateEventActivity";
 
-    private DatabaseReference mDatabase;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
 
     private Button getLocation;
     private Button finishEvent;
@@ -78,6 +82,12 @@ public class CreateActivity extends AppCompatActivity{
     private EditText nameOfEventEdit;
     private EditText eventDescriptionEdit;
 
+    private String name;
+    private String eventDescription;
+    private String date;
+    private String time;
+
+
     // Date implementation variables
     private TextView dTv;
     private Button dBtn;
@@ -92,6 +102,8 @@ public class CreateActivity extends AppCompatActivity{
     private LocationTrack locationTracker;
     private LatLng loc;
 
+    int eventID = 0;
+
     double longitude, latitude;
 
     @Override
@@ -100,16 +112,15 @@ public class CreateActivity extends AppCompatActivity{
         setContentView(R.layout.activity_create);
         setUpBottomNavigationView();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Events");
-
         permissions.add(ACCESS_FINE_LOCATION);
         permissions.add(ACCESS_COARSE_LOCATION);
+
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
         finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
         locationLongitude = (TextView) findViewById(R.id.location_longitude);
         locationLatitude = (TextView) findViewById(R.id.location_latitude);
         nameOfEventEdit = findViewById(R.id.name_input);
-
         eventDescriptionEdit = findViewById(R.id.enter_event_description);
 
         this.imageView = (ImageView) this.findViewById(R.id.image_view);
@@ -157,10 +168,6 @@ public class CreateActivity extends AppCompatActivity{
 
                     locationLongitude.setText(Double.toString(longitude));
                     locationLatitude.setText(Double.toString(latitude));
-
-
-
-
 
                     Toast.makeText(getApplicationContext(), "Longitude: " + Double.toString(longitude) + "\nLatitude: " + Double.toString(latitude), Toast.LENGTH_SHORT).show();
                 } else {
@@ -228,14 +235,20 @@ public class CreateActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-                Event userEvent = new Event(nameOfEventEdit.toString().trim(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude, 0, 0);
+                name = nameOfEventEdit.toString().trim();
+                eventDescription = eventDescriptionEdit.toString().trim();
+
+                date = dTv.toString();
+                time = tTv.toString();
+
+                Event userEvent = new Event(name, eventDescription, currentPhotoPath, time, date, latitude, longitude, 0, 0);
 
                 HashMap<String, Object> eventMap = new HashMap<String, Object>();
 
-                eventMap.put("Name", nameOfEventEdit.toString());
+                eventMap.put("Name", name);
                 eventMap.put("Event", userEvent);
 
-                mDatabase.push().setValue(eventMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                mDatabaseRef.child("Events").push().setValue(eventMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 

@@ -91,7 +91,6 @@
                 android:text="@string/enter_name_of_event" />
 
 
-
             <TextView
                 android:id="@+id/photo"
                 android:layout_width="wrap_content"
@@ -126,7 +125,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="168dp"
-                android:text="@string/date_of_event"/>
+                android:text="@string/date_of_event" />
 
             <Button
                 android:id="@+id/choose_date"
@@ -139,7 +138,6 @@
                 android:textSize="10sp" />
 
 
-
             <TextView
                 android:id="@+id/date"
                 android:layout_width="250dp"
@@ -147,8 +145,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/date_of_event"
                 android:text="DD/MM/YYYY"
-                android:textSize="20sp"
-                />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/time"
@@ -157,8 +154,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/time_of_event"
                 android:text="HH:MM"
-                android:textSize="20sp"
-                />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/choose_time"
@@ -169,9 +165,6 @@
                 android:drawableLeft="@drawable/ic_time"
                 android:text="choose time"
                 android:textSize="10sp" />
-
-
-
 
 
             <EditText
@@ -187,9 +180,8 @@
                 android:layout_width="330dp"
                 android:layout_height="103dp"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginBottom="125dp"
-                android:layout_marginEnd="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="134dp"
                 android:background="@android:color/white" />
 
 

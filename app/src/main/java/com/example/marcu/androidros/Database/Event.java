@@ -26,6 +26,8 @@ public class Event {
 
     }
 
+    private String eventID;
+
     private String name;
 
     private String description;
@@ -43,6 +45,14 @@ public class Event {
     private int likes;
 
     private int comments;
+
+    public  String getEventID(){
+        return eventID;
+    }
+
+    public void setEventID(String eventID){
+        this.eventID = eventID;
+    }
 
 
     public String getName() {
