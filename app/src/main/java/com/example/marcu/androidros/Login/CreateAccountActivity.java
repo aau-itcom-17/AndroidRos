@@ -80,7 +80,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     String email;
     String password;
     String confirmPassword;
-    String picturePath = "null";
+    String picturePath = null;
     TextView uploadPhotoView;
 
     private FirebaseAuth auth;
