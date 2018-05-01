@@ -11,6 +11,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/drawerImage"
         android:src="@mipmap/ic_launcher_round"/>
 
     <TextView
@@ -18,11 +19,13 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:text="Name LName"
+        android:id="@+id/drawerName"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
     
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/drawerEmail"
         android:text="yourmail@mail.com"/>
 
 
