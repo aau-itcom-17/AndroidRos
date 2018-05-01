@@ -157,10 +157,13 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
     }
     public void addProfilePictureButtonClicked(View view){
-        Intent i = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
+        if (checkGalleryPermissions()) {
+            Intent i = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
+        }else {
 
+        }
         //permissionToast = Toast.makeText(context,permission,toastDuration);
        // permissionToast.show();
 
@@ -186,7 +189,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
     }
 
-    private void checkGalleryPermissions(){
+    private boolean checkGalleryPermissions(){
         // Here, this is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -196,6 +199,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
+                return false;
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -204,9 +208,11 @@ public class CreateAccountActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         RESULT_LOAD_IMAGE);
+                return true;
             }
         } else {
             // Permission has already been granted
+            return true;
         }
     }
 
