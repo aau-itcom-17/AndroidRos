@@ -46,7 +46,7 @@ public class User {
 //    private List<User> friends;
 
     // using ignore to not get error.
-    @Ignore
+
     List<Event> events;
     List<Event> favourites;
     List<Event> invites;
