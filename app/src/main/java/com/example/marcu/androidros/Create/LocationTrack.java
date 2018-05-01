@@ -16,6 +16,9 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+
 public class LocationTrack extends Service implements LocationListener {
     private final Context mContext;
 
@@ -27,10 +30,12 @@ public class LocationTrack extends Service implements LocationListener {
     double latitude;
     double longitude;
 
+    LatLng location;
 
+    // Sets the LocationManager to update every time the user moves 10 meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-
-
+  
+    // Sets the update time in the location listener to one minute (60000 miliseconds)
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     protected LocationManager locationManager;
 
@@ -39,17 +44,20 @@ public class LocationTrack extends Service implements LocationListener {
         getLocation();
     }
 
-    private Location getLocation() {
+    protected LatLng getLocation() {
 
         try {
-            locationManager = (LocationManager) mContext
-                    .getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // get GPS status
-            checkGPS = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            checkGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
+            // Method should be implemented if we use the network provider to find the location
+           
             // get network provider status
+            checkNetwork = locationManager
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
             checkNetwork = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
@@ -62,13 +70,6 @@ public class LocationTrack extends Service implements LocationListener {
                 if (checkGPS) {
 
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
                     }
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
@@ -80,24 +81,19 @@ public class LocationTrack extends Service implements LocationListener {
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
+
+                            location = new LatLng(latitude, longitude);
                         }
                     }
 
 
                 }
 
-
+                // Method should be implemented if we use the network provider to find the location
                 if (checkNetwork) {
 
-
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
+
                     }
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
@@ -123,7 +119,7 @@ public class LocationTrack extends Service implements LocationListener {
             e.printStackTrace();
         }
 
-        return loc;
+        return location;
     }
 
     public double getLongitude() {
@@ -144,6 +140,8 @@ public class LocationTrack extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
+
+    // Shows an alert box if user doesn't have gps location permission enabled on the device
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
@@ -172,22 +170,17 @@ public class LocationTrack extends Service implements LocationListener {
     }
 
 
+    // Stops the LocationListener
     public void stopListener() {
         if (locationManager != null) {
 
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             locationManager.removeUpdates(LocationTrack.this);
         }
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {
