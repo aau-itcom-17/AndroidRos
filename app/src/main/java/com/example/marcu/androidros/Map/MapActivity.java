@@ -81,9 +81,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         drawer.addDrawerListener(mToggle);
         mToggle.syncState();
 
-        /*
+
         //Access data in database
-        //database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -102,7 +102,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.w("BITCH", "loadPost:onCancelled", databaseError.toException());
                 // ...
             }
-        });*/
+        });
         // access done.
 
 
