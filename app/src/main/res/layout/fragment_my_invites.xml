@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+
+        android:id="@+id/title_fragment_invites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_my_invites"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"/>
+
+    <ListView
+        android:id="@+id/invitesList"
+        android:layout_width="fill_parent"
+        android:layout_height="412dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#FF9800"
+        android:listSelector="#FF9800"
+        android:dividerHeight="1dp"
+        android:paddingLeft="2dp"
+        android:layout_alignParentLeft="true"></ListView>
+
+</RelativeLayout>

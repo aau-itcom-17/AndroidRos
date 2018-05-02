@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Intro.Application;
 
 import com.example.marcu.androidros.IntroActivity;
@@ -21,10 +22,15 @@ import com.example.marcu.androidros.Utils.Prefs;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    public static List<Event> favourites;
+    public static List<Event> invites;
 
     public static final String TAG = "AnonymousAuth";
 
@@ -42,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        favourites = new ArrayList<>();
+        invites = new ArrayList<>();
+
         super.onCreate(savedInstanceState);
 
         prefs = getSharedPreferences("com.example.marcu.androidros", MODE_PRIVATE);

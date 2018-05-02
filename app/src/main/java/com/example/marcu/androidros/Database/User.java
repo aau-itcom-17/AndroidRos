@@ -1,8 +1,12 @@
 package com.example.marcu.androidros.Database;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.example.marcu.androidros.Login.MainActivity.favourites;
+import static com.example.marcu.androidros.Login.MainActivity.invites;
 
 
 public class User {
@@ -49,6 +53,9 @@ public class User {
     // using ignore to not get error.
 
     List<Event> events;
+    List<Event> favourites;
+    List<Event> invites;
+
 
     private boolean isLoggedIn;
 
@@ -66,6 +73,22 @@ public class User {
 
     public void setEvents(List<Event> events) {
         this.events = events;
+    }
+
+    public List<Event> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<Event> favourites) {
+        this.favourites = favourites;
+    }
+
+    public List<Event> getInvites() {
+        return invites;
+    }
+
+    public void setInvites(List<Event> invites) {
+        this.invites = invites;
     }
 
     public String getUserID() {
