@@ -49,7 +49,7 @@ public class MyFavouritesFragment extends Fragment {
                 String[] favouriteEvents = new String[10];
                 List list = new ArrayList();
 
-                if (user.getFirstName().equals("ll")) {
+                if (user.getFavourites().size().equals(null)) {
                     System.out.println("test");
 
 
