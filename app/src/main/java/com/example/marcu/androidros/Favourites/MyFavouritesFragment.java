@@ -3,6 +3,7 @@ package com.example.marcu.androidros.Favourites;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,60 +12,78 @@ import android.widget.ListView;
 
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Database.User;
+import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyFavouritesFragment extends Fragment {
 
-
-    //public static List<Event> events, myEvents, newestEvents, byNameEvents;
-    private static User user;
-    private static Event event;
-
-    /*public static List<User> users;
-    public static List<Event> myEvents = new ArrayList<>();
-    public static List<Event> newestEvents = new ArrayList<>();
-    public static List<Event> byNameEvents = new ArrayList<>();*/
+    FirebaseUser firebaseUser;
+    FirebaseDatabase database;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_favourites, container, false);
-
-/*
-        String[] favouriteItems = {"Kanye Camp", "My Camp", "Party"};
-*/
-
-        String[] favouriteEvents = new String[user.getFavourites().size()];
-        List list = new ArrayList();
+        final View view = inflater.inflate(R.layout.fragment_my_favourites, container, false);
 
 
-        if (user.getFavourites().size() == 0)
-        {
-            list.add("No Favourites");
-        }
-        else
-        {
-            for (int i = 0; i < user.getFavourites().size(); i++) {
-                list.add(user.getFavourites().get(i).getName());
+        database = FirebaseDatabase.getInstance();
+        database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = firebaseUser.getUid();
+                Log.i("Firebase", "uid: " + uid);
+                User user = dataSnapshot.child(uid).getValue(User.class);
+
+
+                String[] favouriteEvents = new String[10];
+                List list = new ArrayList();
+
+                if (user.getFirstName().equals("ll")) {
+                    System.out.println("test");
+
+
+                    list.add("No Favourites");
+
+                    System.out.println(user.getFavourites().size());
+                } else {
+
+                    System.out.println(user.getFirstName());
+                    for (int i = 0; i < user.getFavourites().size(); i++) {
+                        list.add(user.getFavourites().get(i).getName());
+                    }
+                }
+                list.toArray(favouriteEvents);
+                System.out.println("test1.2");
+
+
+                ListView listView = (ListView) view.findViewById(R.id.favouritesList);
+
+                ArrayAdapter<String> listViewAdaptor = new ArrayAdapter<String>(
+                        getActivity(), android.R.layout.simple_list_item_1, favouriteEvents
+                );
+
+
+                listView.setAdapter(listViewAdaptor);
+                System.out.println("test1.3");
             }
-        }
-        list.toArray(favouriteEvents);
-
-
-
-
-
-        ListView listView = (ListView) view.findViewById(R.id.favouritesList);
-
-        ArrayAdapter<String> listViewAdaptor = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_list_item_1, favouriteEvents
-        );
-
-        listView.setAdapter(listViewAdaptor);
-
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.w("Firebase", "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            });
         return view;
     }
 }

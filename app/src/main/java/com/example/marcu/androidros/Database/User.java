@@ -1,8 +1,12 @@
 package com.example.marcu.androidros.Database;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.example.marcu.androidros.Login.MainActivity.favourites;
+import static com.example.marcu.androidros.Login.MainActivity.invites;
 
 
 public class User {
@@ -33,19 +37,14 @@ public class User {
 
     private String firstName;
 
-    @ColumnInfo(name = "last_name")
     private String lastName;
 
-    @ColumnInfo(name = "email")
     private String email;
 
-    @ColumnInfo(name = "password")
     private String password;
 
-    @ColumnInfo (name = "location")
     private String location;
 
-    @ColumnInfo (name = "profile_picture")
     private String profilePicture;
 
 //    @ColumnInfo (name = "friends")
@@ -56,6 +55,7 @@ public class User {
     List<Event> events;
     List<Event> favourites;
     List<Event> invites;
+
 
     private boolean isLoggedIn;
 
