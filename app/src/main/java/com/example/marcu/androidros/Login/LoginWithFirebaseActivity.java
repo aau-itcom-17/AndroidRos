@@ -30,9 +30,10 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
     String email;
     String password;
     Context context;
-    int toastDuration = Toast.LENGTH_LONG;
+    int toastDuration = Toast.LENGTH_SHORT;
     CharSequence wrongEmailAndPass = "The Email and/or Password does not exist.";
-
+    private String emailFromCreateAccount;
+    private String EXTRA_ID = "emailID";
 
     String TAG = "Firebase";
     FirebaseAuth auth;
@@ -46,10 +47,12 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_with_firebase);
 
         CreateAccountActivity.setHideKeyboardOnTouch(this, findViewById(R.id.activity_login_with_firebase));
-        emailEdit = findViewById(R.id.emailEdit1);
-        passEdit = findViewById(R.id.passEdit1);
+        emailEdit = findViewById(R.id.emailEditLogin);
+        passEdit = findViewById(R.id.passEditLogin);
         context = getApplicationContext();
 
+        emailFromCreateAccount = getIntent().getStringExtra(EXTRA_ID);
+        emailEdit.setText(emailFromCreateAccount);
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myDatabaseRef = database.getReference();

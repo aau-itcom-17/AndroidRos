@@ -59,13 +59,14 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     Intent intent = new Intent();
     Context context;
+    private String EXTRA_ID = "emailID";
     CharSequence missingInfoError = "Please fill out all the fields above...";
     CharSequence passwordNotMatching = "Passwords are not matching...";
     CharSequence emailNotValid = "Please provide a valid email...";
     CharSequence emailAlreadyExist = "The email provided already exists...";
     CharSequence nothing = "";
     CharSequence permission = "Please allow the app to use your gallery if you wish to select a profile picture for your profile";
-    int toastDuration = Toast.LENGTH_LONG;
+    int toastDuration = Toast.LENGTH_SHORT;
     Toast missingInfoToast;
     Toast wrongPasswordToast;
     Toast emailNotValidToast;
@@ -83,6 +84,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     String confirmPassword;
     String picturePath = null;
     TextView uploadPhotoView;
+    private EditText editLoginEmail;
     private Bitmap loadedBitmap;
 
     private FirebaseAuth auth;
@@ -188,7 +190,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
             loadedBitmap = BitmapFactory.decodeFile(picturePath);
 
-            // Checking rotation
+            // Checking rotation of image and turning it the right way
             ExifInterface exif = null;
             try {
                 File pictureFile = new File(picturePath);
@@ -215,6 +217,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     break;
             }
             //
+
             imageView.setImageBitmap(loadedBitmap);
             uploadPhotoView.setText(nothing);
         }
@@ -315,7 +318,9 @@ public class CreateAccountActivity extends AppCompatActivity {
         // Write new user
         writeNewUser(firstName, lastName, email, password, user.getUid(), false, picturePath);
         // Go to MainActivity
-        startActivity(new Intent(this, LoginWithFirebaseActivity.class));
+        intent = new Intent (this, LoginWithFirebaseActivity.class);
+        intent.putExtra(EXTRA_ID, email);
+        startActivity(intent);
         finish();
     }
 

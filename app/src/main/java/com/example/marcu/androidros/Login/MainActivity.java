@@ -12,9 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.marcu.androidros.Intro.Application;
-
-import com.example.marcu.androidros.IntroActivity;
+import com.example.marcu.androidros.Intro.IntroActivity;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.Prefs;

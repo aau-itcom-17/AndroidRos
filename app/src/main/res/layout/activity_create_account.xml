@@ -90,17 +90,6 @@
         app:layout_constraintTop_toBottomOf="@+id/passEdit"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
-        android:id="@+id/createAccountButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:onClick="createAccountButtonClicked"
-        android:text="Create New Account"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profilePictureView"
@@ -153,6 +142,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmPassEdit" />
+
+    <Button
+        android:id="@+id/createAccountButton"
+        android:layout_width="150sp"
+        android:layout_height="50sp"
+        android:layout_marginBottom="50dp"
+        android:onClick="createAccountButtonClicked"
+        android:background="@color/colorPrimary"
+        android:text="@string/create_new_account"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

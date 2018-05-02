@@ -50,4 +50,5 @@
 
     <string name="home_title">Welcome to Application</string>
     <string name="home_desc">make friends and have fun.</string>
+    <string name="create_new_account">Create New Account</string>
 </resources>

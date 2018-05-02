@@ -1,4 +1,4 @@
-package com.example.marcu.androidros;
+package com.example.marcu.androidros.Intro;
 
 import android.content.Context;
 import android.content.Intent;
