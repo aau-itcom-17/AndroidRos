@@ -39,6 +39,7 @@
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="start">Start Now</string>
+    <string name="submitbtn">Accept picture</string>
 
     <string name="slide_1_title">Find people</string>
     <string name="slide_1_desc">The easiest way to find some party ppl</string>
