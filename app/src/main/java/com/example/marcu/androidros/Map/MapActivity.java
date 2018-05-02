@@ -362,5 +362,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Intent intent = new Intent(MapActivity.this, EventPopUp.class);
             startActivity(intent);
         }
+
     }
 }
