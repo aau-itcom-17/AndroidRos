@@ -28,6 +28,7 @@ public class MyInvitesFragment extends Fragment {
 
     FirebaseUser firebaseUser;
     FirebaseDatabase database;
+    public static String[] invites;
 
     @Nullable
     @Override
@@ -45,27 +46,28 @@ public class MyInvitesFragment extends Fragment {
                 User user = dataSnapshot.child(uid).getValue(User.class);
 
 
-                String[] invites = new String[10];
                 List listOfInvites = new ArrayList();
 
-                if (user.getFirstName().equals("ll"))
-                {
-                    System.out.println("test2");
+                if (user.getInvites() == null) {
 
+                    System.out.println("null");
 
+                    invites = new String[1];
+                    listOfInvites.add("No current invites");
+                    listOfInvites.toArray(invites);
 
-                    listOfInvites.add("No Invites");
-                    System.out.println("test2");
-                }
-                else
-                {
-                    for (int i = 0; i < user.getInvites().size(); i++) {
+                } else {
+
+                    System.out.println("not null");
+
+                    invites = new String[user.getFavourites().size()];
+
+                    for (int i = 0; i < user.getInvites().size(); i++)
+                    {
                         listOfInvites.add(user.getInvites().get(i).getName());
                     }
+                    listOfInvites.toArray(invites);
                 }
-                listOfInvites.toArray(invites);
-                System.out.println("test2.2");
-
 
                 ListView listView = (ListView) view.findViewById(R.id.invitesList);
 

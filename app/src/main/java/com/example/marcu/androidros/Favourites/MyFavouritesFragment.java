@@ -28,6 +28,7 @@ public class MyFavouritesFragment extends Fragment {
 
     FirebaseUser firebaseUser;
     FirebaseDatabase database;
+    public static String[] favouriteEvents;
 
     @Nullable
     @Override
@@ -46,26 +47,27 @@ public class MyFavouritesFragment extends Fragment {
                 User user = dataSnapshot.child(uid).getValue(User.class);
 
 
-                String[] favouriteEvents = new String[10];
                 List list = new ArrayList();
 
-                if (user.getFavourites().size().equals(null)) {
-                    System.out.println("test");
+                if (user.getFavourites() == null) {
 
+                    System.out.println("null");
 
-                    list.add("No Favourites");
+                    favouriteEvents = new String[1];
+                    list.add("No current favourites");
+                    list.toArray(favouriteEvents);
 
-                    System.out.println(user.getFavourites().size());
                 } else {
 
-                    System.out.println(user.getFirstName());
+                    System.out.println("not null");
+
+                    favouriteEvents = new String[user.getFavourites().size()];
+
                     for (int i = 0; i < user.getFavourites().size(); i++) {
                         list.add(user.getFavourites().get(i).getName());
                     }
+                    list.toArray(favouriteEvents);
                 }
-                list.toArray(favouriteEvents);
-                System.out.println("test1.2");
-
 
                 ListView listView = (ListView) view.findViewById(R.id.favouritesList);
 
