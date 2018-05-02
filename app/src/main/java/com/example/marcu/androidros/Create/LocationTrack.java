@@ -35,7 +35,7 @@ public class LocationTrack extends Service implements LocationListener {
     // Sets the LocationManager to update every time the user moves 10 meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
   
-    // Sets the update time in the location listener to one minute (60000 miliseconds)
+    // Sets the update time in the location listener to one minute (60000 milliseconds)
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     protected LocationManager locationManager;
 
