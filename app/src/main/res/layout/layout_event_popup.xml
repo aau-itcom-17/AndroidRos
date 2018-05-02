@@ -22,13 +22,13 @@
         android:src="@drawable/ic_close_black_24dp" />
 
     <TextView
-        android:id="@+id/event_title"
+        android:id="@+id/title_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/event_picture"
-        android:text="Title for event"
+        android:text=""
         android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="@color/colorPrimary"
@@ -38,11 +38,11 @@
         android:paddingRight="20sp" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/time_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/event_title"
-        android:text="23. apr. 2018 kl. 13.00 - 15.00"
+        android:layout_below="@+id/title_view"
+        android:text=""
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:paddingBottom="2sp"
@@ -50,11 +50,11 @@
         android:paddingRight="20sp"/>
 
     <TextView
-        android:id="@+id/location"
+        android:id="@+id/location_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/date"
-        android:text="Roskilde Festival, 4000 Roskilde"
+        android:layout_below="@+id/time_view"
+        android:text=""
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:paddingTop="2sp"
@@ -62,11 +62,11 @@
         android:paddingRight="20sp"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/description_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/location"
-        android:text="This is the description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum aliquet nisi eget pulvinar. Cras pulvinar, metus luctus condimentum posuere, nibh sapien rutrum ante, a cursus diam sapien at ex."
+        android:layout_below="@+id/location_view"
+        android:text=""
         android:textColor="@android:color/black"
         android:textSize="15sp"
         android:layout_alignParentStart="true"

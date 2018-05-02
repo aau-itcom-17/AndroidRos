@@ -249,6 +249,7 @@ public class CreateActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
+
                 name = nameOfEventEdit.getText().toString();
                 eventDescription = eventDescriptionEdit.getText().toString();
 
@@ -277,8 +278,6 @@ public class CreateActivity extends AppCompatActivity{
                         }
                     }
                 });
-
-
             }
         });
     }

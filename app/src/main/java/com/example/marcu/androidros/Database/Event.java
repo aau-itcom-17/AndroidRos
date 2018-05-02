@@ -1,9 +1,5 @@
 package com.example.marcu.androidros.Database;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -22,7 +18,7 @@ public class Event {
         this.comments = comments;
     }
 
-    public Event(){
+    public Event(String s, String toString, String currentPhotoPath, String string, String s1, double latitude, double longitude){
 
     }
 

@@ -1,15 +1,14 @@
 package com.example.marcu.androidros.Login;
 
 import android.Manifest;
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
@@ -46,6 +45,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
@@ -80,8 +81,9 @@ public class CreateAccountActivity extends AppCompatActivity {
     String email;
     String password;
     String confirmPassword;
-    String picturePath = "null";
+    String picturePath = null;
     TextView uploadPhotoView;
+    private Bitmap loadedBitmap;
 
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
@@ -157,10 +159,13 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
     }
     public void addProfilePictureButtonClicked(View view){
-        Intent i = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
+        if (checkGalleryPermissions()) {
+            Intent i = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
+        }else {
 
+        }
         //permissionToast = Toast.makeText(context,permission,toastDuration);
        // permissionToast.show();
 
@@ -181,12 +186,46 @@ public class CreateAccountActivity extends AppCompatActivity {
             picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            loadedBitmap = BitmapFactory.decodeFile(picturePath);
+
+            // Checking rotation
+            ExifInterface exif = null;
+            try {
+                File pictureFile = new File(picturePath);
+                exif = new ExifInterface(pictureFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int orientation = ExifInterface.ORIENTATION_NORMAL;
+
+            if (exif != null) {
+                orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            }
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    loadedBitmap = rotateBitmap(loadedBitmap, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    loadedBitmap = rotateBitmap(loadedBitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    loadedBitmap = rotateBitmap(loadedBitmap, 270);
+                    break;
+            }
+            //
+            imageView.setImageBitmap(loadedBitmap);
             uploadPhotoView.setText(nothing);
         }
     }
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
-    private void checkGalleryPermissions(){
+    private boolean checkGalleryPermissions(){
         // Here, this is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -196,6 +235,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
+                return false;
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -204,9 +244,11 @@ public class CreateAccountActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         RESULT_LOAD_IMAGE);
+                return true;
             }
         } else {
             // Permission has already been granted
+            return true;
         }
     }
 
