@@ -138,7 +138,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
 
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
