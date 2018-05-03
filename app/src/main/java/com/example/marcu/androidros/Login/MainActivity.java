@@ -58,12 +58,14 @@ public class MainActivity extends AppCompatActivity {
     public void nextActivityButtonClicked (View view){
         intent.setClass(this, CreateAccountActivity.class);
         startActivity(intent);
+        finish();
         Log.i("TEST", "Going to CreateAccount");
 
     }
     public void loginActivityButtonClicked (View view){
         intent.setClass(this, LoginWithFirebaseActivity.class);
         startActivity(intent);
+        finish();
         Log.i("TEST", "Going to Login Page");
     }
 

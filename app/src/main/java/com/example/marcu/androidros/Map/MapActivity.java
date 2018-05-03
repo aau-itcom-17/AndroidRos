@@ -71,6 +71,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Marker mAAU;
     private Marker mRoskilde;
     private Marker mHome;
+    private Intent intent;
 
 
     private TextView drawerName;
@@ -93,6 +94,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -112,28 +114,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         //Access data in database
         database = FirebaseDatabase.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                String uid = firebaseUser.getUid();
-                Log.i("Firebase", "uid: " + uid);
-                User user = dataSnapshot.child(uid).getValue(User.class);
-                fullName = user.getFirstName() + " " + user.getLastName();
-                email = user.getEmail();
-                profilePictureRef = user.getProfilePicture();
-                Log.i("Firebase", "Profile picture reference: " + profilePictureRef);
-                Log.i("Firebase", "Full name: " + fullName);
-
-                drawerName.setText(fullName);
-                drawerEmail.setText(email);
-                if (profilePictureRef != null){
-                    profilePicFile = new File(profilePictureRef);
-                    if(profilePicFile.exists()) {
-                        drawerImage.setImageBitmap(BitmapFactory.decodeFile(profilePictureRef));
-                    }else{
-                        Toast.makeText(MapActivity.this, "Couldn't load profile picture... please change your profile picture in account settings.", Toast.LENGTH_SHORT);
+                if (firebaseUser != null) {
+                    String uid = firebaseUser.getUid();
+                    Log.i("Firebase", "uid: " + uid);
+                    User user = dataSnapshot.child(uid).getValue(User.class);
+                    if (user != null) {
+                        fullName = user.getFirstName() + " " + user.getLastName();
+                        email = user.getEmail();
+                        profilePictureRef = user.getProfilePicture();
+                        Log.i("Firebase", "Profile picture reference: " + profilePictureRef);
+                        Log.i("Firebase", "Full name: " + fullName);
+                    }
+                    drawerName.setText(fullName);
+                    drawerEmail.setText(email);
+                    if (profilePictureRef != null) {
+                        profilePicFile = new File(profilePictureRef);
+                        if (profilePicFile.exists()) {
+                            drawerImage.setImageBitmap(BitmapFactory.decodeFile(profilePictureRef));
+                        } else {
+                            Toast.makeText(MapActivity.this, "Couldn't load profile picture... please change your profile picture in account settings.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 
@@ -154,7 +159,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         setUpBottomNavigationView();
     }
+    
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+       // savedInstanceState.putInt(STATE_LEVEL, mCurrentLevel);
+
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     // method controlling the menu buttons under the user info in the drawer.
     @Override
@@ -175,8 +190,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .setMessage("Are you sure you want to logout?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                //signing out
                                 FirebaseAuth.getInstance().signOut();
-                                startActivity(new Intent(MapActivity.this, MainActivity.class));
+                                intent = new Intent(MapActivity.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

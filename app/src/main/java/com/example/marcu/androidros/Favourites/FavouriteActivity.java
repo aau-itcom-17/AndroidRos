@@ -29,3 +29,4 @@ public class FavouriteActivity extends AppCompatActivity {
         menuItem.setChecked(true);
     }
 }
+

@@ -69,6 +69,37 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
 
     }
 
+    public void loginButton (View view){
+        intent.setClass(this, MapActivity.class);
+        email = emailEdit.getText().toString();
+        password = passEdit.getText().toString();
+
+        signInWithFirebase(email, password);
+
+        // ...
+    }
+
+    private void signInWithFirebase(String email, String password){
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(context, wrongEmailAndPass, toastDuration).show();
+                            emailEdit.setError(wrongEmailAndPass);
+                        }
+
+                    }
+                });
+    }
 
     @Override
     protected void onStart() {
@@ -110,43 +141,6 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
 
         Log.i(CLASS_TAG, "onDestroy");
     }
-
-    public void loginButton (View view){
-        intent.setClass(this, MapActivity.class);
-        email = emailEdit.getText().toString();
-        password = passEdit.getText().toString();
-
-        signInWithFirebase(email, password);
-
-        // ...
-
-
-    }
-
-    private void signInWithFirebase(String email, String password){
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-
-                            startActivity(intent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(context, wrongEmailAndPass, toastDuration).show();
-                            emailEdit.setError(wrongEmailAndPass);
-                        }
-
-                    }
-                });
-    }
-    private void updateUI(FirebaseUser user) {
-
-    }
-
 
 }
 

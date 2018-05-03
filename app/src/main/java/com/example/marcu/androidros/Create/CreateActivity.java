@@ -21,6 +21,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -89,6 +90,7 @@ public class CreateActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_create);
         setUpBottomNavigationView();
 
@@ -152,10 +154,13 @@ public class CreateActivity extends AppCompatActivity{
 
 
 
+
                     Toast.makeText(getApplicationContext(), "Longitude: " + Double.toString(longitude) + "\nLatitude: " + Double.toString(latitude), Toast.LENGTH_SHORT).show();
                 } else {
                     locationTracker.showSettingsAlert();
                 }
+
+                locationTracker.stopListener();
 
             }
         });
@@ -222,12 +227,33 @@ public class CreateActivity extends AppCompatActivity{
             }
         });
     }
-  
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop");
+        //locationTracker.stopListener(); //Made the system crash when going back
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locationTracker.stopListener();
+        Log.i(TAG, "onDestroy");
     }
+
+
 
     // Adds the picture as a file
     private void galleryAddPic() {
