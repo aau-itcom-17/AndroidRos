@@ -1,5 +1,6 @@
 package com.example.marcu.androidros.Favourites;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -14,6 +16,7 @@ import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
+import com.example.marcu.androidros.ShowEvent.EventActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -88,7 +91,17 @@ public class MyFavouritesFragment extends Fragment {
 
 
                 //Action when clicking on the event:
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                        if (position == 0)
+                        {
+                            Intent intent = new Intent(getActivity(), EventActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
