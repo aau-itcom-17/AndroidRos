@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF9800</color>
+    <color name="colorPrimary">#faba5b</color>
     <color name="colorPrimaryDark">#FB8C00</color>
     <color name="colorAccent">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -12,7 +12,7 @@
     <!-- Screens background color-->
     <color name="bg_screen1">#e55d34</color>
     <color name="bg_screen2">#c64821</color>
-    <color name="bg_screen3">#d6532a</color>
+    <color name="bg_screen3">#f18e70</color>
 
     <!-- dots inactive colors -->
     <color name="pager_dark_screen1">#c64821</color>

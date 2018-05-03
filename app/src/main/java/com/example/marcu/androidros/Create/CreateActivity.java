@@ -1,30 +1,16 @@
 package com.example.marcu.androidros.Create;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -34,7 +20,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -43,11 +28,8 @@ import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,17 +39,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class CreateActivity extends AppCompatActivity{
 
@@ -77,13 +55,14 @@ public class CreateActivity extends AppCompatActivity{
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
 
-    private Button mSubmitBtn;
+
+    private Bitmap mImageBitmap;
+    private ImageButton mPictureButton;
+
     private Button getLocation;
     private Button finishEvent;
-    private ImageButton imageButton;
 
-    private String currentPhotoPath;
-    private ImageView imageView;
+    private String mCurrentPhotoPath;
 
     private TextView locationLatitude;
     private TextView locationLongitude;
@@ -132,35 +111,24 @@ public class CreateActivity extends AppCompatActivity{
         nameOfEventEdit = findViewById(R.id.name_input);
         eventDescriptionEdit = findViewById(R.id.enter_event_description);
 
-        imageView = (ImageView) this.findViewById(R.id.image_view);
-
         mProgressDialog = new ProgressDialog(this);
 
         mStorage = FirebaseStorage.getInstance().getReference().child("event_pictures");
 
-        // Makes the button open the camera
-        imageButton = findViewById(R.id.image_button);
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        mPictureButton = (ImageButton) findViewById(R.id.image_button);
+        mPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                try{
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    // ensure there is a camera activity to handle the intent
-                    startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);} catch (SecurityException e){
-                    if(ContextCompat.checkSelfPermission(CreateActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(CreateActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION);
-                    }
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, CAMERA_REQUEST_CODE);
                 }
-            }
-        });
 
-        mSubmitBtn = (Button) findViewById(R.id.submit_image_button);
-        mSubmitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 startPosting();
             }
+
         });
 
 
@@ -187,6 +155,7 @@ public class CreateActivity extends AppCompatActivity{
                 } else {
                     locationTracker.showSettingsAlert();
                 }
+
 
             }
         });
@@ -249,23 +218,15 @@ public class CreateActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-
                 name = nameOfEventEdit.getText().toString();
                 eventDescription = eventDescriptionEdit.getText().toString();
-
-
 
                 date = dTv.getText().toString();
                 time = tTv.getText().toString();
 
-                Event userEvent = new Event(name, eventDescription, currentPhotoPath, time, date, latitude, longitude, 0, 0);
+                Event userEvent = new Event(name, eventDescription, mCurrentPhotoPath, time, date, latitude, longitude, 0, 0);
 
-                HashMap<String, Object> eventMap = new HashMap<String, Object>();
-
-                eventMap.put("Name", name);
-                eventMap.put("user_event", userEvent);
-
-                mDatabaseRef.child("events").push().setValue(eventMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                mDatabaseRef.child("events").push().setValue(userEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
@@ -282,8 +243,25 @@ public class CreateActivity extends AppCompatActivity{
         });
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
     private void startPosting() {
-        mProgressDialog.setMessage("Posting to database...");
+        mProgressDialog.setMessage("Uploading photo");
 
         final String title_val = nameOfEventEdit.getText().toString().trim();
 
@@ -301,26 +279,48 @@ public class CreateActivity extends AppCompatActivity{
                     DatabaseReference newEvent = mDatabaseRef.push();
                     newEvent.child("event name").setValue(title_val);
                     newEvent.child("image").setValue(downloadUrl.toString());
+
+
+                    mProgressDialog.dismiss();
+
+                    startActivity(new Intent(CreateActivity.this, MapActivity.class));
                 }
             });
         }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        locationTracker.stopListener();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_PERMISSION);
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
 
             mImageUri = data.getData();
+            mPictureButton.setImageURI(mImageUri);
+
+            Picasso.get()
+                    .load(mImageUri)
+                    .resize(100, 134)
+                    .centerCrop()
+                    .into(mPictureButton);
+
         }
+
     }
+
 
 
     // Method handling the buttom navigation view

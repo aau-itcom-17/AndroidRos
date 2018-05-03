@@ -20,12 +20,13 @@
     <string name="description_text_view">Enter descritption of the event</string>
     <string name="time_of_event">Enter time</string>
     <string name="date_of_event">Select date</string>
+
     <string name="location_of_user">Get Location</string>
     <string name="location_text_view">Get Location</string>
     <string name="location_longitude">Longitude</string>
     <string name="location_latitude">Latitude</string>
-    <string name="pause_location_tracking">pause</string>
     <string name="resume_location_tracking">Track location</string>
+
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="create_account_name">Create Account</string>
