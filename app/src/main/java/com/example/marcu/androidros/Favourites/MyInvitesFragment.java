@@ -37,6 +37,9 @@ public class MyInvitesFragment extends Fragment {
 
         database = FirebaseDatabase.getInstance();
         database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+            //Get the user logged in, from the database:
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
@@ -46,8 +49,11 @@ public class MyInvitesFragment extends Fragment {
                 User user = dataSnapshot.child(uid).getValue(User.class);
 
 
+                //Create a list for invites:
                 List listOfInvites = new ArrayList();
 
+
+                //Write "No current invites", if there is nothing in invites:
                 if (user.getInvites() == null) {
 
                     System.out.println("null");
@@ -56,6 +62,8 @@ public class MyInvitesFragment extends Fragment {
                     listOfInvites.add("No current invites");
                     listOfInvites.toArray(invites);
 
+
+                //Adds all invites to the list:
                 } else {
 
                     System.out.println("not null");
@@ -69,6 +77,8 @@ public class MyInvitesFragment extends Fragment {
                     listOfInvites.toArray(invites);
                 }
 
+
+                //Shows the invites:
                 ListView listView = (ListView) view.findViewById(R.id.invitesList);
 
                 ArrayAdapter<String> listViewAdaptor = new ArrayAdapter<String>(
@@ -76,7 +86,10 @@ public class MyInvitesFragment extends Fragment {
                 );
 
                 listView.setAdapter(listViewAdaptor);
-                System.out.println("test2.3");
+
+
+                //Action when clicking on the event:
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

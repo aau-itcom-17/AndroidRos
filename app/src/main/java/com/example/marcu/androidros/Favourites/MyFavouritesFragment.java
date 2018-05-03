@@ -35,9 +35,11 @@ public class MyFavouritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_my_favourites, container, false);
 
-
         database = FirebaseDatabase.getInstance();
         database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+            //Get the user logged in, from the database:
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
@@ -47,16 +49,21 @@ public class MyFavouritesFragment extends Fragment {
                 User user = dataSnapshot.child(uid).getValue(User.class);
 
 
+                //Create a list for favourites:
                 List list = new ArrayList();
 
+
+                //Write "No current favourites", if there is nothing in favourites:
                 if (user.getFavourites() == null) {
 
                     System.out.println("null");
 
                     favouriteEvents = new String[1];
                     list.add("No current favourites");
+
                     list.toArray(favouriteEvents);
 
+                //Adds all favourites to the list:
                 } else {
 
                     System.out.println("not null");
@@ -69,15 +76,19 @@ public class MyFavouritesFragment extends Fragment {
                     list.toArray(favouriteEvents);
                 }
 
+
+                //Shows the favourites:
                 ListView listView = (ListView) view.findViewById(R.id.favouritesList);
 
                 ArrayAdapter<String> listViewAdaptor = new ArrayAdapter<String>(
                         getActivity(), android.R.layout.simple_list_item_1, favouriteEvents
                 );
 
-
                 listView.setAdapter(listViewAdaptor);
-                System.out.println("test1.3");
+
+
+                //Action when clicking on the event:
+
             }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
