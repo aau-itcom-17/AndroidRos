@@ -1,8 +1,10 @@
 package com.example.marcu.androidros.Login;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.marcu.androidros.Database.User;
+import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,8 +36,8 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
     int toastDuration = Toast.LENGTH_SHORT;
     CharSequence wrongEmailAndPass = "The Email and/or Password does not exist.";
     private String emailFromCreateAccount;
-    private String EXTRA_ID = "emailID";
-    private String SAVE_EMAIL = "saveEMAIL";
+    private static final String EXTRA_ID = "emailID";
+    private static final String SAVE_EMAIL = "saveEMAIL";
 
     String TAG = "Firebase";
     String CLASS_TAG = "LoginActivity";
@@ -89,6 +91,7 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
 
                             startActivity(intent);
+                            MainActivity.getInstance().finish();
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.

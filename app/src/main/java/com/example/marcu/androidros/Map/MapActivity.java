@@ -1,8 +1,10 @@
 package com.example.marcu.androidros.Map;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -60,6 +62,7 @@ import java.util.Map;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final String CLASS_TAG = "MapActivity";
     private DrawerLayout drawer;
     private ActionBarDrawerToggle mToggle;
     public GoogleMap mMap;
@@ -68,6 +71,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final LatLng ROSKILDE = new LatLng(55.616885, 12.077064);
     private static final LatLng HOME = new LatLng(55.650661, 12.525810);
     private static final LatLng DK = new LatLng(55.641010, 12.081299);
+    private LatLng MyLocation = null;
     private Marker mAAU;
     private Marker mRoskilde;
     private Marker mHome;
@@ -84,15 +88,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String email;
     private File profilePicFile;
 
-    FirebaseUser firebaseUser;
-    FirebaseDatabase database;
-    DatabaseReference myDatabaseRef;
+    private final static String SAVE_MAP_STATE = "saveMapState";
 
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase database;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        Log.i(CLASS_TAG, "onCreate");
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -137,12 +142,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if (profilePicFile.exists()) {
                             drawerImage.setImageBitmap(BitmapFactory.decodeFile(profilePictureRef));
                         } else {
-                            Toast.makeText(MapActivity.this, "Couldn't load profile picture... please change your profile picture in account settings.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MapActivity.this, "Couldn't load profile picture... " +
+                                    "please change your profile picture in account settings.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
@@ -150,6 +156,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 // ...
             }
         });
+
         // access done.
 
 
@@ -158,67 +165,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         setUpBottomNavigationView();
-    }
-    
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
-       // savedInstanceState.putInt(STATE_LEVEL, mCurrentLevel);
-
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    // method controlling the menu buttons under the user info in the drawer.
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_userpage:
-                getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPageFragment()).commit();
-                break;
-            case R.id.nav_logout:
-                // logging out
-                AlertDialog.Builder builder;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(MapActivity.this, android.R.style.Theme_Material_Dialog_Alert);
-                } else {
-                    builder = new AlertDialog.Builder(MapActivity.this);
-                }
-                builder.setTitle("Logout")
-                        .setMessage("Are you sure you want to logout?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //signing out
-                                FirebaseAuth.getInstance().signOut();
-                                intent = new Intent(MapActivity.this, MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-                break;
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    //When the back button is pressed on the drawer only the drawer will close and not the activity you have chosen
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-
     }
 
     @Override
@@ -237,9 +183,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         enableMyLocation();
 
         // Move the camera to location everytime you open up the page.
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DK, 8));
-
-
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DK, 12));
 
         //Creates a polygon around roskilde festival.
         PolygonOptions roskilde = new PolygonOptions()
@@ -344,6 +288,99 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void showMissingPermissionError() {
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(CLASS_TAG, "onStart");
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(CLASS_TAG, "onResume");
+        SharedPreferences prefs = getSharedPreferences(SAVE_MAP_STATE, MODE_PRIVATE);
+        //String restoredEmail = prefs.getString("map", null);
+        //if (restoredEmail != null && emailFromCreateAccount == null) {
+        //     emailEdit.setText(restoredEmail);
+        //}
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(CLASS_TAG, "onPause");
+        SharedPreferences.Editor editor = getSharedPreferences(SAVE_MAP_STATE, MODE_PRIVATE).edit();
+        //editor.putString("email", emailEdit.getText().toString());
+        editor.apply();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(CLASS_TAG, "onStop");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(CLASS_TAG, "onDestroy");
+    }
+
+
+    // method controlling the menu buttons under the user info in the drawer.
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_userpage:
+                getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPageFragment()).commit();
+                break;
+            case R.id.nav_logout:
+                // logging out
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(MapActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(MapActivity.this);
+                }
+                builder.setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //signing out
+                                FirebaseAuth.getInstance().signOut();
+                                intent = new Intent(MapActivity.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+                break;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    //When the back button is pressed on the drawer only the drawer will close and not the activity you have chosen
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     private void setUpBottomNavigationView() {
