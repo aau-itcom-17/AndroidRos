@@ -42,7 +42,7 @@
             android:name=".Utils.EventPopUp"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity
-            android:name=".IntroActivity"
+            android:name=".Intro.IntroActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!--

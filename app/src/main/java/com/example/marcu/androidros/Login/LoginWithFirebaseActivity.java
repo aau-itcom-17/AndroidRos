@@ -1,7 +1,10 @@
 package com.example.marcu.androidros.Login;
 
+import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.marcu.androidros.Database.User;
+import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,11 +33,15 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
     String email;
     String password;
     Context context;
-    int toastDuration = Toast.LENGTH_LONG;
+    int toastDuration = Toast.LENGTH_SHORT;
     CharSequence wrongEmailAndPass = "The Email and/or Password does not exist.";
-
+    private String emailFromCreateAccount;
+    private static final String EXTRA_ID = "emailID";
+    private static final String SAVE_EMAIL = "saveEMAIL";
 
     String TAG = "Firebase";
+    String CLASS_TAG = "LoginActivity";
+
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
     FirebaseDatabase database;
@@ -46,16 +53,23 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_with_firebase);
 
         CreateAccountActivity.setHideKeyboardOnTouch(this, findViewById(R.id.activity_login_with_firebase));
-        emailEdit = findViewById(R.id.emailEdit1);
-        passEdit = findViewById(R.id.passEdit1);
+        emailEdit = findViewById(R.id.emailEditLogin);
+        passEdit = findViewById(R.id.passEditLogin);
         context = getApplicationContext();
+
+        //getting email from create account
+        emailFromCreateAccount = getIntent().getStringExtra(EXTRA_ID);
+        Log.i("FROM_CREATE",  "email: "+  emailFromCreateAccount);
+        // saves email if you go back to main menu
+
+
+        emailEdit.setText(emailFromCreateAccount);
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myDatabaseRef = database.getReference();
 
     }
-
 
     public void loginButton (View view){
         intent.setClass(this, MapActivity.class);
@@ -65,8 +79,6 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
         signInWithFirebase(email, password);
 
         // ...
-
-
     }
 
     private void signInWithFirebase(String email, String password){
@@ -79,6 +91,8 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
 
                             startActivity(intent);
+                            MainActivity.getInstance().finish();
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -89,10 +103,47 @@ public class LoginWithFirebaseActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void updateUI(FirebaseUser user) {
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(CLASS_TAG, "onStart");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(CLASS_TAG, "onResume");
+        SharedPreferences prefs = getSharedPreferences(SAVE_EMAIL, MODE_PRIVATE);
+        String restoredEmail = prefs.getString("email", null);
+        Log.i(CLASS_TAG, "Email from pref: " + restoredEmail);
+        if (restoredEmail != null && emailFromCreateAccount == null) {
+            emailEdit.setText(restoredEmail);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor editor = getSharedPreferences(SAVE_EMAIL, MODE_PRIVATE).edit();
+        editor.putString("email", emailEdit.getText().toString());
+        editor.apply();
+        Log.i(CLASS_TAG, "The editor email in onPause: " + emailEdit.getText().toString());
+        Log.i(CLASS_TAG, "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(CLASS_TAG, "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.i(CLASS_TAG, "onDestroy");
+    }
 
 }
 

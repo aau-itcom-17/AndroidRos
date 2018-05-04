@@ -11,7 +11,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
+import android.
+  .Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,6 +27,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -121,6 +123,7 @@ public class CreateActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_create);
         setUpBottomNavigationView();
 
@@ -187,6 +190,8 @@ public class CreateActivity extends AppCompatActivity{
                 } else {
                     locationTracker.showSettingsAlert();
                 }
+
+                locationTracker.stopListener();
 
             }
         });
@@ -282,6 +287,40 @@ public class CreateActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
+
+    }
+
+    // Adds the picture as a file
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
     private void startPosting() {
         mProgressDialog.setMessage("Posting to database...");
 
@@ -304,12 +343,6 @@ public class CreateActivity extends AppCompatActivity{
                 }
             });
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        locationTracker.stopListener();
     }
 
     @Override

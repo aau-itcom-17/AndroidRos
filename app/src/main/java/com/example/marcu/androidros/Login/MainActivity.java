@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,10 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.marcu.androidros.Intro.IntroActivity;
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Intro.Application;
 
-import com.example.marcu.androidros.IntroActivity;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.Prefs;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
 
+    public static MainActivity mainActivity;
 
 
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+        mainActivity = this;
         prefs = getSharedPreferences("com.example.marcu.androidros", MODE_PRIVATE);
         setContentView(R.layout.activity_main);
         auth = FirebaseAuth.getInstance();
@@ -63,19 +66,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, MapActivity.class));
             finish();
         }
-
-
     }
 
     public void nextActivityButtonClicked (View view){
         intent.setClass(this, CreateAccountActivity.class);
         startActivity(intent);
+        //finish();
         Log.i("TEST", "Going to CreateAccount");
 
     }
     public void loginActivityButtonClicked (View view){
         intent.setClass(this, LoginWithFirebaseActivity.class);
         startActivity(intent);
+        //finish();
         Log.i("TEST", "Going to Login Page");
     }
 
@@ -88,5 +91,8 @@ public class MainActivity extends AppCompatActivity {
            startActivity(intent);
            prefs.edit().putBoolean("firstrun", false).apply();
         }
+    }
+    public static MainActivity getInstance(){
+        return mainActivity;
     }
 }

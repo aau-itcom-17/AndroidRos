@@ -1,4 +1,4 @@
-package com.example.marcu.androidros;
+package com.example.marcu.androidros.Intro;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.marcu.androidros.Intro.Application;
 import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.Prefs;
@@ -37,12 +36,6 @@ public class IntroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Checking for first time launch - before calling setContentView()
-        //prefs = Application.getApp().getPrefs();
-        /*if (!prefs.isFirstTimeLaunch()) {
-            launchHomeScreen();
-            finish();
-        }*/
 
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
