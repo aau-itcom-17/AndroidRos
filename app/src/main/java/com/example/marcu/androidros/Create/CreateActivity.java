@@ -85,8 +85,8 @@ public class CreateActivity extends AppCompatActivity{
     private String currentPhotoPath;
     private ImageView imageView;
 
-    private TextView locationLatitude;
-    private TextView locationLongitude;
+    public TextView locationLatitude;
+    public TextView locationLongitude;
     private EditText nameOfEventEdit;
     private EditText eventDescriptionEdit;
 
@@ -110,13 +110,13 @@ public class CreateActivity extends AppCompatActivity{
 
     private ProgressDialog mProgressDialog;
 
-    private LocationTrack locationTracker;
-    private LatLng loc;
+    public LocationTrack locationTracker;
+    public LatLng loc;
 
     private static final int CAMERA_REQUEST_CODE = 1;
     private static final int CAMERA_PERMISSION = 1;
 
-    double longitude, latitude;
+    public double longitude, latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

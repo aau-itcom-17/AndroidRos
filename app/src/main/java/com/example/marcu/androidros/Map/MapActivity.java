@@ -1,7 +1,6 @@
 package com.example.marcu.androidros.Map;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,17 +29,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+import com.example.marcu.androidros.Create.LocationTrack;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Login.CreateAccountActivity;
 import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.example.marcu.androidros.Utils.EventPopUp;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -49,6 +54,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,6 +63,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -77,6 +84,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Marker mHome;
     private Intent intent;
 
+    private LocationTrack locationTracker;
+    private LatLng loc;
+
+    double longitude, latitude;
+    private TextView locationLatitude;
+    private TextView locationLongitude;
+
 
     private TextView drawerName;
     private TextView drawerEmail;
@@ -87,6 +101,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String fullName;
     private String email;
     private File profilePicFile;
+    private ChildEventListener mChildEventListener;
+
+
+
 
     private final static String SAVE_MAP_STATE = "saveMapState";
 
@@ -115,6 +133,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
         drawer.addDrawerListener(mToggle);
         mToggle.syncState();
+        ChildEventListener mChildEventListener;
+
 
 
         //Access data in database
@@ -147,6 +167,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                     }
                 }
+
             }
 
             @Override
@@ -182,34 +203,47 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(this);
         enableMyLocation();
 
-        // Move the camera to location everytime you open up the page.
+        locationTracker = new LocationTrack(MapActivity.this);
+        if(locationTracker.canGetLocation()){
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ZOOM, 8));
+            longitude = locationTracker.getLongitude();
+            latitude = locationTracker.getLatitude();
+            loc = new LatLng(latitude, longitude);
+
+        } else {
+            locationTracker.showSettingsAlert();
+        }
+        locationTracker.stopListener();
+
+        // Move the camera to location everytime you open up the page.
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14));
+
+
 
         //Creates a polygon around roskilde festival.
         PolygonOptions roskilde = new PolygonOptions()
                 .add(new LatLng(55.624404, 12.065872),
-                new LatLng(55.616147, 12.065023),
-                new LatLng(55.610281, 12.061161),
-                new LatLng(55.608612, 12.084448),
-                new LatLng(55.610256, 12.095493),
-                new LatLng(55.624845, 12.091416),
-                new LatLng(55.623390, 12.074894))
+                        new LatLng(55.616147, 12.065023),
+                        new LatLng(55.610281, 12.061161),
+                        new LatLng(55.608612, 12.084448),
+                        new LatLng(55.610256, 12.095493),
+                        new LatLng(55.624845, 12.091416),
+                        new LatLng(55.623390, 12.074894))
                 .strokeColor(Color.argb(255, 255, 152, 0));
 
         Polygon polygon = map.addPolygon(roskilde);
 
 
-       PolygonOptions festivalArea = new PolygonOptions()
-               .add(new LatLng(55.622268, 12.070307),
-               new LatLng(55.617445, 12.072882),
-        new LatLng(55.617460, 12.075009),
-        new LatLng(55.617460, 12.075009),
-        new LatLng(55.618425, 12.086578),
-        new LatLng(55.622810, 12.085591))
-        .strokeColor(Color.argb(255, 255, 152, 0));
+        PolygonOptions festivalArea = new PolygonOptions()
+                .add(new LatLng(55.622268, 12.070307),
+                        new LatLng(55.617445, 12.072882),
+                        new LatLng(55.617460, 12.075009),
+                        new LatLng(55.617460, 12.075009),
+                        new LatLng(55.618425, 12.086578),
+                        new LatLng(55.622810, 12.085591))
+                .strokeColor(Color.argb(255, 255, 152, 0));
 
-       Polygon polygon1 = map.addPolygon(festivalArea);
+        Polygon polygon1 = map.addPolygon(festivalArea);
 
         //Creating three simple markers.
         mOrangeScene = mMap.addMarker(new MarkerOptions()
@@ -419,4 +453,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
