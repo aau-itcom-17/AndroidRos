@@ -1,7 +1,9 @@
 package com.example.marcu.androidros.Create;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +11,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
+import android.
+  .Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,26 +22,42 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.Event;
+import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
@@ -47,6 +66,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -55,14 +75,15 @@ public class CreateActivity extends AppCompatActivity{
 
     private static final String TAG = "CreateEventActivity";
 
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
+
+    private Button mSubmitBtn;
     private Button getLocation;
     private Button finishEvent;
-    private Button uploadPhoto;
-    private Button takePhoto;
+    private ImageButton imageButton;
 
-    private static final int REQUEST_TAKE_PHOTO = 1;
-    private static final int CAMERA_REQUEST = 1;
-    private Bitmap imageBitmap;
     private String currentPhotoPath;
     private ImageView imageView;
 
@@ -70,6 +91,15 @@ public class CreateActivity extends AppCompatActivity{
     private TextView locationLongitude;
     private EditText nameOfEventEdit;
     private EditText eventDescriptionEdit;
+
+    private String name;
+    private String eventDescription;
+    private String date;
+    private String time;
+
+    private Uri mImageUri = null;
+
+    private StorageReference mStorage;
 
     // Date implementation variables
     private TextView dTv;
@@ -80,10 +110,13 @@ public class CreateActivity extends AppCompatActivity{
     private TextView tTv;
     private Button tBtn;
 
-    private ArrayList permissions = new ArrayList();
+    private ProgressDialog mProgressDialog;
 
     private LocationTrack locationTracker;
     private LatLng loc;
+
+    private static final int CAMERA_REQUEST_CODE = 1;
+    private static final int CAMERA_PERMISSION = 1;
 
     double longitude, latitude;
 
@@ -94,43 +127,46 @@ public class CreateActivity extends AppCompatActivity{
         setContentView(R.layout.activity_create);
         setUpBottomNavigationView();
 
-        permissions.add(ACCESS_FINE_LOCATION);
-        permissions.add(ACCESS_COARSE_LOCATION);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
         finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
         locationLongitude = (TextView) findViewById(R.id.location_longitude);
         locationLatitude = (TextView) findViewById(R.id.location_latitude);
         nameOfEventEdit = findViewById(R.id.name_input);
-
         eventDescriptionEdit = findViewById(R.id.enter_event_description);
 
-        this.imageView = (ImageView) this.findViewById(R.id.image_view);
+        imageView = (ImageView) this.findViewById(R.id.image_view);
+
+        mProgressDialog = new ProgressDialog(this);
+
+        mStorage = FirebaseStorage.getInstance().getReference().child("event_pictures");
 
         // Makes the button open the camera
-        takePhoto = findViewById(R.id.take_photo);
-        takePhoto.setOnClickListener(new View.OnClickListener() {
+        imageButton = findViewById(R.id.image_button);
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // ensure there is a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
 
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                    }
-
-                    if (photoFile != null) {
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                        startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+                try{
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    // ensure there is a camera activity to handle the intent
+                    startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);} catch (SecurityException e){
+                    if(ContextCompat.checkSelfPermission(CreateActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(CreateActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION);
                     }
                 }
-                startActivity(takePictureIntent);
             }
         });
+
+        mSubmitBtn = (Button) findViewById(R.id.submit_image_button);
+        mSubmitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPosting();
+            }
+        });
+
+
 
         //Gets the location of the user
         getLocation = (Button) findViewById(R.id.get_location);
@@ -149,11 +185,6 @@ public class CreateActivity extends AppCompatActivity{
 
                     locationLongitude.setText(Double.toString(longitude));
                     locationLatitude.setText(Double.toString(latitude));
-
-
-
-
-
 
                     Toast.makeText(getApplicationContext(), "Longitude: " + Double.toString(longitude) + "\nLatitude: " + Double.toString(latitude), Toast.LENGTH_SHORT).show();
                 } else {
@@ -222,8 +253,36 @@ public class CreateActivity extends AppCompatActivity{
         finishEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Event userEvent = new Event(nameOfEventEdit.toString(), eventDescriptionEdit.toString(), currentPhotoPath, tTv.toString(), dTv.toString(), latitude, longitude);
 
+
+                name = nameOfEventEdit.getText().toString();
+                eventDescription = eventDescriptionEdit.getText().toString();
+
+
+
+                date = dTv.getText().toString();
+                time = tTv.getText().toString();
+
+                Event userEvent = new Event(name, eventDescription, currentPhotoPath, time, date, latitude, longitude, 0, 0);
+
+                HashMap<String, Object> eventMap = new HashMap<String, Object>();
+
+                eventMap.put("Name", name);
+                eventMap.put("user_event", userEvent);
+
+                mDatabaseRef.child("events").push().setValue(eventMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if (task.isSuccessful()) {
+
+                            Toast.makeText(CreateActivity.this, "Event saved", Toast.LENGTH_SHORT).show();
+                        } else{
+
+                            Toast.makeText(CreateActivity.this, "An error ocurred, try again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
@@ -244,16 +303,14 @@ public class CreateActivity extends AppCompatActivity{
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "onStop");
-        //locationTracker.stopListener(); //Made the system crash when going back
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy");
+
     }
-
-
 
     // Adds the picture as a file
     private void galleryAddPic() {
@@ -264,63 +321,38 @@ public class CreateActivity extends AppCompatActivity{
         this.sendBroadcast(mediaScanIntent);
     }
 
+    private void startPosting() {
+        mProgressDialog.setMessage("Posting to database...");
 
-    // Creates the image file,get the photo from here
-    private File createImageFile() throws IOException{
-        // create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName, /* prefix */
-                ".jpeg", /*suffix */
-                storageDir /* directory */
-        );
+        final String title_val = nameOfEventEdit.getText().toString().trim();
 
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
+        if(!TextUtils.isEmpty(title_val) && mImageUri != null){
 
+            mProgressDialog.show();
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(imageBitmap);
+            StorageReference filepath = mStorage.child("event_images").child(mImageUri.getLastPathSegment());
+
+            filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                    DatabaseReference newEvent = mDatabaseRef.push();
+                    newEvent.child("event name").setValue(title_val);
+                    newEvent.child("image").setValue(downloadUrl.toString());
+                }
+            });
         }
     }
 
-    public void getPic(String photopath){
-        this.currentPhotoPath = photopath;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    }
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
 
-    // Method handling image scaling
-    private void setPic() {
-        // Get the dimensions of the View
-        int targetW = imageView.getWidth();
-        int targetH = imageView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        imageView.setImageBitmap(bitmap);
+            mImageUri = data.getData();
+        }
     }
 
 

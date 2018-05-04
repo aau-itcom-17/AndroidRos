@@ -67,12 +67,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ActionBarDrawerToggle mToggle;
     public GoogleMap mMap;
     private boolean mPermissionDenied = false;
-    private static final LatLng AAU = new LatLng(55.649114, 12.542689);
+    private static final LatLng ORANGESCENE = new LatLng(55.621441, 12.077196);
     private static final LatLng ROSKILDE = new LatLng(55.616885, 12.077064);
     private static final LatLng HOME = new LatLng(55.650661, 12.525810);
-    private static final LatLng DK = new LatLng(55.641010, 12.081299);
-    private LatLng MyLocation = null;
     private Marker mAAU;
+    private static final LatLng ZOOM = new LatLng(55.641010, 12.081299);
+    private Marker mOrangeScene;
     private Marker mRoskilde;
     private Marker mHome;
     private Intent intent;
@@ -183,7 +183,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         enableMyLocation();
 
         // Move the camera to location everytime you open up the page.
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DK, 12));
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ZOOM, 8));
 
         //Creates a polygon around roskilde festival.
         PolygonOptions roskilde = new PolygonOptions()
@@ -199,13 +200,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Polygon polygon = map.addPolygon(roskilde);
 
 
+       PolygonOptions festivalArea = new PolygonOptions()
+               .add(new LatLng(55.622268, 12.070307),
+               new LatLng(55.617445, 12.072882),
+        new LatLng(55.617460, 12.075009),
+        new LatLng(55.617460, 12.075009),
+        new LatLng(55.618425, 12.086578),
+        new LatLng(55.622810, 12.085591))
+        .strokeColor(Color.argb(255, 255, 152, 0));
+
+       Polygon polygon1 = map.addPolygon(festivalArea);
+
         //Creating three simple markers.
-        mAAU = mMap.addMarker(new MarkerOptions()
-                .position(AAU)
-                .title("AAU")
-                .snippet("The university")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-        mAAU.setTag(0);
+        mOrangeScene = mMap.addMarker(new MarkerOptions()
+                .position(ORANGESCENE)
+                .title("Orange Scene")
+                .snippet("The main scene")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        mOrangeScene.setTag(0);
 
         // Example on how to put in a customisable icon for a marker.
         mRoskilde = mMap.addMarker(new MarkerOptions()
@@ -392,6 +404,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         menuItem.setChecked(true);
     }
 
+
+
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -403,5 +417,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Intent intent = new Intent(MapActivity.this, EventPopUp.class);
             startActivity(intent);
         }
+
     }
 }

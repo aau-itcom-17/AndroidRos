@@ -13,9 +13,9 @@
         android:id="@+id/drawerImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@mipmap/ic_launcher_round"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@color/white"/>
+
+        android:src="@mipmap/ic_launcher_round" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,7 +30,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/drawerEmail"
         android:text="yourmail@mail.com"/>
-
 
 
 </LinearLayout>

@@ -314,6 +314,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     }
                 });
     }
+
     private void onAuthSuccess(FirebaseUser user) {
         // Write new user
         writeNewUser(firstName, lastName, email, password, user.getUid(), false, picturePath);
