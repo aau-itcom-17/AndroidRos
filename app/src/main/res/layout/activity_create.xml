@@ -174,11 +174,12 @@
                 android:layout_height="134dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:background="@color/bg_screen3" />
-
+                android:background="@color/bg_screen3"
+                android:adjustViewBounds="true"
+                android:padding="20dp"
+                android:scaleType="centerCrop"/>
 
         </RelativeLayout>
-
 
         <!--Botton navigtaion-->
         <include layout="@layout/layout_bottom_navigation_view" />

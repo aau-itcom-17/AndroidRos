@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +43,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -113,20 +116,13 @@ public class CreateActivity extends AppCompatActivity{
 
         mProgressDialog = new ProgressDialog(this);
 
-        mStorage = FirebaseStorage.getInstance().getReference().child("event_pictures");
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         mPictureButton = (ImageButton) findViewById(R.id.image_button);
         mPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, CAMERA_REQUEST_CODE);
-                }
-
-                startPosting();
+                takePicture();
             }
 
         });
@@ -243,51 +239,36 @@ public class CreateActivity extends AppCompatActivity{
         });
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  // prefix
-                ".jpg",         // suffix
-                storageDir      // directory
-        );
+    private void takePicture(){
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
+        startActivityForResult(pictureIntent, CAMERA_REQUEST_CODE);
     }
 
-    private void startPosting() {
-        mProgressDialog.setMessage("Uploading photo");
+    /*
+    private void takePicture() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        final String title_val = nameOfEventEdit.getText().toString().trim();
+        if(intent.resolveActivity(getPackageManager()) != null) {
 
-        if(!TextUtils.isEmpty(title_val) && mImageUri != null){
+            File photoFile = null;
+            try{
+                photoFile = createImageFile();
+            } catch (IOException e){
+                // an error occured while creating the image
+            }
 
-            mProgressDialog.show();
+            if(photoFile != null) {
+                Uri photoUri = FileProvider.getUriForFile(this, "com.marcu.androidros.fileprovider", photoFile);
 
-            StorageReference filepath = mStorage.child("event_images").child(mImageUri.getLastPathSegment());
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 
-            filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-                    DatabaseReference newEvent = mDatabaseRef.push();
-                    newEvent.child("event name").setValue(title_val);
-                    newEvent.child("image").setValue(downloadUrl.toString());
-
-
-                    mProgressDialog.dismiss();
-
-                    startActivity(new Intent(CreateActivity.this, MapActivity.class));
-                }
-            });
+                startActivityForResult(intent, CAMERA_REQUEST_CODE);
+            }
         }
+
     }
+    */
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -304,18 +285,58 @@ public class CreateActivity extends AppCompatActivity{
         }
     }
 
+
+    //private File createImageFile() throws IOException {
+        // Create an image file name
+        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        //String imageFileName = "JPEG_" + timeStamp + "_";
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+       // File image = File.createTempFile(
+              //  imageFileName,  /* prefix */
+            //    ".jpg",         /* suffix */
+          //      storageDir      /* directory */
+        //);
+
+        // Save a file: path for use with ACTION_VIEW intents
+        //mCurrentPhotoPath = image.getAbsolutePath();
+      //  return image;
+    //}
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-            mImageUri = data.getData();
-            mPictureButton.setImageURI(mImageUri);
+        if(this.CAMERA_REQUEST_CODE == requestCode && resultCode == RESULT_OK ){
 
-            Picasso.get()
-                    .load(mImageUri)
-                    .resize(100, 134)
-                    .centerCrop()
-                    .into(mPictureButton);
+            mProgressDialog.setMessage("Uploading picture...");
+            mProgressDialog.show();
+
+            Uri uri = data.getData();
+
+            StorageReference filepath = null;
+
+            filepath = mStorage.child("photos").child(uri.getLastPathSegment());
+
+
+            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    mProgressDialog.dismiss();
+
+                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+
+                    Picasso.get().load(downloadUri).fit().centerCrop().into(mPictureButton);
+
+                    Toast.makeText(CreateActivity.this, "Finished task", Toast.LENGTH_SHORT);
+
+
+
+                }
+            });
+
 
         }
 
