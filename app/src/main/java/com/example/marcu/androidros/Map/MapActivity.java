@@ -29,8 +29,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.example.marcu.androidros.Create.LocationTrack;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Login.CreateAccountActivity;
@@ -63,7 +61,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.File;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -93,7 +93,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     private TextView drawerName;
-    private TextView drawerEmail;
+    private TextView drawerMessage;
     private NavigationView navigationView;
     View headerView;
     private ImageView drawerImage;
@@ -124,9 +124,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         headerView = navigationView.getHeaderView(0);
-        drawerEmail = (TextView) headerView.findViewById(R.id.drawerEmail);
         drawerImage = (ImageView) headerView.findViewById(R.id.drawerImage);
         drawerName = (TextView) headerView.findViewById(R.id.drawerName);
+        drawerMessage = (TextView) headerView.findViewById(R.id.drawerMessage);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -156,7 +156,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         Log.i("Firebase", "Full name: " + fullName);
                     }
                     drawerName.setText(fullName);
-                    drawerEmail.setText(email);
+                    randomMessage();
                     if (profilePictureRef != null) {
                         profilePicFile = new File(profilePictureRef);
                         if (profilePicFile.exists()) {
@@ -167,7 +167,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                     }
                 }
-
             }
 
             @Override
@@ -454,16 +453,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
+    private void randomMessage (){
+        String[] messages;
+        messages=getResources().getStringArray(R.array.messages);
+        SecureRandom secureRandom = new SecureRandom();
+        int number = secureRandom.nextInt(messages.length);
+        drawerMessage.setText(messages[number]);
+    }
 }
-

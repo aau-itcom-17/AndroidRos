@@ -30,7 +30,7 @@ public class UserPageFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.close_button:
-                startActivity(new Intent(getActivity(), MapActivity.class));
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 break;
         }
 

@@ -53,4 +53,73 @@
     <string name="home_title">Welcome to Application</string>
     <string name="home_desc">make friends and have fun.</string>
     <string name="create_new_account">Create New Account</string>
+
+
+
+    <string-array name="messages">
+        <item>You are on fire!</item>
+        <item>Many people are jealous of your good looks!</item>
+        <item>Get lit fam!</item>
+        <item>Someone sexy is waiting for you at your next event!</item>
+        <item>Love yourself like Kanye loves Trump</item>
+        <item>You got that DragonEnergy!</item>
+        <item>That gluteus maximus though!</item>
+        <item>The next person you look in the eyes, owe you a beer!</item>
+        <item>My man! (or woman.. or whatever you identify as)</item>
+        <item>Life rewards people who say yes more than no!</item>
+        <item>We love you!</item>
+        <item>Do not follow the rules!</item>
+        <item>Do not trust anyone! Not even us..</item>
+        <item>We do not sell your information to anyone! But you gave us permission to..</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 active events</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You have 0 new hearts on your event</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+        <item>You attended 0 events</item>
+
+
+
+    </string-array>
 </resources>
