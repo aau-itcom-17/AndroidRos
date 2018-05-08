@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.arch.persistence.room.Database;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -261,25 +263,22 @@ public class CreateActivity extends AppCompatActivity{
                 date = dTv.getText().toString();
                 time = tTv.getText().toString();
 
+                // Creation of event and pushing it to the database
                 Event userEvent = new Event(name, eventDescription, currentPhotoPath, time, date, latitude, longitude, 0, 0);
-
-                HashMap<String, Object> eventMap = new HashMap<String, Object>();
-
-                eventMap.put("Name", name);
-                eventMap.put("user_event", userEvent);
-
-                mDatabaseRef.child("events").push().setValue(eventMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                mDatabaseRef.child("events").push().setValue(userEvent, new DatabaseReference.CompletionListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(DatabaseError databaseError,
+                            DatabaseReference databaseReference) {
+                        // set the event id to the key that has been generated
+                        String uniqueKey = databaseReference.getKey();
+                        mDatabaseRef.child("events").child(uniqueKey).child("eventID").setValue(uniqueKey);
 
-                        if (task.isSuccessful()) {
+                        // show users they created the event.
+                        Toast.makeText(CreateActivity.this, "Event created", Toast.LENGTH_SHORT).show();
 
-                            Toast.makeText(CreateActivity.this, "Event saved", Toast.LENGTH_SHORT).show();
-                        } else{
-
-                            Toast.makeText(CreateActivity.this, "An error ocurred, try again", Toast.LENGTH_SHORT).show();
-                        }
+                        // should clear all fields in event and show the sample of the event...
                     }
+
                 });
             }
         });
