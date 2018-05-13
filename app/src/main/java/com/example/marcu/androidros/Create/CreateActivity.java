@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.arch.persistence.room.Database;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,11 +20,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.support.v4.content.MimeTypeFilter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,11 +35,13 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -56,6 +62,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -77,14 +84,19 @@ public class CreateActivity extends AppCompatActivity{
 
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase mDatabase;
+    private StorageReference mStorage;
     private DatabaseReference mDatabaseRef;
+    private Uri mImageUri;
+    private String mCurrentPhotoPath;
+    private String downloadUrl;
 
-    private Button mSubmitBtn;
-    private Button getLocation;
-    private Button finishEvent;
-    private ImageButton imageButton;
 
-    private String currentPhotoPath;
+    Button mSubmitBtn;
+    Button getLocation;
+    Button finishEvent;
+    ImageButton imageButton;
+    ProgressBar progressBar;
+
     private ImageView imageView;
 
     public TextView locationLatitude;
@@ -96,10 +108,7 @@ public class CreateActivity extends AppCompatActivity{
     private String eventDescription;
     private String date;
     private String time;
-
-    private Uri mImageUri = null;
-
-    private StorageReference mStorage;
+    private String uniqueKey;
 
     // Date implementation variables
     private TextView dTv;
@@ -128,18 +137,18 @@ public class CreateActivity extends AppCompatActivity{
         setUpBottomNavigationView();
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        mStorage = FirebaseStorage.getInstance().getReference("events");
 
         finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
         locationLongitude = (TextView) findViewById(R.id.location_longitude);
         locationLatitude = (TextView) findViewById(R.id.location_latitude);
         nameOfEventEdit = findViewById(R.id.name_input);
         eventDescriptionEdit = findViewById(R.id.enter_event_description);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         imageView = (ImageView) this.findViewById(R.id.image_view);
 
         mProgressDialog = new ProgressDialog(this);
-
-        mStorage = FirebaseStorage.getInstance().getReference().child("event_pictures");
 
         // Makes the button open the camera
         imageButton = findViewById(R.id.image_button);
@@ -147,25 +156,30 @@ public class CreateActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-                try{
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     // ensure there is a camera activity to handle the intent
-                    startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);} catch (SecurityException e){
                     if(ContextCompat.checkSelfPermission(CreateActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(CreateActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION);
+                    }else {
+                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                            // Create the File where the photo should go
+                            File photoFile = null;
+                            try {
+                                photoFile = createImageFile();
+                            } catch (IOException ex) {
+                                // Error occurred while creating the File...
+                            }
+                            // Continue only if the File was successfully created
+                            if (photoFile != null) {
+                                mImageUri = FileProvider.getUriForFile(CreateActivity.this,
+                                        "com.example.android.fileprovider", photoFile);
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+                            }
+                        }
                     }
-                }
             }
         });
-
-        mSubmitBtn = (Button) findViewById(R.id.submit_image_button);
-        mSubmitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startPosting();
-            }
-        });
-
 
 
         //Gets the location of the user
@@ -253,33 +267,28 @@ public class CreateActivity extends AppCompatActivity{
         finishEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 name = nameOfEventEdit.getText().toString();
                 eventDescription = eventDescriptionEdit.getText().toString();
-
-
 
                 date = dTv.getText().toString();
                 time = tTv.getText().toString();
 
+
                 // Creation of event and pushing it to the database
-                Event userEvent = new Event(name, eventDescription, currentPhotoPath, time, date, latitude, longitude, 0, 0);
+                Event userEvent = new Event(name, eventDescription, downloadUrl, time, date, latitude, longitude, 0, 0);
                 mDatabaseRef.child("events").push().setValue(userEvent, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError,
                             DatabaseReference databaseReference) {
                         // set the event id to the key that has been generated
-                        String uniqueKey = databaseReference.getKey();
+                        uniqueKey = databaseReference.getKey();
                         mDatabaseRef.child("events").child(uniqueKey).child("eventID").setValue(uniqueKey);
-
-                        // show users they created the event.
-                        Toast.makeText(CreateActivity.this, "Event created", Toast.LENGTH_SHORT).show();
+                        uploadFile();
 
                         // should clear all fields in event and show the sample of the event...
                     }
-
                 });
+
             }
         });
     }
@@ -309,46 +318,17 @@ public class CreateActivity extends AppCompatActivity{
 
     }
 
-    // Adds the picture as a file
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-    private void startPosting() {
-        mProgressDialog.setMessage("Posting to database...");
-
-        final String title_val = nameOfEventEdit.getText().toString().trim();
-
-        if(!TextUtils.isEmpty(title_val) && mImageUri != null){
-
-            mProgressDialog.show();
-
-            StorageReference filepath = mStorage.child("event_images").child(mImageUri.getLastPathSegment());
-
-            filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-                    DatabaseReference newEvent = mDatabaseRef.push();
-                    newEvent.child("event name").setValue(title_val);
-                    newEvent.child("image").setValue(downloadUrl.toString());
-                }
-            });
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            mImageUri = Uri.fromFile(new File (mCurrentPhotoPath));
+            //mImageUri = data.getData();
+            Log.i(TAG, "Permission granted... imageURI: " + mImageUri);
+        }else {
+            Log.i(TAG, "Permission not granted");
+            Toast.makeText(CreateActivity.this,"Permission not granted", Toast.LENGTH_SHORT).show();
 
-            mImageUri = data.getData();
         }
     }
 
@@ -361,6 +341,73 @@ public class CreateActivity extends AppCompatActivity{
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(3);
         menuItem.setChecked(true);
+    }
+
+    // getting the uri from the image taken..
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void uploadFile(){
+        if(mImageUri != null){
+            // creating a storage name for the file.
+            // Taking current time in milliseconds to get a unique filename
+            StorageReference fileReference = mStorage.child(System.currentTimeMillis()
+            + "." +  mImageUri.getPath().substring(mImageUri.getPath().lastIndexOf(".")+1));
+
+            fileReference.putFile(mImageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // Using a delayed thread so the user sees the event is created before it turns to 0 again.
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(0);
+                                }
+                            }, 500);
+                            Toast.makeText(CreateActivity.this, "Event was successfully created", Toast.LENGTH_SHORT).show();
+                            //mStorage.putFile(mImageUri);
+                            downloadUrl = taskSnapshot.getDownloadUrl().toString();
+                            mDatabaseRef.child("events").child(uniqueKey).child("photoPath").setValue(downloadUrl);
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(CreateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressBar.setProgress((int)(progress));
+                            //ProgressDialog is a bad user experience since the user cannot use the app while their event is uploaded...
+                        }
+                    });
+        }else{
+            Toast.makeText(this, "No picture selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
 
