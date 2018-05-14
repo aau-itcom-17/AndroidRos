@@ -96,6 +96,7 @@ public class CreateActivity extends AppCompatActivity{
     Button finishEvent;
     ImageButton imageButton;
     ProgressBar progressBar;
+    ProgressBar progressBar1;
 
     private ImageView imageView;
 
@@ -144,9 +145,12 @@ public class CreateActivity extends AppCompatActivity{
         locationLatitude = (TextView) findViewById(R.id.location_latitude);
         nameOfEventEdit = findViewById(R.id.name_input);
         eventDescriptionEdit = findViewById(R.id.enter_event_description);
+        progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         imageView = (ImageView) this.findViewById(R.id.image_view);
+        progressBar.setVisibility(View.GONE);
+        progressBar1.setVisibility(View.GONE);
 
         mProgressDialog = new ProgressDialog(this);
 
@@ -367,10 +371,11 @@ public class CreateActivity extends AppCompatActivity{
                                 @Override
                                 public void run() {
                                     progressBar.setProgress(0);
+                                    progressBar.setVisibility(View.GONE);
                                 }
-                            }, 500);
+                            }, 2000);
+                            progressBar1.setVisibility(View.GONE);
                             Toast.makeText(CreateActivity.this, "Event was successfully created", Toast.LENGTH_SHORT).show();
-                            //mStorage.putFile(mImageUri);
                             downloadUrl = taskSnapshot.getDownloadUrl().toString();
                             mDatabaseRef.child("events").child(uniqueKey).child("photoPath").setValue(downloadUrl);
 
@@ -386,6 +391,8 @@ public class CreateActivity extends AppCompatActivity{
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressBar.setVisibility(View.VISIBLE);
+                            progressBar1.setVisibility(View.VISIBLE);
                             progressBar.setProgress((int)(progress));
                             //ProgressDialog is a bad user experience since the user cannot use the app while their event is uploaded...
                         }
