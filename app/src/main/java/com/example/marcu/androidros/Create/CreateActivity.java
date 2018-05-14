@@ -1,37 +1,23 @@
 package com.example.marcu.androidros.Create;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.arch.persistence.room.Database;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.content.MimeTypeFilter;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,16 +33,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.Event;
+import com.example.marcu.androidros.Favourites.FavouriteActivity;
 import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,13 +53,8 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class CreateActivity extends AppCompatActivity{
 
@@ -134,28 +112,30 @@ public class CreateActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
-        setContentView(R.layout.activity_create);
-        setUpBottomNavigationView();
+        setContentView(R.layout.activity_create_pretty);
+        //setUpBottomNavigationView();
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         mStorage = FirebaseStorage.getInstance().getReference("events");
 
-        finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
-        locationLongitude = (TextView) findViewById(R.id.location_longitude);
-        locationLatitude = (TextView) findViewById(R.id.location_latitude);
-        nameOfEventEdit = findViewById(R.id.name_input);
-        eventDescriptionEdit = findViewById(R.id.enter_event_description);
+//        finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
+//        locationLongitude = (TextView) findViewById(R.id.location_longitude);
+//        locationLatitude = (TextView) findViewById(R.id.location_latitude);
+//        nameOfEventEdit = findViewById(R.id.name_input);
+//        eventDescriptionEdit = findViewById(R.id.enter_event_description);
+        finishEvent = (Button) findViewById(R.id.create_event_button);
+        nameOfEventEdit = findViewById(R.id.event_title_edit);
+        eventDescriptionEdit = findViewById(R.id.event_description_edit);
         progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        imageView = (ImageView) this.findViewById(R.id.image_view);
+        imageView = (ImageView) findViewById(R.id.event_image_view);
         progressBar.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
 
         mProgressDialog = new ProgressDialog(this);
 
         // Makes the button open the camera
-        imageButton = findViewById(R.id.image_button);
+        imageButton = (ImageButton) findViewById(R.id.take_photo_button);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,39 +165,9 @@ public class CreateActivity extends AppCompatActivity{
             }
         });
 
-
-        //Gets the location of the user
-        getLocation = (Button) findViewById(R.id.get_location);
-        getLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                locationTracker = new LocationTrack(CreateActivity.this);
-
-                if(locationTracker.canGetLocation()){
-
-                    longitude = locationTracker.getLongitude();
-                    latitude = locationTracker.getLatitude();
-
-                    loc = new LatLng(latitude, longitude);
-
-                    locationLongitude.setText(Double.toString(longitude));
-                    locationLatitude.setText(Double.toString(latitude));
-
-                    Toast.makeText(getApplicationContext(), "Longitude: " + Double.toString(longitude) + "\nLatitude: " + Double.toString(latitude), Toast.LENGTH_SHORT).show();
-                } else {
-                    locationTracker.showSettingsAlert();
-                }
-
-                locationTracker.stopListener();
-
-            }
-        });
-
         // Date implementation
-        dTv = (TextView) findViewById(R.id.date);
-        dBtn = (Button) findViewById(R.id.choose_date);
-
+        dTv = (TextView) findViewById(R.id.date_text_view);
+        dBtn = (Button) findViewById(R.id.date_button);
         dBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -245,10 +195,9 @@ public class CreateActivity extends AppCompatActivity{
             }
         });
 
-// Implementing time
-        tTv = (TextView) findViewById(R.id.time);
-        tBtn = (Button) findViewById(R.id.choose_time);
-
+        // Implementing time
+        tTv = (TextView) findViewById(R.id.time_text_view);
+        tBtn = (Button) findViewById(R.id.time_button);
         tBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,6 +226,7 @@ public class CreateActivity extends AppCompatActivity{
                 date = dTv.getText().toString();
                 time = tTv.getText().toString();
 
+                getCurrentLocation();
 
                 // Creation of event and pushing it to the database
                 Event userEvent = new Event(name, eventDescription, downloadUrl, time, date, latitude, longitude, 0, 0);
@@ -293,6 +243,7 @@ public class CreateActivity extends AppCompatActivity{
                     }
                 });
 
+                startActivity(new Intent(CreateActivity.this, FavouriteActivity.class));
             }
         });
     }
@@ -327,6 +278,7 @@ public class CreateActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             mImageUri = Uri.fromFile(new File (mCurrentPhotoPath));
+            imageView.setImageURI(mImageUri);
             //mImageUri = data.getData();
             Log.i(TAG, "Permission granted... imageURI: " + mImageUri);
         }else {
@@ -418,5 +370,16 @@ public class CreateActivity extends AppCompatActivity{
     }
 
 
+    public void getCurrentLocation(){
+        locationTracker = new LocationTrack(CreateActivity.this);
+        if(locationTracker.canGetLocation()){
+            longitude = locationTracker.getLongitude();
+            latitude = locationTracker.getLatitude();
+            loc = new LatLng(latitude, longitude);
+        } else {
+            locationTracker.showSettingsAlert();
+        }
+        locationTracker.stopListener();
+    }
 
 }
