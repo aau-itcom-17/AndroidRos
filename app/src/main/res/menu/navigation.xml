@@ -14,11 +14,5 @@
         android:icon="@drawable/ic_favorite_black_24dp"
         android:title=""/>
 
-   <item
-        android:id="@+id/ic_add"
-        android:icon="@drawable/ic_add_circle_outline_black_24dp"
-        android:title=""/>
-
-
 
 </menu>

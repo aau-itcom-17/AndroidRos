@@ -113,16 +113,10 @@ public class CreateActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_create_pretty);
-        //setUpBottomNavigationView();
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         mStorage = FirebaseStorage.getInstance().getReference("events");
 
-//        finishEvent = (Button) findViewById(R.id.finish_new_event_creation);
-//        locationLongitude = (TextView) findViewById(R.id.location_longitude);
-//        locationLatitude = (TextView) findViewById(R.id.location_latitude);
-//        nameOfEventEdit = findViewById(R.id.name_input);
-//        eventDescriptionEdit = findViewById(R.id.enter_event_description);
         finishEvent = (Button) findViewById(R.id.create_event_button);
         nameOfEventEdit = findViewById(R.id.event_title_edit);
         eventDescriptionEdit = findViewById(R.id.event_description_edit);
@@ -243,7 +237,6 @@ public class CreateActivity extends AppCompatActivity{
                     }
                 });
 
-                startActivity(new Intent(CreateActivity.this, FavouriteActivity.class));
             }
         });
     }
@@ -288,17 +281,6 @@ public class CreateActivity extends AppCompatActivity{
         }
     }
 
-
-    // Method handling the buttom navigation view
-    private void setUpBottomNavigationView(){
-        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(CreateActivity.this, bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(3);
-        menuItem.setChecked(true);
-    }
-
     // getting the uri from the image taken..
     private String getFileExtension(Uri uri){
         ContentResolver contentResolver = getContentResolver();
@@ -330,6 +312,7 @@ public class CreateActivity extends AppCompatActivity{
                             Toast.makeText(CreateActivity.this, "Event was successfully created", Toast.LENGTH_SHORT).show();
                             downloadUrl = taskSnapshot.getDownloadUrl().toString();
                             mDatabaseRef.child("events").child(uniqueKey).child("photoPath").setValue(downloadUrl);
+                            startActivity(new Intent(CreateActivity.this, FavouriteActivity.class));
 
                         }
                     })

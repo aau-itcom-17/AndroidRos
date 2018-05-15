@@ -17,14 +17,13 @@
         <!--Top ToolBar-->
 
         <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
-            android:id="@+id/toolbar"
+            android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:elevation="4dp"/>
-
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
         <!--Body-->
@@ -37,7 +36,6 @@
             <include layout="@layout/layout_center_viewpager" />
 
 
-
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:map="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -45,7 +43,22 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 tools:context=".Map.MapActivity" />
+
+            <ImageButton
+                android:id="@+id/event_image_button"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="70dp"
+                android:background="@null"
+                android:fitsSystemWindows="true"
+                android:onClick="createEventOnClicked"
+                android:scaleType="centerCrop"
+                app:srcCompat="@android:drawable/ic_menu_add" />
 
 
         </RelativeLayout>
@@ -61,7 +74,9 @@
         android:layout_gravity="start"
         android:background="@color/colorPrimary"
         app:headerLayout="@layout/layout_drawer_header"
-        app:menu="@menu/drawer_menu"></android.support.design.widget.NavigationView>
+        app:menu="@menu/drawer_menu">
+
+    </android.support.design.widget.NavigationView>
 
 
 </android.support.v4.widget.DrawerLayout>

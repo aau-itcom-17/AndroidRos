@@ -46,7 +46,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Create.CreateActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/LoginTheme"
+            android:label="Create Event">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Map.MapActivity">
+             </meta-data>
+        </activity>
         <activity
             android:name=".Utils.EventPopUp"
             android:theme="@style/AppTheme.CustomTheme" />
