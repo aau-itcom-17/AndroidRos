@@ -26,9 +26,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.marcu.androidros.Create.CreateActivity;
 import com.example.marcu.androidros.Create.LocationTrack;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Login.CreateAccountActivity;
@@ -102,6 +105,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String email;
     private File profilePicFile;
     private ChildEventListener mChildEventListener;
+    private ImageButton imageButton;
 
 
 
@@ -127,6 +131,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         drawerImage = (ImageView) headerView.findViewById(R.id.drawerImage);
         drawerName = (TextView) headerView.findViewById(R.id.drawerName);
         drawerMessage = (TextView) headerView.findViewById(R.id.drawerMessage);
+        imageButton = (ImageButton) findViewById(R.id.event_image_button);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -459,5 +464,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SecureRandom secureRandom = new SecureRandom();
         int number = secureRandom.nextInt(messages.length);
         drawerMessage.setText(messages[number]);
+    }
+    public void createEventOnClicked (View view){
+        intent = new Intent(this, CreateActivity.class);
+        startActivity(intent);
     }
 }

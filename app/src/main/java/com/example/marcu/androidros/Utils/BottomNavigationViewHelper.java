@@ -39,10 +39,10 @@ public class BottomNavigationViewHelper {
                         Intent intent3 = new Intent(context, FavouriteActivity.class);
                         context.startActivity(intent3.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                         break;
-                    case R.id.ic_add:
-                        Intent intent4 = new Intent(context, CreateActivity.class);
-                        context.startActivity(intent4.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                        break;
+//                    case R.id.ic_add:
+//                        Intent intent4 = new Intent(context, CreateActivity.class);
+//                        context.startActivity(intent4.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+//                        break;
 
                 }
 
