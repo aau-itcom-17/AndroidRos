@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.marcu.androidros.Create.CreateActivity;
 import com.example.marcu.androidros.Create.LocationTrack;
+import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.Login.CreateAccountActivity;
 import com.example.marcu.androidros.Login.MainActivity;
@@ -181,7 +182,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 // ...
             }
         });
-
         // access done.
 
 

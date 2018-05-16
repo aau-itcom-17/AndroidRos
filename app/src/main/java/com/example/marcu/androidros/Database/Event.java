@@ -1,10 +1,14 @@
 package com.example.marcu.androidros.Database;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class Event {
+import java.io.Serializable;
+
+public class Event implements Parcelable{
 
     public Event(String name, String description, String photoPath, String time, String date, double latitude, double longitude, int likes, int comments) {
         this.name = name;
@@ -17,6 +21,10 @@ public class Event {
     }
 
     public Event(String s, String toString, String currentPhotoPath, String string, String s1, double latitude, double longitude){
+
+    }
+
+    public Event(){
 
     }
 
@@ -119,5 +127,15 @@ public class Event {
 
     public void setComments(int comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
