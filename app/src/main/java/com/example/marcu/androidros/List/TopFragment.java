@@ -47,7 +47,7 @@ public class TopFragment extends Fragment implements View.OnClickListener{
 
 
         layoutManager = new LinearLayoutManager(getActivity());
-        adapter = new MainAdapter(events);
+        adapter = new MainAdapter(getContext(), events);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
