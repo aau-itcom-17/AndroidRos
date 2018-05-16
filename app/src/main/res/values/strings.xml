@@ -55,7 +55,6 @@
     <string name="create_new_account">Create New Account</string>
 
 
-
     <string-array name="messages">
         <item>You are on fire!</item>
         <item>Many people are jealous of your good looks!</item>
@@ -118,7 +117,6 @@
         <item>You attended 0 events</item>
         <item>You attended 0 events</item>
         <item>You attended 0 events</item>
-
 
 
     </string-array>

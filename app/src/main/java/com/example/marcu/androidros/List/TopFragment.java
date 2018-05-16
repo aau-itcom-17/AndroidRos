@@ -19,11 +19,10 @@ import com.example.marcu.androidros.Utils.EventPopUp;
 import java.util.ArrayList;
 
 
-public class TopFragment extends Fragment implements View.OnClickListener{
+public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
     String TAG = "TopFragment";
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
-    RecyclerView.LayoutManager layoutManager;
+    MainAdapter adapter;
     ArrayList<Event> events;
 
 
@@ -37,7 +36,6 @@ public class TopFragment extends Fragment implements View.OnClickListener{
 
         if(getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
-
             for (int i = 0; i < events.size(); i++) {
                 Log.i(TAG, events.get(i).getName());
             }
@@ -46,14 +44,10 @@ public class TopFragment extends Fragment implements View.OnClickListener{
         }
 
 
-        layoutManager = new LinearLayoutManager(getActivity());
-        adapter = new MainAdapter(getContext(), events);
-        recyclerView.setLayoutManager(layoutManager);
+        adapter = new MainAdapter(getActivity(), events);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-
-
-
-        recyclerView.setOnClickListener(this);
+        adapter.setOnEventClickListener(TopFragment.this);
 
         return view;
     }
@@ -72,12 +66,21 @@ public class TopFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            //case R.id.event_button:
-             //   startActivity(new Intent(getActivity(), EventPopUp.class));
-             //   break;
-        }
+    public void onEventClick(int position) {
+        Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
+        Event clickedEvent = events.get(position);
+
+        eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
+        startActivity(eventDetailsIntent);
     }
+
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()) {
+//            //case R.id.event_button:
+//            //   startActivity(new Intent(getActivity(), EventPopUp.class));
+//            //   break;
+//        }
+//    }
 
 }

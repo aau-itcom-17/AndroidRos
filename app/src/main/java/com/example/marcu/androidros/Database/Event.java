@@ -48,6 +48,39 @@ public class Event implements Parcelable{
 
     private int comments;
 
+    protected Event(Parcel in) {
+        eventID = in.readString();
+        name = in.readString();
+        description = in.readString();
+        photoPath = in.readString();
+        time = in.readString();
+        date = in.readString();
+        if (in.readByte() == 0) {
+            latitude = null;
+        } else {
+            latitude = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            longitude = null;
+        } else {
+            longitude = in.readDouble();
+        }
+        likes = in.readInt();
+        comments = in.readInt();
+    }
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
     public  String getEventID(){
         return eventID;
     }
@@ -134,8 +167,28 @@ public class Event implements Parcelable{
         return 0;
     }
 
+    // automated code..
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(eventID);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(photoPath);
+        dest.writeString(time);
+        dest.writeString(date);
+        if (latitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(latitude);
+        }
+        if (longitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(longitude);
+        }
+        dest.writeInt(likes);
+        dest.writeInt(comments);
     }
 }

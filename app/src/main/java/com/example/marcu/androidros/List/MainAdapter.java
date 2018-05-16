@@ -2,6 +2,7 @@ package com.example.marcu.androidros.List;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +17,25 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
-    Context context;
-    ArrayList<Event> events;
+    private Context context;
+    private ArrayList<Event> events;
+    private OnEventClickListener listener;
+
+
+
+    public interface OnEventClickListener{
+        void onEventClick(int position);
+    }
+
+    public void setOnEventClickListener(OnEventClickListener listener){
+        this.listener = listener;
+    }
 
     public MainAdapter(Context context, ArrayList<Event> events) {
         this.events = events;
         this.context = context;
     }
+
 
     @NonNull
     @Override
@@ -59,7 +72,17 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             eventName = (TextView) itemView.findViewById(R.id.top_fragment_event_title_text_view);
             description = (TextView) itemView.findViewById(R.id.top_fragment_event_description_text_view);
             eventImage = (ImageView) itemView.findViewById(R.id.top_fragment_image_view);
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onEventClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }
