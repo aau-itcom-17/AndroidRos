@@ -5,7 +5,7 @@
 
     <TextView
 
-        android:id="@+id/title_fragment_my_event"
+        android:id="@+id/title_fragment_my_events"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
