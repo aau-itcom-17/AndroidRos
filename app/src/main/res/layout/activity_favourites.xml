@@ -23,7 +23,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/rellayout2">
+            android:id="@+id/rellayout2"
+            android:layout_below="@+id/rellayout1">
+
 
             <include layout="@layout/layout_center_viewpager"/>
 
