@@ -7,9 +7,9 @@
     <string name="title_my_invites">Invites</string>
     <string name="event_button">Event</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_fragment_top">Top Fragment</string>
-    <string name="title_fragment_nearby">Nearby Fragment</string>
-    <string name="title_fragment_new">New Fragment</string>
+    <string name="title_fragment_top">Top</string>
+    <string name="title_fragment_nearby">Nearby</string>
+    <string name="title_fragment_new">New</string>
     <string name="pop_up">Event</string>
     <string name="create_event_button">+</string>
     <string name="create_new_event_label">Create new event</string>

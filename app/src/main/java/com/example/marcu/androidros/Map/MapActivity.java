@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.media.Image;
 import android.os.Build;
@@ -23,11 +24,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +38,10 @@ import com.example.marcu.androidros.Create.CreateActivity;
 import com.example.marcu.androidros.Create.LocationTrack;
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Database.User;
+import com.example.marcu.androidros.List.EventInfoActivity;
+import com.example.marcu.androidros.List.NearbyFragment;
+import com.example.marcu.androidros.List.NewFragment;
+import com.example.marcu.androidros.List.TopFragment;
 import com.example.marcu.androidros.Login.CreateAccountActivity;
 import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.R;
@@ -63,17 +70,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.security.SecureRandom;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String CLASS_TAG = "MapActivity";
+    private static final String TAG = "MapActivity";
     private DrawerLayout drawer;
     private ActionBarDrawerToggle mToggle;
     public GoogleMap mMap;
@@ -115,12 +127,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private FirebaseUser firebaseUser;
     private FirebaseDatabase database;
+    private ArrayList<Event> events = new ArrayList<>();
+    private List<String> eventIDs = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        Log.i(CLASS_TAG, "onCreate");
+        Log.i(TAG, "onCreate");
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -249,29 +263,114 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Polygon polygon1 = map.addPolygon(festivalArea);
 
-        //Creating three simple markers.
-        mOrangeScene = mMap.addMarker(new MarkerOptions()
-                .position(ORANGESCENE)
-                .title("Orange Scene")
-                .snippet("The main scene")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        mOrangeScene.setTag(0);
+        // Implement info_window_layout.xml - with imageview.
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+            @Override
+            public View getInfoContents(Marker marker) {
 
-        // Example on how to put in a customisable icon for a marker.
-        mRoskilde = mMap.addMarker(new MarkerOptions()
-                .position(ROSKILDE)
-                .snippet("For more information click on this window!")
-                .title("Roskilde Festival")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        mRoskilde.setTag(0);
+                LinearLayout info = new LinearLayout(getApplicationContext());
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(getApplicationContext());
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(getApplicationContext());
+                snippet.setTextColor(Color.RED);
+                title.setGravity(Gravity.CENTER);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
+
+        // Adding markers on map.
+        database = FirebaseDatabase.getInstance();
+        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
+                }
+                for (int i = 0; i < eventIDs.size(); i++){
+                    Event event = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
+                    events.add(event);
+
+                    if (event != null) {
+                        LatLng eventPos = new LatLng(event.getLatitude(), event.getLongitude());
+
+                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                        Date today = Calendar.getInstance().getTime();
+                        String reportDate = df.format(today);
+                        Log.i(TAG, reportDate);
+
+                        String[] separatedDate = reportDate.split(" ", 2);
+                        String date = separatedDate[0];
+                        String time = separatedDate[1];
+                        String[] separated= date.split("/");
+                        String[] separatedTime = time.split(":");
+                        String day = separated[0];
+                        String month = separated[1];
+                        String year = separated[2];
+                        String hour = separatedTime[0];
+                        String minutes = separatedTime[1];
+
+                        String[] separatedEvent = event.getDate().split("/");
+                        String[] separatedEventTime = event.getTime().split(":");
+                        String eventDay = separatedEvent[0];
+                        String eventMonth = separatedEvent[1];
+                        String eventYear = separatedEvent[2];
+                        String eventHour = separatedEventTime[0];
+                        String eventMinutes = separatedEventTime[1];
 
 
-        mHome = mMap.addMarker(new MarkerOptions()
-                .position(HOME)
-                .title("Home")
-                .snippet("The location of my home")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-        mHome.setTag(0);
+                        // 13,48 < 14,48
+                        // 13,46 > 14,48
+                        String snippetTime;
+                        if (Integer.parseInt(hour) + (Integer.parseInt(minutes)/10) <= Integer.parseInt(eventHour) + (Integer.parseInt(eventMinutes)/10)
+                                && Integer.parseInt(hour) + (Integer.parseInt(minutes)/10) >= Integer.parseInt(eventHour) + (Integer.parseInt(eventMinutes)/10) - 1){
+                            //within an hour
+                            snippetTime = "Begins soon, " + event.getTime();
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
+                            if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24){
+                                snippetTime = "Tonight, " + event.getTime();
+                            }else {
+                                snippetTime = "Today, " + event.getTime();
+                            }
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay) + 1){
+                            snippetTime = "Tomorrow, " + event.getTime();
+                        } else {
+                            snippetTime = event.getDate() + " " + event.getTime();
+                        }
+
+                        Marker eventMarker = mMap.addMarker(new MarkerOptions()
+                                .position(eventPos)
+                                .title(event.getName())
+                                .snippet(snippetTime)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        eventMarker.setTag(event);
+
+                    }else{
+                        // null pointer throw error
+                    }
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -343,14 +442,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i(CLASS_TAG, "onStart");
+        Log.i(TAG, "onStart");
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(CLASS_TAG, "onResume");
+        Log.i(TAG, "onResume");
         SharedPreferences prefs = getSharedPreferences(SAVE_MAP_STATE, MODE_PRIVATE);
         //String restoredEmail = prefs.getString("map", null);
         //if (restoredEmail != null && emailFromCreateAccount == null) {
@@ -362,7 +461,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(CLASS_TAG, "onPause");
+        Log.i(TAG, "onPause");
         SharedPreferences.Editor editor = getSharedPreferences(SAVE_MAP_STATE, MODE_PRIVATE).edit();
         //editor.putString("email", emailEdit.getText().toString());
         editor.apply();
@@ -372,14 +471,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i(CLASS_TAG, "onStop");
+        Log.i(TAG, "onStop");
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(CLASS_TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
     }
 
 
@@ -451,10 +550,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if (marker.equals(mRoskilde)) {
-            Intent intent = new Intent(MapActivity.this, EventPopUp.class);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(MapActivity.this, EventInfoActivity.class);
+        Event event = (Event) marker.getTag();
+        intent.putExtra("clickedEvent", event);
+        startActivity(intent);
 
     }
 

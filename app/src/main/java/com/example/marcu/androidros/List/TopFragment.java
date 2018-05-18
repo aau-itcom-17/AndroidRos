@@ -1,9 +1,13 @@
 package com.example.marcu.androidros.List;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
@@ -24,6 +29,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     RecyclerView recyclerView;
     MainAdapter adapter;
     ArrayList<Event> events;
+    ImageView favouriteButton;
+    ImageView favouriteButtonClicked;
 
 
 
@@ -33,6 +40,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
+        favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
+        favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);
 
         if(getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
@@ -42,7 +51,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         }else{
             Log.i(TAG, "getArguments = null");
         }
-
 
         adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -73,6 +81,10 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
     }
+
+
+
+
 
 //    @Override
 //    public void onClick(View v) {
