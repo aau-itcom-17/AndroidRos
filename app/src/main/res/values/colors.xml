@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#FB8C00</color>
     <color name="colorAccent">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
     <color name="eggWhite">#F0F0F0</color>
     <color name="colorLogin">#00ff9d00</color>
     <color name="colorAccentLogin">#ed7303</color>

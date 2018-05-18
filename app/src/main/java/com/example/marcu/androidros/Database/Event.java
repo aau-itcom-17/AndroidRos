@@ -167,7 +167,7 @@ public class Event implements Parcelable{
         return 0;
     }
 
-    // automated code..
+    // automated code
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(eventID);

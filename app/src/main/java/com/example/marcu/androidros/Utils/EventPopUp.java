@@ -48,7 +48,7 @@ public class EventPopUp extends Activity implements View.OnClickListener{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                String title = dataSnapshot.child("event1").child("title").getValue().toString();
+                String title = dataSnapshot.child("events").child("-LB_mQ8FSlGD0y60maK8").child("title").getValue().toString();
                 String time = dataSnapshot.child("event1").child("time").getValue().toString();
                 String location = dataSnapshot.child("event1").child("location").getValue().toString();
                 String description = dataSnapshot.child("event1").child("description").getValue().toString();
