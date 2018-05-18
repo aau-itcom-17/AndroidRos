@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_events_fragment_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-        android:id="@+id/title_fragment_my_events"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="@string/title_my_events"
-        android:textSize="20sp" />
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/my_events_fragment_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <TextView
+            android:id="@+id/my_events_fragment_event_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/my_events_fragment_event_description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 
-    <ListView
-        android:id="@+id/sampleListView"
-        android:layout_width="fill_parent"
-        android:layout_height="412dp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:background="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="#FF9800"
-        android:listSelector="#FF9800"
-        android:dividerHeight="1dp"
-        android:paddingLeft="2dp"
-        android:layout_alignParentLeft="true"></ListView>
-
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>

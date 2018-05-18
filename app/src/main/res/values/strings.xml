@@ -2,7 +2,7 @@
     <string name="app_name">AndroidRos</string>
     <string name="title_map">Map</string>
     <string name="title_list">List</string>
-    <string name="title_favourites">Favourites</string>
+    <string name="title_my_favourites">Favourites</string>
     <string name="title_my_events">My Events</string>
     <string name="title_my_invites">Invites</string>
     <string name="event_button">Event</string>
