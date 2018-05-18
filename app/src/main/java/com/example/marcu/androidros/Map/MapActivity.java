@@ -539,34 +539,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         String snippetTime;
                         //Log.i(TAG, "Device time: " + Integer.parseInt(hour) + (Double.parseDouble(minutes)/100));
                         //Log.i(TAG, "Event time: " + Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100));
-                        if (Integer.parseInt(day) == Integer.parseInt(eventDay)
-                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 2){
-                            snippetTime = "Began today, " + event.getTime();
-                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)
-                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100)
-                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 2) {
-                            snippetTime = "Now, " + event.getTime();
-                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)
-                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) <= Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100)
-                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) >= Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 1){
-                            //within an hour
-                            snippetTime = "Begins soon, " + event.getTime();
-                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
-                            if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24){
+
+                        if (Integer.parseInt(day) > Integer.parseInt(eventDay)){
+                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 24 + 3) {
+                                snippetTime = "Began earlier, " + event.getTime();
+                            }else{
+                                snippetTime = "Yesterday, " + event.getTime();
+                            }
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)){
+                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 3) {
+                                snippetTime = "Began earlier, " + event.getTime();
+                            } else if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 3
+                                    && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100)){
+                                snippetTime = "Now, " + event.getTime();
+                            }else if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24){
                                 snippetTime = "Tonight, " + event.getTime();
                             }else {
                                 snippetTime = "Today, " + event.getTime();
                             }
                         } else if (Integer.parseInt(day) == Integer.parseInt(eventDay) - 1){
                             snippetTime = "Tomorrow, " + event.getTime();
-                            // 10,56 > 10,00
-                            // 10,56 < 10,00 + 1
                         }else{
                             snippetTime = event.getDate() + " " + event.getTime();
                         }
 
-                        // 230,30 - 240 = -10,30 < 240 -240 = 0
-                        // 230,00 - 240 < 00.30 -240 =
+                        //Checking if it's 24 hours old
                         if (Integer.parseInt(day) > Integer.parseInt(eventDay)
                                 && Integer.parseInt(month) <= Integer.parseInt(eventMonth)
                                 && (Integer.parseInt(hour) + Double.parseDouble(minutes)/100) -240 >
