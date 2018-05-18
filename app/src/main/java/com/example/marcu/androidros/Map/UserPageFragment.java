@@ -1,11 +1,15 @@
 package com.example.marcu.androidros.Map;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +37,7 @@ public class UserPageFragment extends Fragment implements View.OnClickListener {
     private List<String> eventIDs = new ArrayList<>();
 
 
+
     //TextView firstName = (TextView) findViewById(R.id.getFirstName);
 
 
@@ -48,6 +53,7 @@ public class UserPageFragment extends Fragment implements View.OnClickListener {
         final TextView fName = (TextView) view.findViewById(R.id.getFirstName);
         final TextView lName = (TextView) view.findViewById(R.id.getLastName);
         final TextView email = (TextView) view.findViewById(R.id.getEmail);
+        Button editProfile = (Button) view.findViewById(R.id.edit_profile_button);
 
 
         // Access data to firebase
@@ -69,14 +75,23 @@ public class UserPageFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+        EditUserPageFragment nextFrag = new EditUserPageFragment();
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-
-
-
+            }
+        });
 
 
         return view;
+
+
     }
+
+
+
+
 
 
 
@@ -86,7 +101,11 @@ public class UserPageFragment extends Fragment implements View.OnClickListener {
             case R.id.close_button:
                 getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 break;
+
         }
 
     }
+
+
+
 }
