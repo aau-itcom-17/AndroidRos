@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/top_fragment_image_view"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="170dp"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -33,11 +33,12 @@
             android:background="#80000000"
             android:paddingBottom="5dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingRight="40dp"
             android:paddingTop="5dp"
             android:textColor="#FFFFFF"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/favourite_button"
