@@ -16,12 +16,14 @@ import com.example.marcu.androidros.List.TopFragment;
 import com.example.marcu.androidros.Utils.SectionsPagerAdapter;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class FavouriteActivity extends AppCompatActivity {
     FirebaseDatabase database;
     String TAG = "FavouriteActivity";
     ArrayList<Event> myEvents = new ArrayList<>();
-    List<String> myEventIDs = new ArrayList<>();
+    List<String> eventIDs = new ArrayList<>();
     MyEventsFragment myEventsFragment;
     MyFavouritesFragment myFavouritesFragment;
     MyInvitesFragment myInvitesFragment;
@@ -56,17 +58,22 @@ public class FavouriteActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    myEventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
+
+                    if(String.valueOf(postSnapshot.child("eventOwner").getValue()).equals(FirebaseAuth.getInstance().getUid()))
+                    {
+                        eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
+                    }
+
                     //Log.i(CLASS_TAG, "EventID " + event.getEventID());
                 }
 
-                for (int i = 0; i < myEventIDs.size(); i++){
-                    Event myEvent = dataSnapshot.child(myEventIDs.get(i)).getValue(Event.class);
+                for (int i = 0; i < eventIDs.size(); i++){
+                    Event myEvent = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
                     myEvents.add(myEvent);
                 }
 
-                for (int i = 0; i < myEventIDs.size(); i++){
-                    Log.i(TAG, myEventIDs.get(i));
+                for (int i = 0; i < eventIDs.size(); i++){
+                    Log.i(TAG, eventIDs.get(i));
                 }
 
                 Bundle bundle = new Bundle();
