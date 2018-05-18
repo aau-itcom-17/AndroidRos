@@ -45,7 +45,6 @@ public class ListActivity extends AppCompatActivity{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
-                    //Log.i(CLASS_TAG, "EventID " + event.getEventID());
                 }
 
                 for (int i = 0; i < eventIDs.size(); i++){

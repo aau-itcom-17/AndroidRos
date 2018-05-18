@@ -231,6 +231,7 @@ public class CreateActivity extends AppCompatActivity{
                         // set the event id to the key that has been generated
                         uniqueKey = databaseReference.getKey();
                         mDatabaseRef.child("events").child(uniqueKey).child("eventID").setValue(uniqueKey);
+                        mDatabaseRef.child("events").child(uniqueKey).child("eventOwner").setValue(FirebaseAuth.getInstance().getUid());
                         uploadFile();
 
                         // should clear all fields in event and show the sample of the event...

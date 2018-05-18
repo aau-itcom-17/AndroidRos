@@ -35,6 +35,8 @@ public class User {
 
     private String userID;
 
+    private String eventOwner;
+
     private String firstName;
 
     private String lastName;
@@ -58,6 +60,14 @@ public class User {
 
 
     private boolean isLoggedIn;
+
+    public String getEventOwner() {
+        return eventOwner;
+    }
+
+    public void setEventOwner(String eventOwner) {
+        this.eventOwner = eventOwner;
+    }
 
     public boolean isLoggedIn() {
         return isLoggedIn;
