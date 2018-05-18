@@ -11,6 +11,7 @@
     <string name="title_fragment_nearby">Nearby</string>
     <string name="title_fragment_new">New</string>
     <string name="pop_up">Event</string>
+    <string name="show_on_map_button">Show On Map</string>
     <string name="create_event_button">+</string>
     <string name="create_new_event_label">Create new event</string>
     <string name="take_photo">Take new photo</string>
