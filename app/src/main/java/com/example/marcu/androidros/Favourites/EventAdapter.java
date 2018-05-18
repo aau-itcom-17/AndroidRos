@@ -32,8 +32,6 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     public EventAdapter(Context context, ArrayList<Event> myEvents) {
         this.myEvents = myEvents;
         this.context = context;
-        //System.out.println("Constructor in EventAdapter: " + myEvents.size());
-
     }
 
 
@@ -54,7 +52,7 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);
-        holder.description.setText(description);
+        //holder.description.setText(description);
     }
 
     @Override
@@ -70,7 +68,7 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             eventName = (TextView) itemView.findViewById(R.id.my_events_fragment_event_title_text_view);
-            description = (TextView) itemView.findViewById(R.id.my_events_fragment_event_description_text_view);
+            //description = (TextView) itemView.findViewById(R.id.my_events_fragment_event_description_text_view);
             eventImage = (ImageView) itemView.findViewById(R.id.my_events_fragment_image_view);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

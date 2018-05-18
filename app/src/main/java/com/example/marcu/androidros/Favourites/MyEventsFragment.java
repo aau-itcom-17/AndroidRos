@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.List.EventInfoActivity;
@@ -26,6 +27,8 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
     RecyclerView recyclerView;
     EventAdapter myAdapter;
     ArrayList<Event> myEvents;
+    ImageView favouriteButton;
+    ImageView favouriteButtonClicked;
 
 
 
@@ -35,6 +38,8 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
         View view = inflater.inflate(R.layout.fragment_my_events, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.my_events_fragment_recycler);
+        favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
+        favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);
 
         if(getArguments() != null) {
             myEvents = getArguments().getParcelableArrayList("key");
