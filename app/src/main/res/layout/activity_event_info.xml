@@ -1,27 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".List.EventInfoActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true">
 
-
-    <TextView
-        android:id="@+id/event_info_title_view"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:context=".List.EventInfoActivity">
 
-</android.support.constraint.ConstraintLayout>
+        <com.master.glideimageview.GlideImageView
+            android:id="@+id/event_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:id="@+id/event_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/event_image_view"
+            android:paddingBottom="10sp"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            android:paddingTop="10sp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/event_time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/event_title_view"
+            android:paddingBottom="2sp"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            android:drawableStart="@drawable/ic_access_time_black_24dp"
+            android:drawableLeft="@drawable/ic_access_time_black_24dp"
+            android:textColor="@color/time_date_color"
+            android:drawableTint="@color/time_date_color"
+            android:textSize="17sp"/>
+
+        <TextView
+            android:id="@+id/event_date_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/event_time_view"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            android:paddingTop="2sp"
+            android:drawableStart="@drawable/ic_event_black_24dp"
+            android:drawableLeft="@drawable/ic_event_black_24dp"
+            android:textColor="@color/time_date_color"
+            android:drawableTint="@color/time_date_color"
+            android:textSize="17sp"
+            />
+
+        <TextView
+            android:id="@+id/event_description_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/event_date_view"
+            android:paddingBottom="20sp"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            android:paddingTop="10sp"
+            android:textColor="@android:color/black"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/event_showonmap_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_description_view"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:drawableStart="@drawable/ic_location_on_black_24dp"
+            android:drawableTint="#90000000"
+            android:text="@string/show_on_map_button"
+            android:textAllCaps="false"
+            android:textColor="#90000000"
+            android:textSize="17dp"/>
+
+
+    </RelativeLayout>
+</ScrollView>
