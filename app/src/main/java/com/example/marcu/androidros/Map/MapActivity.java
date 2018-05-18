@@ -293,85 +293,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        // Adding markers on map.
-        database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
-                }
-                for (int i = 0; i < eventIDs.size(); i++){
-                    Event event = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
-                    events.add(event);
-
-                    if (event != null) {
-                        LatLng eventPos = new LatLng(event.getLatitude(), event.getLongitude());
-
-                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                        Date today = Calendar.getInstance().getTime();
-                        String reportDate = df.format(today);
-                        Log.i(TAG, reportDate);
-
-                        String[] separatedDate = reportDate.split(" ", 2);
-                        String date = separatedDate[0];
-                        String time = separatedDate[1];
-                        String[] separated= date.split("/");
-                        String[] separatedTime = time.split(":");
-                        String day = separated[0];
-                        String month = separated[1];
-                        String year = separated[2];
-                        String hour = separatedTime[0];
-                        String minutes = separatedTime[1];
-
-                        String[] separatedEvent = event.getDate().split("/");
-                        String[] separatedEventTime = event.getTime().split(":");
-                        String eventDay = separatedEvent[0];
-                        String eventMonth = separatedEvent[1];
-                        String eventYear = separatedEvent[2];
-                        String eventHour = separatedEventTime[0];
-                        String eventMinutes = separatedEventTime[1];
-
-
-                        // 13,48 < 14,48
-                        // 13,46 > 14,48
-                        String snippetTime;
-                        if (Integer.parseInt(hour) + (Integer.parseInt(minutes)/10) <= Integer.parseInt(eventHour) + (Integer.parseInt(eventMinutes)/10)
-                                && Integer.parseInt(hour) + (Integer.parseInt(minutes)/10) >= Integer.parseInt(eventHour) + (Integer.parseInt(eventMinutes)/10) - 1){
-                            //within an hour
-                            snippetTime = "Begins soon, " + event.getTime();
-                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
-                            if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24){
-                                snippetTime = "Tonight, " + event.getTime();
-                            }else {
-                                snippetTime = "Today, " + event.getTime();
-                            }
-                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay) + 1){
-                            snippetTime = "Tomorrow, " + event.getTime();
-                        } else {
-                            snippetTime = event.getDate() + " " + event.getTime();
-                        }
-
-                        Marker eventMarker = mMap.addMarker(new MarkerOptions()
-                                .position(eventPos)
-                                .title(event.getName())
-                                .snippet(snippetTime)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                        eventMarker.setTag(event);
-
-                    }else{
-                        // null pointer throw error
-                    }
-
-                }
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        // Adding markers on map. See method down below.
+        addMarkersOnMap();
     }
 
     /**
@@ -567,5 +490,109 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void createEventOnClicked (View view){
         intent = new Intent(this, CreateActivity.class);
         startActivity(intent);
+    }
+
+    public void addMarkersOnMap(){
+        database = FirebaseDatabase.getInstance();
+        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
+                }
+                for (int i = 0; i < eventIDs.size(); i++){
+                    Event event = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
+                    events.add(event);
+
+                    if (event != null) {
+                        LatLng eventPos = new LatLng(event.getLatitude(), event.getLongitude());
+
+                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                        Date today = Calendar.getInstance().getTime();
+                        String reportDate = df.format(today);
+                        Log.i(TAG, reportDate);
+                        Log.i(TAG, event.getDate() + " " + event.getTime());
+
+                        String[] separatedDate = reportDate.split(" ", 2);
+                        String date = separatedDate[0];
+                        String time = separatedDate[1];
+                        String[] separated= date.split("/");
+                        String[] separatedTime = time.split(":");
+                        String day = separated[0];
+                        String month = separated[1];
+                        String year = separated[2];
+                        String hour = separatedTime[0];
+                        String minutes = separatedTime[1];
+
+                        String[] separatedEvent = event.getDate().split("/");
+                        String[] separatedEventTime = event.getTime().split(":");
+                        String eventDay = separatedEvent[0];
+                        String eventMonth = separatedEvent[1];
+                        String eventYear = separatedEvent[2];
+                        String eventHour = separatedEventTime[0];
+                        String eventMinutes = separatedEventTime[1];
+
+
+                        // 13,48 < 14,48
+                        // 13,48 > 13,48 - 1
+                        // 11:19 < 11:16
+                        String snippetTime;
+                        //Log.i(TAG, "Device time: " + Integer.parseInt(hour) + (Double.parseDouble(minutes)/100));
+                        //Log.i(TAG, "Event time: " + Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100));
+                        if (Integer.parseInt(day) == Integer.parseInt(eventDay)
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 2){
+                            snippetTime = "Began today, " + event.getTime();
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100)
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 2) {
+                            snippetTime = "Now, " + event.getTime();
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) <= Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100)
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) >= Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 1){
+                            //within an hour
+                            snippetTime = "Begins soon, " + event.getTime();
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
+                            if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24){
+                                snippetTime = "Tonight, " + event.getTime();
+                            }else {
+                                snippetTime = "Today, " + event.getTime();
+                            }
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay) - 1){
+                            snippetTime = "Tomorrow, " + event.getTime();
+                            // 10,56 > 10,00
+                            // 10,56 < 10,00 + 1
+                        }else{
+                            snippetTime = event.getDate() + " " + event.getTime();
+                        }
+
+                        // 230,30 - 240 = -10,30 < 240 -240 = 0
+                        // 230,00 - 240 < 00.30 -240 =
+                        if (Integer.parseInt(day) > Integer.parseInt(eventDay)
+                                && Integer.parseInt(month) <= Integer.parseInt(eventMonth)
+                                && (Integer.parseInt(hour) + Double.parseDouble(minutes)/100) -240 >
+                                (Integer.parseInt(eventHour) + Double.parseDouble(eventMinutes)/100) -240) {
+                            Log.i(TAG, "Event: " + event.getName() + " is more than a day old, and will not be placed on the map");
+                        }else {
+                            Marker eventMarker = mMap.addMarker(new MarkerOptions()
+                                    .position(eventPos)
+                                    .title(event.getName())
+                                    .snippet(snippetTime)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            eventMarker.setTag(event);
+                        }
+
+                    }else{
+                        // null pointer throw error
+                    }
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

@@ -30,6 +30,8 @@ public class Event implements Parcelable{
 
     private String eventID;
 
+    private String eventOwner;
+
     private String name;
 
     private String description;
@@ -87,6 +89,14 @@ public class Event implements Parcelable{
 
     public void setEventID(String eventID){
         this.eventID = eventID;
+    }
+
+    public String getEventOwner() {
+        return eventOwner;
+    }
+
+    public void setEventOwner(String eventOwner) {
+        this.eventOwner = eventOwner;
     }
 
 

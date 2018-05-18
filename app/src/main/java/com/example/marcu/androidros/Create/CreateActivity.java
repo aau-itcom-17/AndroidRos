@@ -1,6 +1,7 @@
 package com.example.marcu.androidros.Create;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -200,9 +201,10 @@ public class CreateActivity extends AppCompatActivity{
                 int tHour = calendar.get(Calendar.HOUR_OF_DAY);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @SuppressLint("DefaultLocale")
                     @Override
                     public void onTimeSet(TimePicker view, int hourSelected, int minuteSelected) {
-                        tTv.setText(hourSelected + ":" + minuteSelected);
+                        tTv.setText(String.format("%02d:%02d", hourSelected, minuteSelected));
                     }
                 }, tHour, tMinute, true);
                 timePickerDialog.show();
