@@ -55,11 +55,9 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         String imageUrl = event.getPhotoPath();
         String title = event.getName();
-        String description = event.getDescription();
 
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);
-        //holder.description.setText(description);
     }
 
     @Override

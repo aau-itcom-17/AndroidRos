@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +62,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.security.SecureRandom;
@@ -69,6 +73,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -262,38 +270,61 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Implement info_window_layout.xml - with imageview.
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
             @Override
             public View getInfoWindow(Marker arg0) {
+
                 return null;
+
             }
 
             @Override
             public View getInfoContents(Marker marker) {
+                View view = MapActivity.this.getLayoutInflater().inflate(R.layout.marker_event_info, null);
+                ImageView imageView = (ImageView) view.findViewById(R.id.marker_info_image_view);
+                TextView title = (TextView) view.findViewById(R.id.marker_info_title_text_view);
+                TextView snippet = (TextView) view.findViewById(R.id.marker_event_time);
+                Event event = (Event) marker.getTag();
 
-                LinearLayout info = new LinearLayout(getApplicationContext());
-                info.setOrientation(LinearLayout.VERTICAL);
 
-                TextView title = new TextView(getApplicationContext());
-                title.setTextColor(Color.BLACK);
-                title.setGravity(Gravity.CENTER);
-                title.setTypeface(null, Typeface.BOLD);
-                title.setText(marker.getTitle());
+                if (event != null) {
+                    String path = event.getPhotoPath();
+                    Log.i(TAG, path);
+                    title.setText(marker.getTitle());
+                    snippet.setText(marker.getSnippet());
 
-                TextView snippet = new TextView(getApplicationContext());
-                snippet.setTextColor(Color.RED);
-                title.setGravity(Gravity.CENTER);
-                snippet.setText(marker.getSnippet());
+                    Picasso.get().load(path).into(imageView, new MarkerCallback(marker));
 
-                info.addView(title);
-                info.addView(snippet);
+                }
 
-                return info;
+                return view;
             }
         });
 
         // Adding markers on map. See method down below.
         addMarkersOnMap();
     }
+    public class MarkerCallback implements Callback {
+        Marker marker=null;
+
+        MarkerCallback(Marker marker) {
+            this.marker=marker;
+        }
+
+        @Override
+        public void onError(Exception e) {
+            Log.e(getClass().getSimpleName(), "Error loading thumbnail!");
+        }
+
+        @Override
+        public void onSuccess() {
+            if (marker != null && marker.isInfoWindowShown()) {
+                marker.hideInfoWindow();
+                marker.showInfoWindow();
+            }
+        }
+    }
+
 
     /**
      * Enables the My Location layer if the fine location permission has been granted.
@@ -530,16 +561,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         String eventHour = separatedEventTime[0];
                         String eventMinutes = separatedEventTime[1];
 
-
-                        // 13,48 < 14,48
-                        // 13,48 > 13,48 - 1
-                        // 11:19 < 11:16
                         String snippetTime;
-                        //Log.i(TAG, "Device time: " + Integer.parseInt(hour) + (Double.parseDouble(minutes)/100));
-                        //Log.i(TAG, "Event time: " + Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100));
-
-                        if (Integer.parseInt(day) > Integer.parseInt(eventDay)) {
-                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) - 24 + 3) {
+                        if (Integer.parseInt(day) > Integer.parseInt(eventDay)){
+                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 24 + 3) {
                                 snippetTime = "Began earlier, " + event.getTime();
                             } else {
                                 snippetTime = "Yesterday, " + event.getTime();
@@ -574,6 +598,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                     .snippet(snippetTime)
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                             eventMarker.setTag(event);
+                            // Tag makes it possible to send the event to another activity. onInfoWindowClick()
+
                         }
 
                     } else {
@@ -583,7 +609,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
 
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
