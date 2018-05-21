@@ -1,14 +1,8 @@
 package com.example.marcu.androidros.Map;
 
-import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,37 +18,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserPageFragment extends Fragment implements View.OnClickListener {
+public class UserPage extends AppCompatActivity {
 
     private FirebaseUser firebaseUser;
     private FirebaseDatabase database;
     private ArrayList<Event> events = new ArrayList<>();
     private List<String> eventIDs = new ArrayList<>();
 
-
-
-    //TextView firstName = (TextView) findViewById(R.id.getFirstName);
-
-
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_userpage, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_page);
 
-        ImageView closeButton = (ImageView) view.findViewById(R.id.close_button);
-        closeButton.setOnClickListener(this);
 
-        final TextView fName = (TextView) view.findViewById(R.id.getFirstName);
-        final TextView lName = (TextView) view.findViewById(R.id.getLastName);
-        final TextView email = (TextView) view.findViewById(R.id.getEmail);
-        Button editProfile = (Button) view.findViewById(R.id.edit_profile_button);
-
+        final TextView fName = (TextView) findViewById(R.id.getFirstName);
+        final TextView lName = (TextView) findViewById(R.id.getLastName);
+        final TextView email = (TextView) findViewById(R.id.getEmail);
+        Button editProfile = (Button) findViewById(R.id.edit_profile_button);
 
         // Access data to firebase
         database = FirebaseDatabase.getInstance();
@@ -75,37 +58,13 @@ public class UserPageFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        EditUserPageFragment nextFrag = new EditUserPageFragment();
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        return view;
-
-
-    }
 
 
 
 
 
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.close_button:
-                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-                break;
-
-        }
-
-    }
 
 
 
+    }
 }

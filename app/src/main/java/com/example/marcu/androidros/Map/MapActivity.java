@@ -487,7 +487,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_userpage:
-                getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPageFragment()).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPage()).commit();
+                Intent k = new Intent(this, UserPage.class);
+                startActivity(k);
                 break;
             case R.id.nav_logout:
                 // logging out
