@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,8 +24,12 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
 
+
     public interface OnEventClickListener{
         void onEventClick(int position);
+        void onFavouriteClick(int position);
+        void onUnFavouriteClick(int position);
+
     }
 
     public void setOnEventClickListener(OnEventClickListener listener){
@@ -66,12 +71,47 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         public TextView eventName;
         public TextView description;
         public ImageView eventImage;
+        public ImageButton favourite;
+        public ImageButton unFavourite;
 
         public ViewHolder(View itemView) {
             super(itemView);
             eventName = (TextView) itemView.findViewById(R.id.top_fragment_event_title_text_view);
             //description = (TextView) itemView.findViewById(R.id.top_fragment_event_description_text_view);
             eventImage = (ImageView) itemView.findViewById(R.id.top_fragment_image_view);
+            favourite = (ImageButton) itemView.findViewById(R.id.favourite_button);
+            //favourite.setVisibility();
+            favourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onFavouriteClick(position);
+                            favourite.setVisibility(View.INVISIBLE);
+                            unFavourite.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
+
+            unFavourite = (ImageButton) itemView.findViewById(R.id.favourite_button_clicked);
+            unFavourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onUnFavouriteClick(position);
+                            unFavourite.setVisibility(View.INVISIBLE);
+                            favourite.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                }
+            });
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

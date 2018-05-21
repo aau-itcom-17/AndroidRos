@@ -15,22 +15,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.EventPopUp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
+    FirebaseDatabase database;
     String TAG = "TopFragment";
     RecyclerView recyclerView;
     MainAdapter adapter;
     ArrayList<Event> events;
-    ImageView favouriteButton;
-    ImageView favouriteButtonClicked;
+    ImageButton favouriteButton;
+    ImageButton unFavouriteButton;
+
+    private DatabaseReference mDatabaseRef;
+
 
 
 
@@ -40,8 +52,10 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
-        favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);
+        favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
+        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
 
         if(getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
@@ -58,7 +72,10 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         adapter.setOnEventClickListener(TopFragment.this);
 
         return view;
-    }
+
+
+
+        }
 
     @Override
     public void onStart() {
@@ -78,8 +95,65 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
         Event clickedEvent = events.get(position);
 
+
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
+    }
+
+    @Override
+    public void onFavouriteClick(int position){
+
+
+
+        Event event = events.get(position);
+        String id = event.getEventID();
+        System.out.println("Favourite!");
+
+
+
+        /*database = FirebaseDatabase.getInstance();
+        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
+                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
+
+
+
+
+        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+    }
+
+    @Override
+    public void onUnFavouriteClick(int position){
+        Event event = events.get(position);
+        String id = event.getEventID();
+        System.out.println("UnFavourite!!!");
+
+        /*database = FirebaseDatabase.getInstance();
+        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
+                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
+
+
+
+        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
     }
 
 

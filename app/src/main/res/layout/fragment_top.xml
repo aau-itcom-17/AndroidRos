@@ -39,7 +39,7 @@
             android:textSize="25sp"
             android:textStyle="bold"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/favourite_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -52,9 +52,10 @@
             android:paddingRight="12dp"
             android:clickable="true"
             android:focusable="true"
+            android:background="@null"
             />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/favourite_button_clicked"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -68,6 +69,7 @@
             android:clickable="true"
             android:focusable="true"
             android:visibility="invisible"
+            android:background="@null"
             />
 
     </RelativeLayout>
