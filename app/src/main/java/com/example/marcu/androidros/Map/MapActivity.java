@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,22 +38,14 @@ import com.example.marcu.androidros.Create.LocationTrack;
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.List.EventInfoActivity;
-import com.example.marcu.androidros.List.NearbyFragment;
-import com.example.marcu.androidros.List.NewFragment;
-import com.example.marcu.androidros.List.TopFragment;
-import com.example.marcu.androidros.Login.CreateAccountActivity;
 import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
-import com.example.marcu.androidros.Utils.EventPopUp;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -66,11 +57,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.security.SecureRandom;
@@ -80,7 +69,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -93,6 +81,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final LatLng ORANGESCENE = new LatLng(55.621441, 12.077196);
     private static final LatLng ROSKILDE = new LatLng(55.616885, 12.077064);
     private static final LatLng HOME = new LatLng(55.650661, 12.525810);
+    private LatLng eventLoc;
     private Marker mAAU;
     private static final LatLng ZOOM = new LatLng(55.641010, 12.081299);
     private Marker mOrangeScene;
@@ -101,7 +90,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Intent intent;
 
     private LocationTrack locationTracker;
-    private LatLng loc;
+    private LatLng userLoc;
 
     double longitude, latitude;
     private TextView locationLatitude;
@@ -121,8 +110,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageButton imageButton;
 
 
-
-
     private final static String SAVE_MAP_STATE = "saveMapState";
 
     private FirebaseUser firebaseUser;
@@ -135,7 +122,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         Log.i(TAG, "onCreate");
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -154,7 +140,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         drawer.addDrawerListener(mToggle);
         mToggle.syncState();
         ChildEventListener mChildEventListener;
-
 
 
         //Access data in database
@@ -222,20 +207,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         enableMyLocation();
 
         locationTracker = new LocationTrack(MapActivity.this);
-        if(locationTracker.canGetLocation()){
+        if (locationTracker.canGetLocation()) {
 
             longitude = locationTracker.getLongitude();
             latitude = locationTracker.getLatitude();
-            loc = new LatLng(latitude, longitude);
+            userLoc = new LatLng(latitude, longitude);
 
         } else {
             locationTracker.showSettingsAlert();
         }
         locationTracker.stopListener();
 
-        // Move the camera to location everytime you open up the page.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14));
+        try {
+            Intent intent = getIntent();
+            eventLoc = intent.getParcelableExtra("event_location");
+            Log.i(TAG, "LatLong Data is: " + eventLoc.toString());
 
+        } catch (NullPointerException e) {
+            Log.i(TAG, "No LatLong Data");
+
+        }
+
+        if (eventLoc != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLoc, 18));
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 14));
+        }
 
 
         //Creates a polygon around roskilde festival.
@@ -269,6 +266,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public View getInfoWindow(Marker arg0) {
                 return null;
             }
+
             @Override
             public View getInfoContents(Marker marker) {
 
@@ -465,7 +463,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -480,19 +477,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-    private void randomMessage (){
+    private void randomMessage() {
         String[] messages;
-        messages=getResources().getStringArray(R.array.messages);
+        messages = getResources().getStringArray(R.array.messages);
         SecureRandom secureRandom = new SecureRandom();
         int number = secureRandom.nextInt(messages.length);
         drawerMessage.setText(messages[number]);
     }
-    public void createEventOnClicked (View view){
+
+    public void createEventOnClicked(View view) {
         intent = new Intent(this, CreateActivity.class);
         startActivity(intent);
     }
 
-    public void addMarkersOnMap(){
+    public void addMarkersOnMap() {
         database = FirebaseDatabase.getInstance();
         database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -500,7 +498,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
                 }
-                for (int i = 0; i < eventIDs.size(); i++){
+                for (int i = 0; i < eventIDs.size(); i++) {
                     Event event = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
                     events.add(event);
 
@@ -516,7 +514,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         String[] separatedDate = reportDate.split(" ", 2);
                         String date = separatedDate[0];
                         String time = separatedDate[1];
-                        String[] separated= date.split("/");
+                        String[] separated = date.split("/");
                         String[] separatedTime = time.split(":");
                         String day = separated[0];
                         String month = separated[1];
@@ -540,36 +538,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         //Log.i(TAG, "Device time: " + Integer.parseInt(hour) + (Double.parseDouble(minutes)/100));
                         //Log.i(TAG, "Event time: " + Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100));
 
-                        if (Integer.parseInt(day) > Integer.parseInt(eventDay)){
-                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 24 + 3) {
+                        if (Integer.parseInt(day) > Integer.parseInt(eventDay)) {
+                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) - 24 + 3) {
                                 snippetTime = "Began earlier, " + event.getTime();
-                            }else{
+                            } else {
                                 snippetTime = "Yesterday, " + event.getTime();
                             }
-                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)){
-                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 3) {
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
+                            if (Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) + 3) {
                                 snippetTime = "Began earlier, " + event.getTime();
-                            } else if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) + 3
-                                    && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100)){
+                            } else if (Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) + 3
+                                    && Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100)) {
                                 snippetTime = "Now, " + event.getTime();
-                            }else if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24){
+                            } else if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24) {
                                 snippetTime = "Tonight, " + event.getTime();
-                            }else {
+                            } else {
                                 snippetTime = "Today, " + event.getTime();
                             }
-                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay) - 1){
+                        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay) - 1) {
                             snippetTime = "Tomorrow, " + event.getTime();
-                        }else{
+                        } else {
                             snippetTime = event.getDate() + " " + event.getTime();
                         }
 
                         //Checking if it's 24 hours old
                         if (Integer.parseInt(day) > Integer.parseInt(eventDay)
                                 && Integer.parseInt(month) <= Integer.parseInt(eventMonth)
-                                && (Integer.parseInt(hour) + Double.parseDouble(minutes)/100) -240 >
-                                (Integer.parseInt(eventHour) + Double.parseDouble(eventMinutes)/100) -240) {
+                                && (Integer.parseInt(hour) + Double.parseDouble(minutes) / 100) - 240 >
+                                (Integer.parseInt(eventHour) + Double.parseDouble(eventMinutes) / 100) - 240) {
                             Log.i(TAG, "Event: " + event.getName() + " is more than a day old, and will not be placed on the map");
-                        }else {
+                        } else {
                             Marker eventMarker = mMap.addMarker(new MarkerOptions()
                                     .position(eventPos)
                                     .title(event.getName())
@@ -578,13 +576,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             eventMarker.setTag(event);
                         }
 
-                    }else{
+                    } else {
                         // null pointer throw error
                     }
 
                 }
 
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
