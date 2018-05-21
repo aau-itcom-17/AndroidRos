@@ -37,7 +37,7 @@
         <activity
             android:name=".Map.MapActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".List.ListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -50,7 +50,7 @@
             android:theme="@style/LoginTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Map.MapActivity"></meta-data>
+                android:value=".Map.MapActivity" />
         </activity>
         <activity
             android:name=".Utils.EventPopUp"
@@ -87,7 +87,7 @@
             android:theme="@style/LoginTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login.MainActivity"></meta-data>
+                android:value=".Login.MainActivity" />
         </activity>
         <activity
             android:name=".Login.LoginWithFirebaseActivity"
@@ -95,7 +95,7 @@
             android:theme="@style/LoginTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login.MainActivity"></meta-data>
+                android:value=".Login.MainActivity" />
         </activity>
         <activity
             android:name=".List.EventInfoActivity"
@@ -103,9 +103,10 @@
             android:theme="@style/LoginTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".List.ListActivity"></meta-data>
+                android:value=".List.ListActivity" />
         </activity>
-        <activity android:name=".Map.UserPage"></activity>
+        <activity android:name=".Map.UserPage" />
+        <activity android:name=".Map.EditUserPage"></activity>
     </application>
 
 </manifest>

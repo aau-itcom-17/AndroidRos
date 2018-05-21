@@ -1,5 +1,6 @@
 package com.example.marcu.androidros.Map;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -57,10 +58,15 @@ public class UserPage extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
 
-
-
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent myIntent = new Intent(UserPage.this, EditUserPage.class);
+                UserPage.this.startActivity(myIntent);
+            }
+        });
 
 
 
