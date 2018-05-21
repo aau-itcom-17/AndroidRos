@@ -90,21 +90,30 @@ public class EditUserPage extends AppCompatActivity {
                 String password = editPassword.getText().toString().trim();
                 String confirmPassword = repeatEditPassword.getText().toString().trim();
 
+                if (!password.isEmpty() || !confirmPassword.isEmpty()) {
 
-                if (!password.equals(confirmPassword)) {
-                    Toast.makeText(getApplicationContext(),"Password is not matching", Toast.LENGTH_SHORT).show();
-                } else if (password.length() < 6) {
-                    Toast.makeText(getApplicationContext(), "Password is too small", Toast.LENGTH_SHORT).show();
-                } else if (!CreateAccountActivity.isValidEmail(email)) {
-                    Toast.makeText(getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                    if (password.length() < 6) {
+                        Toast.makeText(getApplicationContext(), "Password is too small", Toast.LENGTH_SHORT).show();
+                    } else if (!password.equals(confirmPassword)) {
+                        Toast.makeText(getApplicationContext(), "Password is not matching", Toast.LENGTH_SHORT).show();
+                    } else if (!CreateAccountActivity.isValidEmail(email)) {
+                        Toast.makeText(getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("firstName").setValue(editFirstName.getText().toString().trim()); // Changing the value from edit profil in database
+                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("lastName").setValue(editLastName.getText().toString().trim());
+                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("email").setValue(editEmail.getText().toString().trim());
+                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("password").setValue(editPassword.getText().toString().trim());
+                        Toast.makeText(getApplicationContext(), "User info is saved", Toast.LENGTH_LONG).show();
+                    }
+                } else {
                     myDatabaseRef.child("users").child(firebaseUser.getUid()).child("firstName").setValue(editFirstName.getText().toString().trim()); // Changing the value from edit profil in database
                     myDatabaseRef.child("users").child(firebaseUser.getUid()).child("lastName").setValue(editLastName.getText().toString().trim());
                     myDatabaseRef.child("users").child(firebaseUser.getUid()).child("email").setValue(editEmail.getText().toString().trim());
-                    myDatabaseRef.child("users").child(firebaseUser.getUid()).child("password").setValue(editPassword.getText().toString().trim());
                     Toast.makeText(getApplicationContext(), "User info is saved", Toast.LENGTH_LONG).show();
+
                 }
+
 
             }
         });
