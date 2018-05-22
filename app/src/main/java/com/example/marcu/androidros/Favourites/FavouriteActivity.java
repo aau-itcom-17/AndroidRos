@@ -26,6 +26,7 @@ import com.example.marcu.androidros.List.NewFragment;
 import com.example.marcu.androidros.List.TopFragment;
 import com.example.marcu.androidros.Login.MainActivity;
 import com.example.marcu.androidros.Map.MapActivity;
+import com.example.marcu.androidros.Map.UserPage;
 import com.example.marcu.androidros.Utils.SectionsPagerAdapter;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
@@ -148,7 +149,9 @@ public class FavouriteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-                Toast.makeText(this, "User Page", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "User Page", Toast.LENGTH_SHORT).show();
+                Intent userPageIntent = new Intent (FavouriteActivity.this, UserPage.class);
+                FavouriteActivity.this.startActivity(userPageIntent);
                 return true;
             case R.id.item2:
                 // logging out
