@@ -11,7 +11,7 @@
         android:title=""/>
    <item
         android:id="@+id/ic_favorite"
-        android:icon="@drawable/ic_favorite_black_24dp"
+        android:icon="@drawable/ic_person_black_24dp"
         android:title=""/>
 
 
