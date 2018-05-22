@@ -27,9 +27,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
@@ -37,7 +39,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     String TAG = "TopFragment";
     RecyclerView recyclerView;
     MainAdapter adapter ;
-    ArrayList<Event> events;
+    Query events;
     ImageButton favouriteButton;
     ImageButton unFavouriteButton;
 
@@ -58,15 +60,22 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
 
         if(getArguments() != null) {
-            events = getArguments().getParcelableArrayList("key");
-            for (int i = 0; i < events.size(); i++) {
-                Log.i(TAG, events.get(i).getName());
-            }
-        }else{
-            Log.i(TAG, "getArguments = null");
+            //events = getArguments().getParcelableArrayList("key");
+            events = (Query) mDatabaseRef.child("events").child("").orderByChild("likes").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        System.out.println(child.getKey());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
-        adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -94,10 +103,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onEventClick(int position) {
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
-        Event clickedEvent = events.get(position);
 
 
-        eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
     }
 
@@ -106,8 +113,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
 
 
-        Event event = events.get(position);
-        String id = event.getEventID();
         System.out.println("Favourite!");
 
 
@@ -129,13 +134,10 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
 
 
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
     }
 
     @Override
     public void onUnFavouriteClick(int position){
-        Event event = events.get(position);
-        String id = event.getEventID();
         System.out.println("UnFavourite!!!");
 
         /*database = FirebaseDatabase.getInstance();
@@ -154,7 +156,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
 
 
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
     }
 
 

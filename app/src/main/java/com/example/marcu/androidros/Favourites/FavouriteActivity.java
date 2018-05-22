@@ -140,7 +140,7 @@ public class FavouriteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.item1:
                 //Toast.makeText(this, "User Page", Toast.LENGTH_SHORT).show();
-                Intent userPageIntent = new Intent (FavouriteActivity.this, UserPage.class);
+                Intent userPageIntent = new Intent (FavouriteActivity.this, EditUserPage.class);
                 FavouriteActivity.this.startActivity(userPageIntent);
                 return true;
             case R.id.item2:
