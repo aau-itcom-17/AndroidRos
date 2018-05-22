@@ -31,8 +31,8 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
     RecyclerView recyclerView;
     EventAdapter myAdapter;
     ArrayList<Event> myEvents;
-    ImageView favouriteButton;
-    ImageView favouriteButtonClicked;
+    /*ImageView favouriteButton;
+    ImageView favouriteButtonClicked;*/
     private DatabaseReference mDatabaseRef;
 
 
@@ -45,6 +45,8 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
         /*favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
         favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);*/
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
 
         if(getArguments() != null) {
             myEvents = getArguments().getParcelableArrayList("key");
@@ -60,6 +62,7 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
 
         myAdapter = new EventAdapter(getActivity(), myEvents);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(myAdapter);
         myAdapter.setOnEventClickListener(MyEventsFragment.this);
 

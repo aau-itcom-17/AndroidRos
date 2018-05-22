@@ -187,7 +187,7 @@ public class FavouriteActivity extends AppCompatActivity {
     private void setUpViewPager() {
         SectionsPagerAdapter myAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         myAdapter.addFragment(myEventsFragment);
-        myAdapter.addFragment(new MyFavouritesFragment());
+        myAdapter.addFragment(myFavouritesFragment);
         myAdapter.addFragment(new MyInvitesFragment());
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setAdapter(myAdapter);

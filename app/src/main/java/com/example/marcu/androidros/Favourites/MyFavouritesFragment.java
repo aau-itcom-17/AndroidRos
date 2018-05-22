@@ -32,69 +32,6 @@ import java.util.List;
 
 public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEventClickListener {
 
-    /*FirebaseUser firebaseUser;
-    FirebaseDatabase database;
-    public static String[] favouriteEvents;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_my_favourites, container, false);
-
-
-        database = FirebaseDatabase.getInstance();
-        database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                String uid = firebaseUser.getUid();
-                Log.i("Firebase", "uid: " + uid);
-                User user = dataSnapshot.child(uid).getValue(User.class);
-
-
-                List list = new ArrayList();
-
-                if (user.getFavourites() == null) {
-
-                    System.out.println("null");
-
-                    favouriteEvents = new String[1];
-                    list.add("No current favourites");
-                    list.toArray(favouriteEvents);
-
-                } else {
-
-                    System.out.println("not null");
-
-                    favouriteEvents = new String[user.getFavourites().size()];
-
-                    for (int i = 0; i < user.getFavourites().size(); i++) {
-                        list.add(user.getFavourites().get(i).getName());
-                    }
-                    list.toArray(favouriteEvents);
-                }
-
-                ListView listView = (ListView) view.findViewById(R.id.favouritesList);
-
-                ArrayAdapter<String> listViewAdaptor = new ArrayAdapter<String>(
-                        getActivity(), android.R.layout.simple_list_item_1, favouriteEvents
-                );
-
-
-                listView.setAdapter(listViewAdaptor);
-                System.out.println("test1.3");
-            }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                    Log.w("Firebase", "loadPost:onCancelled", databaseError.toException());
-                    // ...
-                }
-            });
-        return view;
-    }*/
-
 
     String TAG = "MyFavouritesFragment";
     RecyclerView recyclerView;
@@ -113,10 +50,12 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
         favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
         favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
 
         if(getArguments() != null) {
             myFavourites = getArguments().getParcelableArrayList("key");
-            System.out.println("Second: " + myFavourites.size());
+            System.out.println("Third: " + myFavourites.size());
 
             for (int i = 0; i < myFavourites.size(); i++) {
                 Log.i(TAG, myFavourites.get(i).getName());
@@ -128,6 +67,7 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
 
         myAdapter = new EventAdapter(getActivity(), myFavourites);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(myAdapter);
         myAdapter.setOnEventClickListener(MyFavouritesFragment.this);
 
