@@ -1,4 +1,4 @@
-package com.example.marcu.androidros.Map;
+package com.example.marcu.androidros.Favourites;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
