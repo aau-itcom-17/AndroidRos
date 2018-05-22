@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Map.EditUserPage"
+    tools:context=".Favourites.EditUserPage"
     tools:layout_editor_absoluteY="25dp">
 
     <EditText

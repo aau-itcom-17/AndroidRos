@@ -20,7 +20,6 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -105,8 +104,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".List.ListActivity" />
         </activity>
-        <activity android:name=".Map.UserPage" />
-        <activity android:name=".Map.EditUserPage"></activity>
+        <activity android:name=".Favourites.UserPage"
+            android:label="Account"
+            android:theme="@style/LoginTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Favourites.FavouriteActivity" />
+        </activity>
+        <activity android:name=".Favourites.EditUserPage"
+            android:label="Edit Account"
+            android:theme="@style/LoginTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Favourites.EditUserPage" />
+        </activity>
+
     </application>
 
 </manifest>
