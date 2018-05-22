@@ -30,6 +30,8 @@ public class EditUserPage extends AppCompatActivity {
 
     //Context context = getApplicationContext();
 
+    public String databaseOldPassword;
+
 
 
 
@@ -47,7 +49,7 @@ public class EditUserPage extends AppCompatActivity {
         final Button saveButton = (Button) findViewById(R.id.saveButton);
         final TextView editPassword = (TextView) findViewById(R.id.editPassword);
         final TextView repeatEditPassword = (TextView) findViewById(R.id.repeatEditPassword);
-
+        final TextView oldPasswordTextview = (TextView) findViewById(R.id.oldPassword);
 
         // Firebase
         FirebaseAuth.AuthStateListener mAuthListener;
@@ -69,7 +71,7 @@ public class EditUserPage extends AppCompatActivity {
                 editFirstName.setText(user.getFirstName());
                 editLastName.setText(user.getLastName());
                 editEmail.setText(user.getEmail());
-
+                databaseOldPassword = user.getPassword();
 
 
             }
@@ -89,23 +91,33 @@ public class EditUserPage extends AppCompatActivity {
                 String email = editEmail.getText().toString().trim();
                 String password = editPassword.getText().toString().trim();
                 String confirmPassword = repeatEditPassword.getText().toString().trim();
+                String oldPassword = oldPasswordTextview.getText().toString().trim();
 
-                if (!password.isEmpty() || !confirmPassword.isEmpty()) {
 
-                    if (password.length() < 6) {
-                        Toast.makeText(getApplicationContext(), "Password is too small", Toast.LENGTH_SHORT).show();
-                    } else if (!password.equals(confirmPassword)) {
-                        Toast.makeText(getApplicationContext(), "Password is not matching", Toast.LENGTH_SHORT).show();
-                    } else if (!CreateAccountActivity.isValidEmail(email)) {
-                        Toast.makeText(getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
+                if (!password.isEmpty() || !confirmPassword.isEmpty() || !oldPassword.isEmpty()) {
+
+                    // If old password
+                    if (oldPassword.equals(databaseOldPassword)) {
+
+                        if (password.length() < 6) {
+                            Toast.makeText(getApplicationContext(), "The new password is too small", Toast.LENGTH_SHORT).show();
+                        } else if (!password.equals(confirmPassword)) {
+                            Toast.makeText(getApplicationContext(), "The password is not matching", Toast.LENGTH_SHORT).show();
+                        } else if (!CreateAccountActivity.isValidEmail(email)) {
+                            Toast.makeText(getApplicationContext(), "The email is not valid", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            myDatabaseRef.child("users").child(firebaseUser.getUid()).child("firstName").setValue(editFirstName.getText().toString().trim()); // Changing the value from edit profil in database
+                            myDatabaseRef.child("users").child(firebaseUser.getUid()).child("lastName").setValue(editLastName.getText().toString().trim());
+                            myDatabaseRef.child("users").child(firebaseUser.getUid()).child("email").setValue(editEmail.getText().toString().trim());
+                            myDatabaseRef.child("users").child(firebaseUser.getUid()).child("password").setValue(editPassword.getText().toString().trim());
+                            Toast.makeText(getApplicationContext(), "User info is saved", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "The old password is wrong", Toast.LENGTH_SHORT).show();
+
                     }
-                    else {
-                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("firstName").setValue(editFirstName.getText().toString().trim()); // Changing the value from edit profil in database
-                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("lastName").setValue(editLastName.getText().toString().trim());
-                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("email").setValue(editEmail.getText().toString().trim());
-                        myDatabaseRef.child("users").child(firebaseUser.getUid()).child("password").setValue(editPassword.getText().toString().trim());
-                        Toast.makeText(getApplicationContext(), "User info is saved", Toast.LENGTH_LONG).show();
-                    }
+
                 } else {
                     myDatabaseRef.child("users").child(firebaseUser.getUid()).child("firstName").setValue(editFirstName.getText().toString().trim()); // Changing the value from edit profil in database
                     myDatabaseRef.child("users").child(firebaseUser.getUid()).child("lastName").setValue(editLastName.getText().toString().trim());
