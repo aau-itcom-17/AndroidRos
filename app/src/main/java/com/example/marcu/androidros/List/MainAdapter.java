@@ -23,13 +23,10 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private OnEventClickListener listener;
 
 
-
-
     public interface OnEventClickListener{
         void onEventClick(int position);
         void onFavouriteClick(int position);
         void onUnFavouriteClick(int position);
-
     }
 
     public void setOnEventClickListener(OnEventClickListener listener){

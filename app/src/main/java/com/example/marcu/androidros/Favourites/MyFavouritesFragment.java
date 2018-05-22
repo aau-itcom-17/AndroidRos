@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -98,33 +99,34 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
     String TAG = "MyFavouritesFragment";
     RecyclerView recyclerView;
     EventAdapter myAdapter;
-    ArrayList<Event> myEvents;
+    ArrayList<Event> myFavourites;
     ImageView favouriteButton;
     ImageView favouriteButtonClicked;
+    private DatabaseReference mDatabaseRef;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_favourites, container, false);
+        View view = inflater.inflate(R.layout.fragment_top, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.my_favourites_fragment_recycler);
+        recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
         favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
         favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);
 
         if(getArguments() != null) {
-            myEvents = getArguments().getParcelableArrayList("key");
-            System.out.println("Second: " + myEvents.size());
+            myFavourites = getArguments().getParcelableArrayList("key");
+            System.out.println("Second: " + myFavourites.size());
 
-            for (int i = 0; i < myEvents.size(); i++) {
-                Log.i(TAG, myEvents.get(i).getName());
+            for (int i = 0; i < myFavourites.size(); i++) {
+                Log.i(TAG, myFavourites.get(i).getName());
             }
         }else{
             Log.i(TAG, "getArguments = null");
         }
 
 
-        myAdapter = new EventAdapter(getActivity(), myEvents);
+        myAdapter = new EventAdapter(getActivity(), myFavourites);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(myAdapter);
         myAdapter.setOnEventClickListener(MyFavouritesFragment.this);
@@ -148,9 +150,31 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
     @Override
     public void onEventClick(int position) {
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
-        Event clickedEvent = myEvents.get(position);
+        Event clickedEvent = myFavourites.get(position);
 
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
+    }
+
+    @Override
+    public void onFavouriteClick(int position){
+
+        Event event = myFavourites.get(position);
+        String eventId = event.getEventID();
+        System.out.println("Favourite!");
+
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+        mDatabaseRef.child("user").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
+    }
+
+    @Override
+    public void onUnFavouriteClick(int position){
+
+        Event event = myFavourites.get(position);
+        String eventId = event.getEventID();
+        System.out.println("UnFavourite!!!");
+
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("events").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }
 }

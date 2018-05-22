@@ -33,14 +33,13 @@ import java.util.ArrayList;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
-    FirebaseDatabase database;
+    //FirebaseDatabase database;
     String TAG = "TopFragment";
     RecyclerView recyclerView;
     MainAdapter adapter ;
     ArrayList<Event> events;
     ImageButton favouriteButton;
     ImageButton unFavouriteButton;
-
     private DatabaseReference mDatabaseRef;
 
 
