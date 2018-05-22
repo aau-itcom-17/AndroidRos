@@ -73,9 +73,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         adapter.setOnEventClickListener(TopFragment.this);
 
         return view;
-
-
-
         }
 
     @Override
@@ -96,7 +93,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
         Event clickedEvent = events.get(position);
 
-
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
     }
@@ -104,57 +100,23 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onFavouriteClick(int position){
 
-
-
         Event event = events.get(position);
-        String id = event.getEventID();
+        String eventId = event.getEventID();
         System.out.println("Favourite!");
 
-
-
-        /*database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
-                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-
-
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+        mDatabaseRef.child("user").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
     }
 
     @Override
     public void onUnFavouriteClick(int position){
+
         Event event = events.get(position);
-        String id = event.getEventID();
+        String eventId = event.getEventID();
         System.out.println("UnFavourite!!!");
 
-        /*database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
-                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("events").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }
 
 

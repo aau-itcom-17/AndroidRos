@@ -31,7 +31,6 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
     ImageView favouriteButtonClicked;
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,14 +81,4 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
     }
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            //case R.id.event_button:
-//            //   startActivity(new Intent(getActivity(), EventPopUp.class));
-//            //   break;
-//        }
-//    }
-
 }

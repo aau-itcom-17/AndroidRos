@@ -78,7 +78,6 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             //description = (TextView) itemView.findViewById(R.id.top_fragment_event_description_text_view);
             eventImage = (ImageView) itemView.findViewById(R.id.top_fragment_image_view);
             favourite = (ImageButton) itemView.findViewById(R.id.favourite_button);
-            //favourite.setVisibility();
             favourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
