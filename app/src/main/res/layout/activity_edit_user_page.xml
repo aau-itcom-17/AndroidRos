@@ -12,19 +12,36 @@
         android:layout_height="wrap_content"
         android:background="@color/eggWhite">
 
-        <ImageView
-            android:id="@+id/profile_picture_view"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+
+        <android.support.v7.widget.CardView
+
+            android:layout_marginTop="15dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:elevation="12dp"
+            android:id="@+id/profile_picture_container"
+            app:cardCornerRadius="70dp"
             android:layout_centerHorizontal="true"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp" />
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9">
+            <ImageView
+                android:id="@+id/profile_picture_view"
+                android:layout_height="140dp"
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+              >
+            </ImageView>
+        </android.support.v7.widget.CardView>
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_picture_view"
+            android:layout_height="30dp"
+            android:layout_below="@+id/profile_picture_container"
             android:layout_centerInParent="true"
+            android:textSize="16dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
             android:background="@android:color/transparent"
             android:text="Change Profile Picture"
             android:textAllCaps="false" />
