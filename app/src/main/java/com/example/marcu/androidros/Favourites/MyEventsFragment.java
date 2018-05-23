@@ -26,13 +26,12 @@ import java.util.ArrayList;
 
 public class MyEventsFragment extends Fragment implements EventAdapter.OnEventClickListener{
 
-    FirebaseDatabase database;
-    String TAG = "MyEventsFragment";
-    RecyclerView recyclerView;
-    EventAdapter myAdapter;
-    ArrayList<Event> myEvents;
-    /*ImageView favouriteButton;
-    ImageView favouriteButtonClicked;*/
+    //private FirebaseDatabase database;
+    private String TAG = "MyEventsFragment";
+    private RecyclerView recyclerView;
+    private EventAdapter myAdapter;
+    private ArrayList<Event> allEvents = new ArrayList<>();
+    private ArrayList<Event> myEvents = new ArrayList<>();
     private DatabaseReference mDatabaseRef;
 
 
@@ -43,28 +42,34 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        /*favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
-        favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);*/
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
-
-        if(getArguments() != null) {
-            myEvents = getArguments().getParcelableArrayList("key");
-            System.out.println("Second: " + myEvents.size());
-
-            for (int i = 0; i < myEvents.size(); i++) {
-                Log.i(TAG, myEvents.get(i).getName());
+        if(getArguments() != null)
+        {
+            allEvents = getArguments().getParcelableArrayList("key");
+            for (int i = 0; i < allEvents.size(); i++) {
+                Log.i(TAG, allEvents.get(i).getName());
             }
-        }else{
+        }
+        else{
             Log.i(TAG, "getArguments = null");
         }
 
 
-        myAdapter = new EventAdapter(getActivity(), myEvents);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(myAdapter);
-        myAdapter.setOnEventClickListener(MyEventsFragment.this);
+        for (int i = 0; i < allEvents.size(); i++)
+        {
+            if (allEvents.get(i) != null && allEvents.get(i).getEventOwner() != null) {
+                if (allEvents.get(i).getEventOwner().equals(FirebaseAuth.getInstance().getUid())) {
+                    Event event = allEvents.get(i);
+                    myEvents.add(event);
+                }
+            }
+        }
+            myAdapter = new EventAdapter(getActivity(), myEvents);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(myAdapter);
+            myAdapter.setOnEventClickListener(MyEventsFragment.this);
 
         return view;
     }

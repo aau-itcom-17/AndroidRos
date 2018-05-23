@@ -55,7 +55,7 @@ public class FavouriteActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
     String TAG = "FavouriteActivity";
-    ArrayList<Event> myEvents = new ArrayList<>();
+    ArrayList<Event> allEvents = new ArrayList<>();
     List<String> eventIDs = new ArrayList<>();
     MyEventsFragment myEventsFragment;
     MyFavouritesFragment myFavouritesFragment;
@@ -99,8 +99,20 @@ public class FavouriteActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
 
-                    if (String.valueOf(postSnapshot.child("eventOwner").getValue()).equals(FirebaseAuth.getInstance().getUid())) {
+                }
+                for (int i = 0; i < eventIDs.size(); i++){
+                    Event event = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
+                    allEvents.add(event);
+                }
+
+                for (int i = 0; i < eventIDs.size(); i++){
+                    Log.i(TAG, eventIDs.get(i));
+                }
+
+
+                    /*if (String.valueOf(postSnapshot.child("eventOwner").getValue()).equals(FirebaseAuth.getInstance().getUid())) {
                         eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
                     }
 
@@ -114,10 +126,10 @@ public class FavouriteActivity extends AppCompatActivity {
 
                 for (int i = 0; i < eventIDs.size(); i++) {
                     Log.i(TAG, eventIDs.get(i));
-                }
+                }*/
 
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("key", myEvents);
+                bundle.putParcelableArrayList("key", allEvents);
                 myEventsFragment = new MyEventsFragment();
                 myFavouritesFragment = new MyFavouritesFragment();
                 myInvitesFragment = new MyInvitesFragment();

@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MyInvitesFragment extends Fragment {
 
-    FirebaseUser firebaseUser;
+    /*FirebaseUser firebaseUser;
     FirebaseDatabase database;
     public static String[] invites;
 
@@ -86,5 +86,5 @@ public class MyInvitesFragment extends Fragment {
             }
         });
         return view;
-    }
+    }*/
 }

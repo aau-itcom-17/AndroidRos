@@ -30,16 +30,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEventClickListener {
+public class MyFavouritesFragment extends Fragment implements FavouriteAdapter.OnEventClickListener {
 
 
-    String TAG = "MyFavouritesFragment";
-    RecyclerView recyclerView;
-    EventAdapter myAdapter;
-    ArrayList<Event> myFavourites;
-    ImageView favouriteButton;
-    ImageView favouriteButtonClicked;
+    private String TAG = "MyFavouritesFragment";
+    private RecyclerView recyclerView;
+    private FavouriteAdapter myAdapter;
+    private ArrayList<Event> allEvents = new ArrayList<>();
+    private ArrayList<Event> myFavourites = new ArrayList<>();
     private DatabaseReference mDatabaseRef;
+    private FirebaseDatabase database;
+    private FirebaseUser firebaseUser;
+
 
 
     @Nullable
@@ -48,28 +50,58 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        favouriteButton = (ImageView) view.findViewById(R.id.favourite_button);
-        favouriteButtonClicked = (ImageView) view.findViewById(R.id.favourite_button_clicked);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        database = FirebaseDatabase.getInstance();
 
 
-        if(getArguments() != null) {
-            myFavourites = getArguments().getParcelableArrayList("key");
-            System.out.println("Third: " + myFavourites.size());
+        database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (firebaseUser != null) {
+                    String id = firebaseUser.getUid();
+                    //User user = dataSnapshot.child(id).getValue(User.class);
 
-            for (int i = 0; i < myFavourites.size(); i++) {
-                Log.i(TAG, myFavourites.get(i).getName());
+
+                    if(getArguments() != null)
+                    {
+                        allEvents = getArguments().getParcelableArrayList("key");
+                        System.out.println("Second: " + allEvents.size());
+
+                        for (int i = 0; i < allEvents.size(); i++) {
+                            Log.i(TAG, allEvents.get(i).getName());
+                        }
+                    }
+                    else{
+                        Log.i(TAG, "getArguments = null");
+                    }
+
+
+                    for (int i = 0; i < allEvents.size(); i++)
+                    {
+                        if (allEvents.get(i) != null) {
+                            if (dataSnapshot.child(id).child("favourites").hasChild(allEvents.get(i).getEventID())) {
+                                Event event = allEvents.get(i);
+                                myFavourites.add(event);
+                            }
+                        }
+                    }
+
+                    myAdapter = new FavouriteAdapter(getActivity(), myFavourites);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setAdapter(myAdapter);
+                    myAdapter.setOnEventClickListener(MyFavouritesFragment.this);
+                }
             }
-        }else{
-            Log.i(TAG, "getArguments = null");
-        }
 
 
-        myAdapter = new EventAdapter(getActivity(), myFavourites);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(myAdapter);
-        myAdapter.setOnEventClickListener(MyFavouritesFragment.this);
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         return view;
     }
@@ -104,7 +136,7 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
         System.out.println("Favourite!");
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
-        mDatabaseRef.child("user").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
     }
 
     @Override
@@ -115,6 +147,6 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
         System.out.println("UnFavourite!!!");
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
-        mDatabaseRef.child("events").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }
 }

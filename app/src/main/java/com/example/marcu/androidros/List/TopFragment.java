@@ -38,12 +38,11 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     RecyclerView recyclerView;
     MainAdapter adapter ;
     ArrayList<Event> events;
-    ImageButton favouriteButton;
-    ImageButton unFavouriteButton;
+    /*ImageButton favouriteButton;
+    ImageButton unFavouriteButton;*/
     private DatabaseReference mDatabaseRef;
 
-
-
+    
 
     @Nullable
     @Override
@@ -51,8 +50,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
-        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);
+        /*favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
+        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);*/
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
@@ -104,7 +103,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         System.out.println("Favourite!");
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
-        mDatabaseRef.child("user").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
     }
 
     @Override
@@ -115,7 +114,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         System.out.println("UnFavourite!!!");
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
-        mDatabaseRef.child("events").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }
 
 

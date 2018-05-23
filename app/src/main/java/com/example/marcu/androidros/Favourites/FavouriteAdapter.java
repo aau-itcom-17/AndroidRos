@@ -50,6 +50,8 @@ class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.ViewHolder>
         Event event = myFavourites.get(position);
 
         String imageUrl = event.getPhotoPath();
+        System.out.println("OOOOOOOOOOOOOO OOOOOOOOOOOOOOO: " + event.getName());
+
         String title = event.getName();
         String description = event.getDescription();
 
