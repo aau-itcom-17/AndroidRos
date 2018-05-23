@@ -307,7 +307,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         addMarkersOnMap();
     }
     public class MarkerCallback implements Callback {
-        Marker marker=null;
+        Marker marker;
 
         MarkerCallback(Marker marker) {
             this.marker=marker;
@@ -371,6 +371,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             enableMyLocation();
         } else {
             // Display the missing permission error dialog when the fragments resume.
+
             mPermissionDenied = true;
         }
     }
@@ -543,11 +544,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (event != null) {
                         LatLng eventPos = new LatLng(event.getLatitude(), event.getLongitude());
 
+
                         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         Date today = Calendar.getInstance().getTime();
                         String reportDate = df.format(today);
-                        Log.i(TAG, reportDate);
-                        Log.i(TAG, event.getDate() + " " + event.getTime());
 
                         String[] separatedDate = reportDate.split(" ", 2);
                         String date = separatedDate[0];
