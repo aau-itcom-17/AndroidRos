@@ -1,10 +1,13 @@
 package com.example.marcu.androidros.Favourites;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.io.File;
+
 public class EditUserPage extends AppCompatActivity {
 
 
@@ -27,6 +32,8 @@ public class EditUserPage extends AppCompatActivity {
     private FirebaseDatabase database;
     private FirebaseAuth mAuth;
     private DatabaseReference myDatabaseRef;
+    private String profilePictureRef;
+    private File profilePicFile;
 
     //Context context = getApplicationContext();
 
@@ -50,6 +57,7 @@ public class EditUserPage extends AppCompatActivity {
         final TextView editPassword = (TextView) findViewById(R.id.editPassword);
         final TextView repeatEditPassword = (TextView) findViewById(R.id.repeatEditPassword);
         final TextView oldPasswordTextview = (TextView) findViewById(R.id.oldPassword);
+        final ImageView profilePicture = (ImageView) findViewById(R.id.profile_picture_view);
 
         // Firebase
         FirebaseAuth.AuthStateListener mAuthListener;
@@ -72,6 +80,22 @@ public class EditUserPage extends AppCompatActivity {
                 editLastName.setText(user.getLastName());
                 editEmail.setText(user.getEmail());
                 databaseOldPassword = user.getPassword();
+
+                if (firebaseUser != null) {
+                    if (user != null) {
+                        profilePictureRef = user.getProfilePicture();
+                        Log.i("Firebase", "Profile picture reference: " + profilePictureRef);
+                    }
+                    if (profilePictureRef != null) {
+                        profilePicFile = new File(profilePictureRef);
+                        if (profilePicFile.exists()) {
+                            profilePicture.setImageBitmap(BitmapFactory.decodeFile(profilePictureRef));
+                        } else {
+                            Toast.makeText(EditUserPage.this, "Couldn't load profile picture... " +
+                                    "please change your profile picture.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
 
 
             }
