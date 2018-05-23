@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Event> events;
     private OnEventClickListener listener;
@@ -29,11 +29,11 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     }
 
-    public void setOnEventClickListener(OnEventClickListener listener){
+    public void setOnEventClickListener1(OnEventClickListener listener){
         this.listener = listener;
     }
 
-    public MainAdapter(Context context, ArrayList<Event> events) {
+    public NewAdapter(Context context, ArrayList<Event> events) {
         this.events = events;
         this.context = context;
     }
@@ -41,13 +41,13 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public MainAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_top ,parent,false);
+    public NewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.fragment_new ,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MainAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NewAdapter.ViewHolder holder, int position) {
         Event event = events.get(position);
 
         String imageUrl = event.getPhotoPath();
@@ -71,10 +71,12 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            eventName = (TextView) itemView.findViewById(R.id.top_fragment_event_title_text_view);
+            eventName = (TextView) itemView.findViewById(R.id.new_fragment_event_title_text_view);
             //description = (TextView) itemView.findViewById(R.id.top_fragment_event_description_text_view);
-            eventImage = (ImageView) itemView.findViewById(R.id.top_fragment_image_view);
-            favourite = (ImageButton) itemView.findViewById(R.id.favourite_button);
+            eventImage = (ImageView) itemView.findViewById(R.id.new_fragment_image_view);
+            favourite = (ImageButton) itemView.findViewById(R.id.new_fragment_favourite_button);
+            unFavourite = (ImageButton) itemView.findViewById(R.id.new_fragment_favourite_button_clicked);
+
             //favourite.setVisibility();
             favourite.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,7 +92,6 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                 }
             });
 
-            unFavourite = (ImageButton) itemView.findViewById(R.id.favourite_button_clicked);
             unFavourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -105,7 +106,6 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
                 }
             });
-
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

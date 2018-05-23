@@ -83,8 +83,8 @@ public class ListActivity extends AppCompatActivity{
     private void setUpViewPager (){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(topFragment);
-        adapter.addFragment(new NearbyFragment());
-        adapter.addFragment(new NewFragment());
+        adapter.addFragment(nearbyFragment);
+        adapter.addFragment(newFragment);
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setAdapter(adapter);
 
