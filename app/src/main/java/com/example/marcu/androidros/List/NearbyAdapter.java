@@ -52,9 +52,11 @@ class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder> {
 
         String imageUrl = event.getPhotoPath();
         String title = event.getName();
+        String distance = String.valueOf(event.getDistance());
 
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);
+        holder.distanceView.setText(distance);
     }
 
     @Override
@@ -68,6 +70,7 @@ class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder> {
         public ImageView eventImage;
         public ImageButton favourite;
         public ImageButton unFavourite;
+        public TextView distanceView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -76,6 +79,7 @@ class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder> {
             eventImage = (ImageView) itemView.findViewById(R.id.nearby_fragment_image_view);
             favourite = (ImageButton) itemView.findViewById(R.id.nearby_fragment_favourite_button);
             unFavourite = (ImageButton) itemView.findViewById(R.id.nearby_fragment_favourite_button_clicked);
+            distanceView = (TextView) itemView.findViewById(R.id.nearby_fragment_distance_text);
 
             //favourite.setVisibility();
             favourite.setOnClickListener(new View.OnClickListener() {

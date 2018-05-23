@@ -42,13 +42,24 @@ public class Event implements Parcelable{
 
     private String date;
 
-    private Double latitude;
+    private double latitude;
 
-    private Double longitude;
+    private double longitude;
 
     private int likes;
 
     private int comments;
+
+    private int distance;
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
 
     protected Event(Parcel in) {
         eventID = in.readString();
@@ -57,16 +68,8 @@ public class Event implements Parcelable{
         photoPath = in.readString();
         time = in.readString();
         date = in.readString();
-        if (in.readByte() == 0) {
-            latitude = null;
-        } else {
-            latitude = in.readDouble();
-        }
-        if (in.readByte() == 0) {
-            longitude = null;
-        } else {
-            longitude = in.readDouble();
-        }
+        latitude = in.readDouble();
+        longitude = in.readDouble();
         likes = in.readInt();
         comments = in.readInt();
     }
@@ -186,18 +189,10 @@ public class Event implements Parcelable{
         dest.writeString(photoPath);
         dest.writeString(time);
         dest.writeString(date);
-        if (latitude == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(latitude);
-        }
-        if (longitude == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(longitude);
-        }
+        dest.writeDouble(latitude);
+        dest.writeByte((byte) 0);
+        dest.writeByte((byte) 1);
+        dest.writeDouble(longitude);
         dest.writeInt(likes);
         dest.writeInt(comments);
     }

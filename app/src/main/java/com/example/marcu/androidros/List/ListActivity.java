@@ -52,7 +52,6 @@ public class ListActivity extends AppCompatActivity{
                     String id = String.valueOf(postSnapshot.child("eventID").getValue());
                     Event event = dataSnapshot.child(id).getValue(Event.class);
 
-
                     if (event != null) {
                         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         Date today = Calendar.getInstance().getTime();

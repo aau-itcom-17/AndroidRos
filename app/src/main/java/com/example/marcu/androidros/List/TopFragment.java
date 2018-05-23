@@ -56,15 +56,19 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
-
-        if(getArguments() != null) {
-            events = getArguments().getParcelableArrayList("key");
-            for (int i = 0; i < events.size(); i++) {
-                Log.i(TAG, events.get(i).getName());
+        if (savedInstanceState != null) {
+            events = savedInstanceState.getParcelableArrayList("SavedList");
+        }else {
+            if (getArguments() != null) {
+                events = getArguments().getParcelableArrayList("key");
+                for (int i = 0; i < events.size(); i++) {
+                    Log.i(TAG, events.get(i).getName());
+                }
+            } else {
+                Log.i(TAG, "getArguments = null");
             }
-        }else{
-            Log.i(TAG, "getArguments = null");
         }
+
 
         adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -75,6 +79,12 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
 
 
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("SavedList", events);
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -87,6 +97,12 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     public void onStop() {
         super.onStop();
         Log.i(TAG, "onStop");
+
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
 
     }
 
