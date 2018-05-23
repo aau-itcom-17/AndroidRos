@@ -42,7 +42,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     ImageButton unFavouriteButton;*/
     private DatabaseReference mDatabaseRef;
 
-    
+
 
     @Nullable
     @Override
