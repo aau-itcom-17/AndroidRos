@@ -1,11 +1,10 @@
-package com.example.marcu.androidros.Map;
+package com.example.marcu.androidros.Favourites;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.marcu.androidros.Database.Event;

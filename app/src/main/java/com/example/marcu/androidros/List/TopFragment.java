@@ -36,7 +36,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     //FirebaseDatabase database;
     String TAG = "TopFragment";
     RecyclerView recyclerView;
-    MainAdapter adapter ;
+    MainAdapter adapter;
     ArrayList<Event> events;
     /*ImageButton favouriteButton;
     ImageButton unFavouriteButton;*/
@@ -66,12 +66,12 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
         adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         adapter.setOnEventClickListener(TopFragment.this);
 
         return view;
         }
+
 
     @Override
     public void onStart() {

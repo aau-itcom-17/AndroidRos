@@ -78,7 +78,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnInfoWindowClickListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final String TAG = "MapActivity";
@@ -131,24 +131,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         Log.i(TAG, "onCreate");
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        headerView = navigationView.getHeaderView(0);
-        drawerImage = (ImageView) headerView.findViewById(R.id.drawerImage);
-        drawerName = (TextView) headerView.findViewById(R.id.drawerName);
-        drawerMessage = (TextView) headerView.findViewById(R.id.drawerMessage);
+        //drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //headerView = navigationView.getHeaderView(0);
+        //drawerImage = (ImageView) headerView.findViewById(R.id.drawerImage);
+        //drawerName = (TextView) headerView.findViewById(R.id.drawerName);
+        //drawerMessage = (TextView) headerView.findViewById(R.id.drawerMessage);
         imageButton = (ImageButton) findViewById(R.id.event_image_button);
 
-        navigationView.setNavigationItemSelectedListener(this);
+        //navigationView.setNavigationItemSelectedListener(this);
 
-        mToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
-        drawer.addDrawerListener(mToggle);
-        mToggle.syncState();
+        //mToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
+        //drawer.addDrawerListener(mToggle);
+        //mToggle.syncState();
         ChildEventListener mChildEventListener;
 
+/*
 
         //Access data in database
         database = FirebaseDatabase.getInstance();
@@ -191,6 +192,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
         // access done.
 
+*/
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -433,6 +435,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.i(TAG, "onDestroy");
     }
 
+/*
 
     // method controlling the menu buttons under the user info in the drawer.
     @Override
@@ -475,6 +478,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return true;
     }
 
+
     //When the back button is pressed on the drawer only the drawer will close and not the activity you have chosen
     @Override
     public void onBackPressed() {
@@ -485,6 +489,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
     }
+    */
 
     private void setUpBottomNavigationView() {
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
