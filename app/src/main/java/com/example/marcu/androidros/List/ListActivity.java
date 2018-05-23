@@ -21,9 +21,12 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +38,6 @@ public class ListActivity extends AppCompatActivity{
     TopFragment topFragment;
     NearbyFragment nearbyFragment;
     NewFragment newFragment;
-    Date today;
-    String todayString;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +51,29 @@ public class ListActivity extends AppCompatActivity{
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String id = String.valueOf(postSnapshot.child("eventID").getValue());
                     Event event = dataSnapshot.child(id).getValue(Event.class);
-                    addActiveEvent(event);
+
+
+                    if (event != null) {
+                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                        Date today = Calendar.getInstance().getTime();
+                        Date eventDate = null;
+                        DateFormat eventDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+                        try {
+                            eventDate = eventDateFormat.parse(event.getDate() + " " + event.getTime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (today.after(eventDate)) {
+                            Log.i(TAG, "Event was too old: " + event.getEventID());
+                        } else {
+                            // adding to list
+                            events.add(event);
+                            Log.i(TAG, "Event was added: " + event.getEventID());
+                        }
+                    }
+
 
                 }
 
@@ -76,23 +99,7 @@ public class ListActivity extends AppCompatActivity{
 
 
     }
-    public void addActiveEvent(Event event){
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        today = Calendar.getInstance().getTime();
-        todayString = df.format(today);
 
-        String[] separated = todayString.split("/");
-        String[] separatedEventDate = event.getDate().split("/");
-        String day = separated[0];
-        String eventDay = separatedEventDate[0];
-
-        if (Integer.parseInt(eventDay) < Integer.parseInt(day)){
-            Log.i(TAG, "Event was too old and not put into public list: " + event.getName());
-        }else {
-            events.add(event);
-            Log.i(TAG, "Event was added: " + event.getName());
-        }
-    }
 
     //This is setting up the 3 tabs at the top
     private void setUpViewPager (){
