@@ -1,8 +1,7 @@
-package com.example.marcu.androidros.List;
+package com.example.marcu.androidros.Favourites;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +16,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.ViewHolder> {
     private Context context;
-    private ArrayList<Event> events;
+    private ArrayList<Event> myFavourites;
     private OnEventClickListener listener;
 
-  
+
     public interface OnEventClickListener{
         void onEventClick(int position);
         void onFavouriteClick(int position);
@@ -33,33 +32,37 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    public MainAdapter(Context context, ArrayList<Event> events) {
-        this.events = events;
+    public FavouriteAdapter(Context context, ArrayList<Event> myFavourites) {
+        this.myFavourites = myFavourites;
         this.context = context;
     }
 
 
     @NonNull
     @Override
-    public MainAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavouriteAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_top ,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MainAdapter.ViewHolder holder, int position) {
-        Event event = events.get(position);
+    public void onBindViewHolder(@NonNull FavouriteAdapter.ViewHolder holder, int position) {
+        Event event = myFavourites.get(position);
 
         String imageUrl = event.getPhotoPath();
+        System.out.println("OOOOOOOOOOOOOO OOOOOOOOOOOOOOO: " + event.getName());
+
         String title = event.getName();
+        String description = event.getDescription();
 
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);
+        //holder.description.setText(description);
     }
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return myFavourites.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,7 +75,7 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             eventName = (TextView) itemView.findViewById(R.id.top_fragment_event_title_text_view);
-            //description = (TextView) itemView.findViewById(R.id.top_fragment_event_description_text_view);
+            //description = (TextView) itemView.findViewById(R.id.my_events_fragment_event_description_text_view);
             eventImage = (ImageView) itemView.findViewById(R.id.top_fragment_image_view);
             favourite = (ImageButton) itemView.findViewById(R.id.favourite_button);
             favourite.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +107,6 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
                 }
             });
-
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

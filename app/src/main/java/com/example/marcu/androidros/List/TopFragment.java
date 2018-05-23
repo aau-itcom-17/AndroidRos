@@ -33,18 +33,16 @@ import java.util.ArrayList;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
-    FirebaseDatabase database;
+    //FirebaseDatabase database;
     String TAG = "TopFragment";
     RecyclerView recyclerView;
     MainAdapter adapter;
     ArrayList<Event> events;
-    ImageButton favouriteButton;
-    ImageButton unFavouriteButton;
-
+    /*ImageButton favouriteButton;
+    ImageButton unFavouriteButton;*/
     private DatabaseReference mDatabaseRef;
 
-
-
+    
 
     @Nullable
     @Override
@@ -52,8 +50,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
-        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);
+        /*favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
+        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);*/
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
@@ -72,10 +70,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         adapter.setOnEventClickListener(TopFragment.this);
 
         return view;
+        }
 
-
-
-    }
 
     @Override
     public void onStart() {
@@ -95,7 +91,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
         Event clickedEvent = events.get(position);
 
-
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
     }
@@ -103,57 +98,23 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onFavouriteClick(int position){
 
-
-
         Event event = events.get(position);
-        String id = event.getEventID();
+        String eventId = event.getEventID();
         System.out.println("Favourite!");
 
-
-
-        /*database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
-                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-
-
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
     }
 
     @Override
     public void onUnFavouriteClick(int position){
+
         Event event = events.get(position);
-        String id = event.getEventID();
+        String eventId = event.getEventID();
         System.out.println("UnFavourite!!!");
 
-        /*database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
-                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }
 
 
