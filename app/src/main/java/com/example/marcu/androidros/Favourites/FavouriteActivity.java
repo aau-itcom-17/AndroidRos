@@ -1,12 +1,9 @@
 package com.example.marcu.androidros.Favourites;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -17,15 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.Database.User;
-import com.example.marcu.androidros.List.NearbyFragment;
-import com.example.marcu.androidros.List.NewFragment;
-import com.example.marcu.androidros.List.TopFragment;
 import com.example.marcu.androidros.Login.MainActivity;
-import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.Utils.SectionsPagerAdapter;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
@@ -37,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,7 +151,9 @@ public class FavouriteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-                Toast.makeText(this, "User Page", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "User Page", Toast.LENGTH_SHORT).show();
+                Intent userPageIntent = new Intent (FavouriteActivity.this, EditUserPage.class);
+                FavouriteActivity.this.startActivity(userPageIntent);
                 return true;
             case R.id.item2:
                 // logging out
