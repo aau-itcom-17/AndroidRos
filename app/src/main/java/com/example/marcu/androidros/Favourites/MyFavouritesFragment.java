@@ -10,14 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.example.marcu.androidros.Database.Event;
-import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.List.EventInfoActivity;
-import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,20 +23,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MyFavouritesFragment extends Fragment implements FavouriteAdapter.OnEventClickListener {
-
+public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEventClickListener {
 
     private String TAG = "MyFavouritesFragment";
     private RecyclerView recyclerView;
-    private FavouriteAdapter myAdapter;
+    private MyPageAdapter myAdapter;
     private ArrayList<Event> allEvents = new ArrayList<>();
     private ArrayList<Event> myFavourites = new ArrayList<>();
     private DatabaseReference mDatabaseRef;
     private FirebaseDatabase database;
     private FirebaseUser firebaseUser;
-
 
 
     @Nullable
@@ -87,7 +79,7 @@ public class MyFavouritesFragment extends Fragment implements FavouriteAdapter.O
                         }
                     }
 
-                    myAdapter = new FavouriteAdapter(getActivity(), myFavourites);
+                    myAdapter = new MyPageAdapter(getActivity(), myFavourites);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setAdapter(myAdapter);
@@ -144,7 +136,7 @@ public class MyFavouritesFragment extends Fragment implements FavouriteAdapter.O
 
         Event event = myFavourites.get(position);
         String eventId = event.getEventID();
-        System.out.println("UnFavourite!!!");
+        System.out.println("UnFavourite!");
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();

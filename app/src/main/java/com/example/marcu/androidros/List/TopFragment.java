@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.Event;
@@ -33,16 +34,15 @@ import java.util.ArrayList;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
-    //FirebaseDatabase database;
+
+    private FirebaseDatabase database;
     String TAG = "TopFragment";
     RecyclerView recyclerView;
     MainAdapter adapter;
     ArrayList<Event> events;
-    /*ImageButton favouriteButton;
-    ImageButton unFavouriteButton;*/
     private DatabaseReference mDatabaseRef;
 
-    
+
 
     @Nullable
     @Override
@@ -50,8 +50,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        /*favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
-        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);*/
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
@@ -60,9 +58,11 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
             for (int i = 0; i < events.size(); i++) {
                 Log.i(TAG, events.get(i).getName());
             }
-        }else{
-            Log.i(TAG, "getArguments = null");
         }
+        else
+            {
+            Log.i(TAG, "getArguments = null");
+            }
 
         adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -104,6 +104,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
+
     }
 
     @Override
@@ -111,7 +112,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
         Event event = events.get(position);
         String eventId = event.getEventID();
-        System.out.println("UnFavourite!!!");
+        System.out.println("UnFavourite!");
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
