@@ -31,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
@@ -63,6 +65,26 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
             {
             Log.i(TAG, "getArguments = null");
             }
+
+        database = FirebaseDatabase.getInstance();
+        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+
+                Collections.sort(events, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+
+                        return Double.compare((double)dataSnapshot.child(o2.getEventID()).child("favourites").getChildrenCount(),(double)(dataSnapshot.child(o1.getEventID()).child("favourites").getChildrenCount()));
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
