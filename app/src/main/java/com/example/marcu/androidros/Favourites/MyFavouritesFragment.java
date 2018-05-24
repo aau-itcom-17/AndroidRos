@@ -30,18 +30,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyFavouritesFragment extends Fragment implements FavouriteAdapter.OnEventClickListener {
-
+public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEventClickListener {
 
     private String TAG = "MyFavouritesFragment";
     private RecyclerView recyclerView;
-    private FavouriteAdapter myAdapter;
+    private EventAdapter myAdapter;
     private ArrayList<Event> allEvents = new ArrayList<>();
     private ArrayList<Event> myFavourites = new ArrayList<>();
     private DatabaseReference mDatabaseRef;
     private FirebaseDatabase database;
     private FirebaseUser firebaseUser;
-
 
 
     @Nullable
@@ -87,7 +85,7 @@ public class MyFavouritesFragment extends Fragment implements FavouriteAdapter.O
                         }
                     }
 
-                    myAdapter = new FavouriteAdapter(getActivity(), myFavourites);
+                    myAdapter = new EventAdapter(getActivity(), myFavourites);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setAdapter(myAdapter);
@@ -144,7 +142,7 @@ public class MyFavouritesFragment extends Fragment implements FavouriteAdapter.O
 
         Event event = myFavourites.get(position);
         String eventId = event.getEventID();
-        System.out.println("UnFavourite!!!");
+        System.out.println("UnFavourite!");
 
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();

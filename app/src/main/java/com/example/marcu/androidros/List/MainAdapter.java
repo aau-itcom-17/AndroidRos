@@ -59,6 +59,7 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         String imageUrl = event.getPhotoPath();
         String title = event.getName();
+        String description = event.getDescription();
 
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);
@@ -105,10 +106,10 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         public ImageView eventImage;
         public ImageButton favourite;
         public ImageButton unFavourite;
-        TextView likeCount;
+        public TextView likeCount;
+
 
         public ViewHolder(View itemView) {
-
 
             super(itemView);
             eventName = (TextView) itemView.findViewById(R.id.top_fragment_event_title_text_view);

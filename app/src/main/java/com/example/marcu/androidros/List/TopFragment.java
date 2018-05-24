@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
+
     private FirebaseDatabase database;
     String TAG = "TopFragment";
     RecyclerView recyclerView;
