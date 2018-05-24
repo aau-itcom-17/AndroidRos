@@ -30,7 +30,6 @@
 
             <include layout="@layout/layout_center_viewpager"/>
 
-
         </RelativeLayout>
 
 

@@ -55,11 +55,13 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
-        if(getArguments() != null) {
+
+        if (getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
             for (int i = 0; i < events.size(); i++) {
                 Log.i(TAG, events.get(i).getName());
             }
+
         }
         else
             {
@@ -86,13 +88,16 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
             }
         });
 
+
         adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
         adapter.setOnEventClickListener(TopFragment.this);
 
         return view;
+
         }
+
 
 
     @Override
@@ -105,6 +110,12 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     public void onStop() {
         super.onStop();
         Log.i(TAG, "onStop");
+
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
 
     }
 

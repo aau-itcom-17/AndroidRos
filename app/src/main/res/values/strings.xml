@@ -9,7 +9,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_fragment_top">Top</string>
     <string name="title_fragment_nearby">Nearby</string>
-    <string name="title_fragment_new">New</string>
+    <string name="title_fragment_new">Upcoming</string>
     <string name="pop_up">Event</string>
     <string name="show_on_map_button">Show On Map</string>
     <string name="create_event_button">+</string>

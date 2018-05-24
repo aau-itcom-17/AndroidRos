@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
@@ -19,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class NewFragment extends Fragment implements NewAdapter.OnEventClickListener{
 
@@ -45,9 +48,17 @@ public class NewFragment extends Fragment implements NewAdapter.OnEventClickList
 
         if(getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
+            Collections.sort(events, new Comparator<Event>() {
+                public int compare(Event m1, Event m2) {
+                    return (m1.getDate() + " " + m1.getTime()).compareTo(m2.getDate()+ " " + m2.getTime());
+                }
+            });
+
+
             for (int i = 0; i < events.size(); i++) {
-                Log.i(TAG, events.get(i).getName());
+                Log.i(TAG, events.get(i).getDate() + " "+  events.get(i).getTime());
             }
+
         }else{
             Log.i(TAG, "getArguments = null");
         }
@@ -57,7 +68,7 @@ public class NewFragment extends Fragment implements NewAdapter.OnEventClickList
         adapter = new NewAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-        adapter.setOnEventClickListener1(NewFragment.this);
+        adapter.setOnEventClickListener(NewFragment.this);
 
         return view;
 

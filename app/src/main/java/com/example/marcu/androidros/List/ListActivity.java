@@ -20,7 +20,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class ListActivity extends AppCompatActivity{
@@ -28,11 +35,9 @@ public class ListActivity extends AppCompatActivity{
     FirebaseDatabase database;
     String TAG = "ListActivity";
     ArrayList<Event> events = new ArrayList<>();
-    List<String> eventIDs = new ArrayList<>();
     TopFragment topFragment;
     NearbyFragment nearbyFragment;
     NewFragment newFragment;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,17 +48,36 @@ public class ListActivity extends AppCompatActivity{
         database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(new Date());
+                cal.add(Calendar.HOUR_OF_DAY, - 3);
+                Date today = cal.getTime();
+
+                Log.i(TAG, "MOTHERFUCKING TIME - 3 hours" + today);
+                Date eventDate = null;
+                DateFormat eventDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
-                }
+                    String id = String.valueOf(postSnapshot.child("eventID").getValue());
+                    Event event = dataSnapshot.child(id).getValue(Event.class);
+                    if (event != null) {
 
-                for (int i = 0; i < eventIDs.size(); i++){
-                    Event event = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
-                    events.add(event);
-                }
+                        try {
+                            eventDate = eventDateFormat.parse(event.getDate() + " " + event.getTime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
-                for (int i = 0; i < eventIDs.size(); i++){
-                    Log.i(TAG, eventIDs.get(i));
+                        if (today.after(eventDate)) {
+                            Log.i(TAG, "Event was too old: " + event.getEventID());
+                        } else {
+                            // adding to list
+                            events.add(event);
+                            Log.i(TAG, "Event was added: " + event.getEventID());
+                        }
+                    }
+
                 }
 
                 Bundle bundle = new Bundle();
@@ -78,6 +102,7 @@ public class ListActivity extends AppCompatActivity{
 
 
     }
+
 
     //This is setting up the 3 tabs at the top
     private void setUpViewPager (){

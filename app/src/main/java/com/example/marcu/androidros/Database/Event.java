@@ -50,6 +50,25 @@ public class Event implements Parcelable{
 
     private int comments;
 
+    private int distance;
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+    private String distanceString;
+
+    public String getDistanceString() {
+        return distanceString;
+    }
+
+    public void setDistanceString(String distanceString) {
+        this.distanceString = distanceString;
+    }
+
     protected Event(Parcel in) {
         eventID = in.readString();
         name = in.readString();
