@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Event> myEvents;
     private OnEventClickListener listener;
@@ -39,7 +39,7 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    public EventAdapter(Context context, ArrayList<Event> myEvents) {
+    public MyPageAdapter(Context context, ArrayList<Event> myEvents) {
         this.myEvents = myEvents;
         this.context = context;
     }
@@ -47,13 +47,13 @@ class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public EventAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyPageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_top ,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final EventAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyPageAdapter.ViewHolder holder, int position) {
         final Event event = myEvents.get(position);
 
         String imageUrl = event.getPhotoPath();

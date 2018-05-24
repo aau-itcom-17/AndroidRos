@@ -10,25 +10,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.List.EventInfoActivity;
-import com.example.marcu.androidros.List.TopFragment;
 import com.example.marcu.androidros.R;
-import com.example.marcu.androidros.Utils.EventPopUp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class MyEventsFragment extends Fragment implements EventAdapter.OnEventClickListener{
+public class MyEventsFragment extends Fragment implements MyPageAdapter.OnEventClickListener{
 
     private String TAG = "MyEventsFragment";
     private RecyclerView recyclerView;
-    private EventAdapter myAdapter;
+    private MyPageAdapter myAdapter;
     private ArrayList<Event> allEvents = new ArrayList<>();
     private ArrayList<Event> myEvents = new ArrayList<>();
     private DatabaseReference mDatabaseRef;
@@ -64,7 +60,7 @@ public class MyEventsFragment extends Fragment implements EventAdapter.OnEventCl
                 }
             }
         }
-            myAdapter = new EventAdapter(getActivity(), myEvents);
+            myAdapter = new MyPageAdapter(getActivity(), myEvents);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(myAdapter);

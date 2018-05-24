@@ -10,14 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.example.marcu.androidros.Database.Event;
-import com.example.marcu.androidros.Database.User;
 import com.example.marcu.androidros.List.EventInfoActivity;
-import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,13 +23,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEventClickListener {
+public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEventClickListener {
 
     private String TAG = "MyFavouritesFragment";
     private RecyclerView recyclerView;
-    private EventAdapter myAdapter;
+    private MyPageAdapter myAdapter;
     private ArrayList<Event> allEvents = new ArrayList<>();
     private ArrayList<Event> myFavourites = new ArrayList<>();
     private DatabaseReference mDatabaseRef;
@@ -85,7 +79,7 @@ public class MyFavouritesFragment extends Fragment implements EventAdapter.OnEve
                         }
                     }
 
-                    myAdapter = new EventAdapter(getActivity(), myFavourites);
+                    myAdapter = new MyPageAdapter(getActivity(), myFavourites);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setAdapter(myAdapter);
