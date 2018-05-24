@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marcu.androidros.Database.Event;
@@ -30,19 +31,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class TopFragment extends Fragment implements MainAdapter.OnEventClickListener {
-    FirebaseDatabase database;
+
+    private FirebaseDatabase database;
     String TAG = "TopFragment";
     RecyclerView recyclerView;
     MainAdapter adapter;
     ArrayList<Event> events;
-    ImageButton favouriteButton;
-    ImageButton unFavouriteButton;
-
     private DatabaseReference mDatabaseRef;
-
 
 
 
@@ -52,8 +52,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         View view = inflater.inflate(R.layout.fragment_top, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
-        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
@@ -63,9 +61,32 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
             for (int i = 0; i < events.size(); i++) {
                 Log.i(TAG, events.get(i).getName());
             }
-        } else {
-            Log.i(TAG, "getArguments = null");
+
         }
+        else
+            {
+            Log.i(TAG, "getArguments = null");
+            }
+
+        database = FirebaseDatabase.getInstance();
+        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+
+                Collections.sort(events, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+
+                        return Double.compare((double)dataSnapshot.child(o2.getEventID()).child("favourites").getChildrenCount(),(double)(dataSnapshot.child(o1.getEventID()).child("favourites").getChildrenCount()));
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         adapter = new MainAdapter(getActivity(), events);
@@ -74,7 +95,9 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         adapter.setOnEventClickListener(TopFragment.this);
 
         return view;
-    }
+
+        }
+
 
 
     @Override
@@ -101,7 +124,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
         Event clickedEvent = events.get(position);
 
-
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
     }
@@ -109,57 +131,24 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onFavouriteClick(int position){
 
-
-
         Event event = events.get(position);
-        String id = event.getEventID();
+        String eventId = event.getEventID();
         System.out.println("Favourite!");
 
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
 
-
-        /*database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
-                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-
-
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
     }
 
     @Override
     public void onUnFavouriteClick(int position){
+
         Event event = events.get(position);
-        String id = event.getEventID();
-        System.out.println("UnFavourite!!!");
+        String eventId = event.getEventID();
+        System.out.println("UnFavourite!");
 
-        /*database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                long numOfLikes = dataSnapshot.child("events").child(id).child("favourites").getChildrenCount();
-                mDatabaseRef.child("events").child(id).child("favourites").child("favourites").child(Long.toString(numOfLikes + 1)).setValue(FirebaseAuth.getInstance().getUid());
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }
 
 

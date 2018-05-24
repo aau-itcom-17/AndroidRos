@@ -1,8 +1,7 @@
-package com.example.marcu.androidros.List;
+package com.example.marcu.androidros.Favourites;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.ViewHolder> {
     private Context context;
-    private ArrayList<Event> events;
+    private ArrayList<Event> myEvents;
     private OnEventClickListener listener;
     private FirebaseDatabase database;
 
@@ -40,22 +39,22 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    public MainAdapter(Context context, ArrayList<Event> events) {
-        this.events = events;
+    public MyPageAdapter(Context context, ArrayList<Event> myEvents) {
+        this.myEvents = myEvents;
         this.context = context;
     }
 
 
     @NonNull
     @Override
-    public MainAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyPageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_top ,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MainAdapter.ViewHolder holder, final int position) {
-        final Event event = events.get(position);
+    public void onBindViewHolder(@NonNull final MyPageAdapter.ViewHolder holder, int position) {
+        final Event event = myEvents.get(position);
 
         String imageUrl = event.getPhotoPath();
         String title = event.getName();
@@ -97,7 +96,7 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return myEvents.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -135,7 +134,7 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     //int eventID = getAdapterPosition();
-                                    Event event = events.get(position);
+                                    Event event = myEvents.get(position);
                                     String id = event.getEventID();
 
                                     if (event != null) {
@@ -171,7 +170,7 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     //int eventID = getAdapterPosition();
-                                    Event event = events.get(position);
+                                    Event event = myEvents.get(position);
                                     String id = event.getEventID();
 
                                     if (event != null) {
@@ -187,7 +186,6 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                     }
                 }
             });
-
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
