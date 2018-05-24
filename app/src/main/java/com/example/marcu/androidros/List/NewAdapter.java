@@ -155,7 +155,7 @@ class NewAdapter extends RecyclerView.Adapter<NewAdapter.ViewHolder> {
         String eventMinutes = separatedEventTime[1];
 
         if (Integer.parseInt(day) > Integer.parseInt(eventDay) && Integer.parseInt(month) <= Integer.parseInt(eventMonth)) {
-            return "";
+            return event.getDate() + " " + event.getTime();
         } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
             if (Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) + -1
                     && Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100)  < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100)) {

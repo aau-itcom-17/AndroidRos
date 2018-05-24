@@ -239,7 +239,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         if (eventLoc != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLoc, 18));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLoc, 15));
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 14));
         }
@@ -298,6 +298,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Picasso.get().load(path).into(imageView, new MarkerCallback(marker));
 
                 }
+
 
                 return view;
             }
@@ -569,11 +570,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         String eventMinutes = separatedEventTime[1];
 
                         String snippetTime;
+                        boolean lazyBoolean = false;
                         if (Integer.parseInt(day) > Integer.parseInt(eventDay)){
                             if (Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 24 + 3) {
                                 snippetTime = "Began earlier, " + event.getTime();
                             } else {
                                 snippetTime = "Yesterday, " + event.getTime();
+                                lazyBoolean = true;
                             }
                         } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
                             if (Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) + 3) {
@@ -592,12 +595,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             snippetTime = event.getDate() + " " + event.getTime();
                         }
 
-                        //Checking if it's 24 hours old
+                        //Checking if it's more than 3 hours old
                         if (Integer.parseInt(day) > Integer.parseInt(eventDay)
-                                && Integer.parseInt(month) <= Integer.parseInt(eventMonth)
-                                && (Integer.parseInt(hour) + Double.parseDouble(minutes) / 100) - 240 >
-                                (Integer.parseInt(eventHour) + Double.parseDouble(eventMinutes) / 100) - 240) {
-                            Log.i(TAG, "Event: " + event.getName() + " is more than a day old, and will not be placed on the map");
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 24 + 3
+                                || lazyBoolean == true || Integer.parseInt(day) == Integer.parseInt(eventDay)
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) + 3){
+                            Log.i(TAG, "Event: " + event.getName() + " is more than 3 hours old, and will not be placed on the map");
                         } else {
                             Marker eventMarker = mMap.addMarker(new MarkerOptions()
                                     .position(eventPos)

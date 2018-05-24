@@ -48,15 +48,20 @@ public class ListActivity extends AppCompatActivity{
         database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(new Date());
+                cal.add(Calendar.HOUR_OF_DAY, - 3);
+                Date today = cal.getTime();
+
+                Log.i(TAG, "MOTHERFUCKING TIME - 3 hours" + today);
+                Date eventDate = null;
+                DateFormat eventDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String id = String.valueOf(postSnapshot.child("eventID").getValue());
                     Event event = dataSnapshot.child(id).getValue(Event.class);
-
                     if (event != null) {
-                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                        Date today = Calendar.getInstance().getTime();
-                        Date eventDate = null;
-                        DateFormat eventDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
                         try {
                             eventDate = eventDateFormat.parse(event.getDate() + " " + event.getTime());
@@ -72,7 +77,6 @@ public class ListActivity extends AppCompatActivity{
                             Log.i(TAG, "Event was added: " + event.getEventID());
                         }
                     }
-
 
                 }
 

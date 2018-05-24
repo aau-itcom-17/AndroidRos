@@ -1,6 +1,7 @@
 package com.example.marcu.androidros.List;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.Callable;
+
+import javax.security.auth.callback.Callback;
 
 public class NearbyFragment extends Fragment implements NearbyAdapter.OnEventClickListener {
     String TAG = "NearbyFragment";
@@ -53,10 +57,8 @@ public class NearbyFragment extends Fragment implements NearbyAdapter.OnEventCli
 
         locationTracker = new LocationTrack(getActivity());
         if (locationTracker.canGetLocation()) {
-
             longitude = locationTracker.getLongitude();
             latitude = locationTracker.getLatitude();
-
         } else {
             locationTracker.showSettingsAlert();
         }
@@ -65,50 +67,71 @@ public class NearbyFragment extends Fragment implements NearbyAdapter.OnEventCli
         if(getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
 
-            Collections.sort(events, new Comparator<Event>() {
-                public int compare(Event m1, Event m2) {
-                    return Double.compare(distance(m1.getLatitude(), m1.getLongitude(), latitude, longitude)
-                            ,distance(m2.getLatitude(), m2.getLongitude(), latitude, longitude));
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Collections.sort(events, new Comparator<Event>() {
+                        public int compare(Event m1, Event m2) {
+                            return Double.compare(distance(m1.getLatitude(), m1.getLongitude(), latitude, longitude)
+                                    ,(distance(m2.getLatitude(), m2.getLongitude(), latitude, longitude)));
+                        }
+                    });
                 }
             });
-            Collections.reverse(events);
+            thread.start();
 
 
-            for (int i = 0; i < events.size(); i++) {
-                distance = distance(events.get(i).getLongitude(), events.get(i).getLatitude(), latitude, longitude) * 100;
-                int n = (int) distance;
-                events.get(i).setDistance(n);
-                Log.i(TAG, "Cyka km " + distance);
+            while(true){
+                if (thread.isAlive()){
+
+                }else{
+                    break;
+                }
             }
+            for (int i = 0; i < events.size(); i++) {
+                distance = distance(events.get(i).getLatitude(), events.get(i).getLongitude(),  latitude, longitude);
+                events.get(i).setDistance((int)distance);
+                Log.i(TAG, "Cast to int " + events.get(i).getName() + " " + events.get(i).getDistance());
+            }
+
+            adapter = new NearbyAdapter(getActivity(), events);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+            Log.i(TAG, "Adapter " + adapter.getItemCount());
+            adapter.setOnEventClickListener(NearbyFragment.this);
+
+            Log.i(TAG, "View is returned");
+            return view;
+
+
         }else{
             Log.i(TAG, "getArguments = null");
+            return null;
         }
 
-        adapter = new NearbyAdapter(getActivity(), events);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
-        adapter.setOnEventClickListener(NearbyFragment.this);
 
-        return view;
+
+
     }
 
     private static double distance(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        //distance in km:
-        dist = dist * 1.609344;
+            double earthRadius = 6378100; //m
+            lat1 = Math.toRadians(lat1);
+            lat2 = Math.toRadians(lat2);
+            double diffLat = Math.toRadians(lat2-lat1);
+            double diffLon = Math.toRadians(lon2-lon1);
 
-        return (dist);
-    }
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
+            double a = Math.sin(diffLat/2) * Math.sin(diffLat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(diffLon/2) * Math.sin(diffLon/2);
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-    private static double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
-    }
+            double d =  earthRadius * c;
+
+            return d;
+        }
+
+
+
+
 
 
     @Override
