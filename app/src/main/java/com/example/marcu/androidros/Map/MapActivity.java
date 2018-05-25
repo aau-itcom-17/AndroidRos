@@ -596,9 +596,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
 
                         //Checking if it's more than 3 hours old
-                        if (Integer.parseInt(day) > Integer.parseInt(eventDay)
+                        if (Integer.parseInt(day) > Integer.parseInt(eventDay) && Integer.parseInt(month) >= Integer.parseInt(eventMonth)
                                 && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 24 + 3
-                                || lazyBoolean == true || Integer.parseInt(day) == Integer.parseInt(eventDay)
+                                || Integer.parseInt(day) > Integer.parseInt(eventDay) && Integer.parseInt(month) >= Integer.parseInt(eventMonth)
+                                && Integer.parseInt(hour) + (Double.parseDouble(minutes)/100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes)/100) - 24 + 3
+                                || Integer.parseInt(day) == Integer.parseInt(eventDay) && Integer.parseInt(month) >= Integer.parseInt(eventMonth)
                                 && Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) + 3){
                             Log.i(TAG, "Event: " + event.getName() + " is more than 3 hours old, and will not be placed on the map");
                         } else {

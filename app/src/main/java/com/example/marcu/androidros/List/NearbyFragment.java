@@ -1,7 +1,7 @@
 package com.example.marcu.androidros.List;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,13 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.example.marcu.androidros.Create.LocationTrack;
 import com.example.marcu.androidros.Database.Event;
-import com.example.marcu.androidros.Map.MapActivity;
 import com.example.marcu.androidros.R;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,15 +23,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.concurrent.Callable;
-
-import javax.security.auth.callback.Callback;
 
 public class NearbyFragment extends Fragment implements NearbyAdapter.OnEventClickListener {
     String TAG = "NearbyFragment";
     RecyclerView recyclerView;
     NearbyAdapter adapter;
     ArrayList<Event> events;
+    ArrayList<Event> eventsTetst=new ArrayList<Event>();
+    ArrayList<Event> eventsUpdated;
     ImageButton favouriteButton;
     ImageButton unFavouriteButton;
 
@@ -44,6 +40,60 @@ public class NearbyFragment extends Fragment implements NearbyAdapter.OnEventCli
     double distance;
 
     private DatabaseReference mDatabaseRef;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        locationTracker = new LocationTrack(getActivity());
+        if (locationTracker.canGetLocation()) {
+            longitude = locationTracker.getLongitude();
+            latitude = locationTracker.getLatitude();
+        } else {
+            locationTracker.showSettingsAlert();
+        }
+        locationTracker.stopListener();
+
+        if (getArguments() != null) {
+            events = getArguments().getParcelableArrayList("key");
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Collections.sort(events, new Comparator<Event>() {
+                        public int compare(Event m1, Event m2) {
+                            return Double.compare(distance(m1.getLatitude(), m1.getLongitude(), latitude, longitude)
+                                    , (distance(m2.getLatitude(), m2.getLongitude(), latitude, longitude)));
+                        }
+                    });
+                }
+            });
+            thread.start();
+
+            Thread[] threads = new Thread[1];
+            threads[0] = thread;
+
+            for (int i = 0; i < threads.length; i++) {
+                try {
+                    threads[i].join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for (int i = 0; i < events.size(); i++) {
+                distance = distance(events.get(i).getLatitude(), events.get(i).getLongitude(), latitude, longitude);
+                events.get(i).setDistance((int) distance);
+                Log.i(TAG, "Cast to int " + events.get(i).getName() + " " + events.get(i).getDistance());
+            }
+        }else{
+                Log.i(TAG, "getArguments = null");
+            }
+
+            // 1.
+        adapter = new NearbyAdapter(eventsTetst);
+
+    }
+
 
     @Nullable
     @Override
@@ -55,63 +105,31 @@ public class NearbyFragment extends Fragment implements NearbyAdapter.OnEventCli
         unFavouriteButton = (ImageButton) view.findViewById(R.id.nearby_fragment_favourite_button_clicked);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
-        locationTracker = new LocationTrack(getActivity());
-        if (locationTracker.canGetLocation()) {
-            longitude = locationTracker.getLongitude();
-            latitude = locationTracker.getLatitude();
-        } else {
-            locationTracker.showSettingsAlert();
-        }
-        locationTracker.stopListener();
-
-        if(getArguments() != null) {
-            events = getArguments().getParcelableArrayList("key");
-
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Collections.sort(events, new Comparator<Event>() {
-                        public int compare(Event m1, Event m2) {
-                            return Double.compare(distance(m1.getLatitude(), m1.getLongitude(), latitude, longitude)
-                                    ,(distance(m2.getLatitude(), m2.getLongitude(), latitude, longitude)));
-                        }
-                    });
-                }
-            });
-            thread.start();
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter.setOnEventClickListener(NearbyFragment.this);
 
 
-            while(true){
-                if (thread.isAlive()){
 
-                }else{
-                    break;
-                }
-            }
-            for (int i = 0; i < events.size(); i++) {
-                distance = distance(events.get(i).getLatitude(), events.get(i).getLongitude(),  latitude, longitude);
-                events.get(i).setDistance((int)distance);
-                Log.i(TAG, "Cast to int " + events.get(i).getName() + " " + events.get(i).getDistance());
-            }
+            final Activity act = getActivity(); //only neccessary if you use fragments
+            if (act != null)
+                act.runOnUiThread(new Runnable() {
+                    public void run() {
+                        eventsUpdated = adapter.updateItems(events);
+                        adapter.notifyDataSetChanged();
+                        recyclerView.setAdapter(adapter);
+                        Log.i(TAG, "Adapter is updated " + adapter.getItemCount());
+                    }
+                });
 
-            adapter = new NearbyAdapter(getActivity(), events);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(adapter);
-            Log.i(TAG, "Adapter " + adapter.getItemCount());
-            adapter.setOnEventClickListener(NearbyFragment.this);
 
             Log.i(TAG, "View is returned");
             return view;
 
 
-        }else{
-            Log.i(TAG, "getArguments = null");
-            return null;
-        }
-
-
-
-
+    }
+    public void onResume() {
+        super.onResume();
     }
 
     private static double distance(double lat1, double lon1, double lat2, double lon2) {
@@ -137,7 +155,7 @@ public class NearbyFragment extends Fragment implements NearbyAdapter.OnEventCli
     @Override
     public void onEventClick(int position) {
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
-        Event clickedEvent = events.get(position);
+        Event clickedEvent = eventsUpdated.get(position);
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
     }

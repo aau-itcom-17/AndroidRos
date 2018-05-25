@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
 
-public class Event implements Parcelable{
+public class Event implements Parcelable {
 
     public Event(String name, String description, String photoPath, String time, String date, double latitude, double longitude, int likes, int comments) {
         this.name = name;

@@ -64,7 +64,7 @@
         android:layout_marginTop="16dp"
         android:background="@color/colorLogin"
         android:onClick="nextActivityButtonClicked"
-        android:text="Sign up without Facebook"
+        android:text="Sign up with Email"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="16sp"

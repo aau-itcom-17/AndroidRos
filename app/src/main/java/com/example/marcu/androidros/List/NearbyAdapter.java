@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder> {
-    private Context context;
     private ArrayList<Event> events;
     private OnEventClickListener listener;
+    String TAG = "NearbyAdapter";
 
     public interface OnEventClickListener{
         void onEventClick(int position);
@@ -33,16 +34,33 @@ class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    public NearbyAdapter(Context context, ArrayList<Event> events) {
+    public NearbyAdapter( ArrayList<Event> events) {
         this.events = events;
-        this.context = context;
+
+    }
+    public NearbyAdapter(){
+
+    }
+    public synchronized ArrayList<Event> updateItems(ArrayList<Event> newList) {
+        if (events != null) {
+            for (int i = 0; i < events.size(); i++) {
+                events.remove(i);
+            }
+            events.addAll(newList);
+
+        }else{
+            events = newList;
+
+        }
+        this.notifyDataSetChanged();
+        return events;
     }
 
 
     @NonNull
     @Override
     public NearbyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_nearby ,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_nearby ,parent,false);
         return new ViewHolder(view);
     }
 
@@ -52,7 +70,8 @@ class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder> {
 
         String imageUrl = event.getPhotoPath();
         String title = event.getName();
-        String distance = String.valueOf(event.getDistance());
+        String distance = String.valueOf(event.getDistance() +  " meters");
+        Log.i(TAG, "Distance " + event.getName() +  " " +  event.getDistance());
 
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);

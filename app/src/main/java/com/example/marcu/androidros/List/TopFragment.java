@@ -55,12 +55,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
-
         if (getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
-            for (int i = 0; i < events.size(); i++) {
-                Log.i(TAG, events.get(i).getName());
-            }
 
         }
         else
@@ -68,27 +64,47 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
             Log.i(TAG, "getArguments = null");
             }
 
-        database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    database = FirebaseDatabase.getInstance();
+                    database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(final DataSnapshot dataSnapshot) {
 
-                Collections.sort(events, new Comparator<Event>() {
-                    @Override
-                    public int compare(Event o1, Event o2) {
+                            Collections.sort(events, new Comparator<Event>() {
+                                @Override
+                                public int compare(Event o1, Event o2) {
+                                    return Double.compare((double)dataSnapshot.child(o2.getEventID()).child("favourites").getChildrenCount(),(double)(dataSnapshot.child(o1.getEventID()).child("favourites").getChildrenCount()));
+                                }
+                            });
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                        return Double.compare((double)dataSnapshot.child(o2.getEventID()).child("favourites").getChildrenCount(),(double)(dataSnapshot.child(o1.getEventID()).child("favourites").getChildrenCount()));
-                    }
-                });
+                        }
+                    });
+
+
+                }
+            });
+        thread.start();
+
+        Thread[] threads = new Thread[1];
+        threads[0] = thread;
+
+        for (int i = 0; i < threads.length; i++){
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        }
 
 
+
+        Log.i(TAG, "Returning view");
         adapter = new MainAdapter(getActivity(), events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
