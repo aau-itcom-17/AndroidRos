@@ -88,6 +88,7 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.favourite.setVisibility(View.VISIBLE);
 
 
+        holder.likeCount.setText(Integer.toString(event.getLikes()));
 
         database = FirebaseDatabase.getInstance();
         database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
@@ -97,10 +98,6 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                 //int eventID = getAdapterPosition();
                 //Event event = events.get(position);
                 String id = event.getEventID();
-
-                if (event != null) {
-                    holder.likeCount.setText(Long.toString(dataSnapshot.child(id).child("favourites").getChildrenCount()));
-                }
 
                 if (dataSnapshot.child(id).child("favourites").hasChild(FirebaseAuth.getInstance().getUid()))
                 {
@@ -153,24 +150,15 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                             favourite.setVisibility(View.INVISIBLE);
                             unFavourite.setVisibility(View.VISIBLE);
 
-                            database = FirebaseDatabase.getInstance();
-                            database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
-                            {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    //int eventID = getAdapterPosition();
-                                    Event event = events.get(position);
-                                    String id = event.getEventID();
 
-                                    if (event != null) {
-                                        likeCount.setText(Long.toString(dataSnapshot.child(id).child("favourites").getChildrenCount()));
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                            Event event = events.get(position);
+                            String id = event.getEventID();
 
-                                }
-                            });
+
+                            if (event != null) {
+                                likeCount.setText(Integer.toString(event.getLikes()));
+                            }
+
 
 
                         }
@@ -188,25 +176,12 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                             unFavourite.setVisibility(View.INVISIBLE);
                             favourite.setVisibility(View.VISIBLE);
 
-
-                            database = FirebaseDatabase.getInstance();
-                            database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
-                            {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    //int eventID = getAdapterPosition();
                                     Event event = events.get(position);
                                     String id = event.getEventID();
 
                                     if (event != null) {
-                                        likeCount.setText(Long.toString(dataSnapshot.child(id).child("favourites").getChildrenCount()));
+                                        likeCount.setText(Integer.toString(event.getLikes()));
                                     }
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
                         }
                     }
                 }

@@ -34,11 +34,6 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
     ImageButton favouriteButton;
     ImageButton unFavouriteButton;
 
-    LocationTrack locationTracker;
-    double longitude;
-    double latitude;
-    double distance;
-
     private DatabaseReference mDatabaseRef;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,8 +128,10 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
     public void onFavouriteClick(int position) {
         Event event = eventsUpdated.get(position);
         String id = event.getEventID();
-        System.out.println("Favourite!");
+
+        mDatabaseRef.child("events").child(id).child("likes").setValue(event.getLikes() + 1);
         mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(id).setValue(id);
 
     }
 
@@ -143,7 +140,10 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
         Event event = eventsUpdated.get(position);
         String id = event.getEventID();
         System.out.println("UnFavourite!!!");
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
 
+        mDatabaseRef.child("events").child(id).child("likes").setValue(event.getLikes()  -1);
+
+        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(id).removeValue();
     }
 }

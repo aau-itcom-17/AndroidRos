@@ -64,25 +64,13 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                database = FirebaseDatabase.getInstance();
-                database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
 
                         Collections.sort(events, new Comparator<Event>() {
                             @Override
                             public int compare(Event o1, Event o2) {
-                                return Double.compare((double)dataSnapshot.child(o2.getEventID()).child("favourites").getChildrenCount()
-                                        ,(double)(dataSnapshot.child(o1.getEventID()).child("favourites").getChildrenCount()));
+                                return Double.compare((double)o1.getLikes(),(double)o2.getLikes());
                             }
                         });
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
 
 
             }
@@ -169,6 +157,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         String eventId = event.getEventID();
         System.out.println("Favourite!");
 
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + 1);
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
 
@@ -181,6 +170,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         String eventId = event.getEventID();
         System.out.println("UnFavourite!");
 
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + -1);
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }
