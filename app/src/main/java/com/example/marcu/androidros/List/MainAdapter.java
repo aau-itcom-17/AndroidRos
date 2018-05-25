@@ -20,10 +20,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
-    private Context context;
     private ArrayList<Event> events;
     private OnEventClickListener listener;
     private FirebaseDatabase database;
@@ -40,16 +43,30 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    public MainAdapter(Context context, ArrayList<Event> events) {
+    public MainAdapter(ArrayList<Event> events) {
         this.events = events;
-        this.context = context;
+    }
+
+    public synchronized ArrayList<Event> updateItems(ArrayList<Event> newList) {
+        if (events != null) {
+            for (int i = 0; i < events.size(); i++) {
+                events.remove(i);
+            }
+            events.addAll(newList);
+
+        }else{
+            events = newList;
+
+        }
+        this.notifyDataSetChanged();
+        return events;
     }
 
 
     @NonNull
     @Override
     public MainAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_top ,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_top ,parent,false);
         return new ViewHolder(view);
     }
 
@@ -59,10 +76,13 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         String imageUrl = event.getPhotoPath();
         String title = event.getName();
-        String description = event.getDescription();
+        String distance = String.valueOf(event.getDistance() +  " meters");
+        String time = timeMessage(event);
 
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);
+        holder.distance.setText(distance);
+        holder.time.setText(time);
 
         holder.unFavourite.setVisibility(View.INVISIBLE);
         holder.favourite.setVisibility(View.VISIBLE);
@@ -107,6 +127,8 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         public ImageButton favourite;
         public ImageButton unFavourite;
         public TextView likeCount;
+        public TextView distance;
+        public TextView time;
 
 
         public ViewHolder(View itemView) {
@@ -117,6 +139,8 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             favourite = (ImageButton) itemView.findViewById(R.id.favourite_button);
             unFavourite = (ImageButton) itemView.findViewById(R.id.favourite_button_clicked);
             likeCount = (TextView) itemView.findViewById(R.id.like_count_view);
+            distance = (TextView) itemView.findViewById(R.id.top_fragment_distance_text);
+            time = (TextView)itemView.findViewById(R.id.top_fragment_time_text);
 
 
             favourite.setOnClickListener(new View.OnClickListener() {
@@ -201,5 +225,48 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                 }
             });
         }
+    }
+    public String timeMessage (Event event) {
+
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date today = Calendar.getInstance().getTime();
+        String reportDate = df.format(today);
+
+        String[] separatedDate = reportDate.split(" ", 2);
+        String date = separatedDate[0];
+        String time = separatedDate[1];
+        String[] separated = date.split("/");
+        String[] separatedTime = time.split(":");
+        String day = separated[0];
+        String month = separated[1];
+        String year = separated[2];
+        String hour = separatedTime[0];
+        String minutes = separatedTime[1];
+
+        String[] separatedEvent = event.getDate().split("/");
+        String[] separatedEventTime = event.getTime().split(":");
+        String eventDay = separatedEvent[0];
+        String eventMonth = separatedEvent[1];
+        String eventYear = separatedEvent[2];
+        String eventHour = separatedEventTime[0];
+        String eventMinutes = separatedEventTime[1];
+
+        if (Integer.parseInt(day) > Integer.parseInt(eventDay) && Integer.parseInt(month) <= Integer.parseInt(eventMonth)) {
+            return event.getDate() + " " + event.getTime();
+        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay)) {
+            if (Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100) > Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100) + -1
+                    && Integer.parseInt(hour) + (Double.parseDouble(minutes) / 100)  < Integer.parseInt(eventHour) + (Double.parseDouble(eventMinutes) / 100)) {
+                return  "Soon, " + event.getTime();
+            } else if (18 < Integer.parseInt(eventHour) && Integer.parseInt(eventHour) < 24) {
+                return "Tonight, " + event.getTime();
+            } else {
+                return "Today, " + event.getTime();
+            }
+        } else if (Integer.parseInt(day) == Integer.parseInt(eventDay) - 1) {
+            return "Tomorrow, " + event.getTime();
+        } else {
+            return  event.getDate() + " " + event.getTime();
+        }
+
     }
 }

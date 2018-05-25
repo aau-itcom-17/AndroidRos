@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class NewFragment extends Fragment implements NewAdapter.OnEventClickListener{
+public class NewFragment extends Fragment implements MainAdapter.OnEventClickListener{
 
     String TAG = "NewFragment";
     RecyclerView recyclerView;
-    NewAdapter adapter;
+    MainAdapter adapter;
     ArrayList<Event> events;
     ImageButton favouriteButton;
     ImageButton unFavouriteButton;
@@ -39,11 +39,11 @@ public class NewFragment extends Fragment implements NewAdapter.OnEventClickList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_top, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.new_fragment_recycler);
-        favouriteButton = (ImageButton) view.findViewById(R.id.new_fragment_favourite_button);
-        unFavouriteButton = (ImageButton) view.findViewById(R.id.new_fragment_favourite_button_clicked);
+        recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
+        favouriteButton = (ImageButton) view.findViewById(R.id.favourite_button);
+        unFavouriteButton = (ImageButton) view.findViewById(R.id.favourite_button_clicked);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
@@ -65,7 +65,7 @@ public class NewFragment extends Fragment implements NewAdapter.OnEventClickList
         }
 
 
-        adapter = new NewAdapter(getActivity(), events);
+        adapter = new MainAdapter( events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
         adapter.setOnEventClickListener(NewFragment.this);

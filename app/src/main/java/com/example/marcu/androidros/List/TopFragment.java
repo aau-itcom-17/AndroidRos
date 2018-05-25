@@ -1,5 +1,6 @@
 package com.example.marcu.androidros.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -42,53 +43,50 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     RecyclerView recyclerView;
     MainAdapter adapter;
     ArrayList<Event> events;
+    ArrayList<Event> eventsTest=new ArrayList<Event>();
+    ArrayList<Event> eventsUpdated;
     private DatabaseReference mDatabaseRef;
 
 
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_top, container, false);
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
 
         }
         else
-            {
+        {
             Log.i(TAG, "getArguments = null");
+        }
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                database = FirebaseDatabase.getInstance();
+                database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+
+                        Collections.sort(events, new Comparator<Event>() {
+                            @Override
+                            public int compare(Event o1, Event o2) {
+                                return Double.compare((double)dataSnapshot.child(o2.getEventID()).child("favourites").getChildrenCount()
+                                        ,(double)(dataSnapshot.child(o1.getEventID()).child("favourites").getChildrenCount()));
+                            }
+                        });
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
-
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    database = FirebaseDatabase.getInstance();
-                    database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
-                    {
-                        @Override
-                        public void onDataChange(final DataSnapshot dataSnapshot) {
-
-                            Collections.sort(events, new Comparator<Event>() {
-                                @Override
-                                public int compare(Event o1, Event o2) {
-                                    return Double.compare((double)dataSnapshot.child(o2.getEventID()).child("favourites").getChildrenCount(),(double)(dataSnapshot.child(o1.getEventID()).child("favourites").getChildrenCount()));
-                                }
-                            });
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                }
-            });
+        });
         thread.start();
 
         Thread[] threads = new Thread[1];
@@ -102,14 +100,34 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
             }
         }
 
+        adapter = new MainAdapter(eventsTest);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_top, container, false);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.top_fragment_recycler);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter.setOnEventClickListener(TopFragment.this);
+
+        final Activity act = getActivity(); //only necessary if you use fragments
+        if (act != null)
+            act.runOnUiThread(new Runnable() {
+                public void run() {
+                    eventsUpdated = adapter.updateItems(events);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.setAdapter(adapter);
+                    Log.i(TAG, "Adapter is updated " + adapter.getItemCount());
+                }
+            });
 
 
         Log.i(TAG, "Returning view");
-        adapter = new MainAdapter(getActivity(), events);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
-        adapter.setOnEventClickListener(TopFragment.this);
-
         return view;
 
         }
@@ -138,7 +156,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onEventClick(int position) {
         Intent eventDetailsIntent = new Intent(getActivity(), EventInfoActivity.class);
-        Event clickedEvent = events.get(position);
+        Event clickedEvent = eventsUpdated.get(position);
 
         eventDetailsIntent.putExtra("clickedEvent", clickedEvent );
         startActivity(eventDetailsIntent);
@@ -147,7 +165,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onFavouriteClick(int position){
 
-        Event event = events.get(position);
+        Event event = eventsUpdated.get(position);
         String eventId = event.getEventID();
         System.out.println("Favourite!");
 
@@ -159,7 +177,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onUnFavouriteClick(int position){
 
-        Event event = events.get(position);
+        Event event = eventsUpdated.get(position);
         String eventId = event.getEventID();
         System.out.println("UnFavourite!");
 

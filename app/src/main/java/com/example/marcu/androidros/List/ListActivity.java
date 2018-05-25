@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.marcu.androidros.Create.LocationTrack;
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
 import com.example.marcu.androidros.Utils.BottomNavigationViewHelper;
@@ -38,7 +39,10 @@ public class ListActivity extends AppCompatActivity{
     TopFragment topFragment;
     NearbyFragment nearbyFragment;
     NewFragment newFragment;
-
+    LocationTrack locationTracker;
+    double longitude;
+    double latitude;
+    double distance;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,15 @@ public class ListActivity extends AppCompatActivity{
                 Log.i(TAG, "MOTHERFUCKING TIME - 3 hours" + today);
                 Date eventDate = null;
                 DateFormat eventDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+                locationTracker = new LocationTrack(ListActivity.this);
+                if (locationTracker.canGetLocation()) {
+                    longitude = locationTracker.getLongitude();
+                    latitude = locationTracker.getLatitude();
+                } else {
+                    locationTracker.showSettingsAlert();
+                }
+                locationTracker.stopListener();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String id = String.valueOf(postSnapshot.child("eventID").getValue());
@@ -78,6 +91,11 @@ public class ListActivity extends AppCompatActivity{
                         }
                     }
 
+                }
+                for (int i = 0; i < events.size(); i++) {
+                    distance = distance(events.get(i).getLatitude(), events.get(i).getLongitude(), latitude, longitude);
+                    events.get(i).setDistance((int) distance);
+                    Log.i(TAG, "Cast to int " + events.get(i).getName() + " " + events.get(i).getDistance());
                 }
 
                 Bundle bundle = new Bundle();
@@ -131,4 +149,21 @@ public class ListActivity extends AppCompatActivity{
         MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
     }
+
+    private static double distance(double lat1, double lon1, double lat2, double lon2) {
+        double earthRadius = 6378100; //m
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        double diffLat = Math.toRadians(lat2-lat1);
+        double diffLon = Math.toRadians(lon2-lon1);
+
+        double a = Math.sin(diffLat/2) * Math.sin(diffLat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(diffLon/2) * Math.sin(diffLon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double d =  earthRadius * c;
+
+        return d;
+    }
+
+
 }
