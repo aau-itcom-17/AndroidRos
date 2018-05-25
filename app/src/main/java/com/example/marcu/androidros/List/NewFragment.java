@@ -67,6 +67,7 @@ public class NewFragment extends Fragment implements MainAdapter.OnEventClickLis
 
         adapter = new MainAdapter( events);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         adapter.setOnEventClickListener(NewFragment.this);
 

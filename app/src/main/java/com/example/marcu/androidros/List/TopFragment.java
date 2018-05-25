@@ -65,12 +65,12 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
             @Override
             public void run() {
 
-                        Collections.sort(events, new Comparator<Event>() {
-                            @Override
-                            public int compare(Event o1, Event o2) {
-                                return Double.compare((double)o1.getLikes(),(double)o2.getLikes());
-                            }
-                        });
+                Collections.sort(events, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+                        return (Integer.toString(o2.getLikes()).compareTo(Integer.toString(o1.getLikes())));
+                    }
+                });
 
 
             }
@@ -87,6 +87,9 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
                 e.printStackTrace();
             }
         }
+        for (int i = 0; i < events.size(); i++){
+            Log.i(TAG,events.get(i).getName() + events.get(i).getLikes());
+        }
 
         adapter = new MainAdapter(eventsTest);
     }
@@ -100,8 +103,10 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter.setOnEventClickListener(TopFragment.this);
+
 
         final Activity act = getActivity(); //only necessary if you use fragments
         if (act != null)
@@ -113,9 +118,11 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
                     Log.i(TAG, "Adapter is updated " + adapter.getItemCount());
                 }
             });
+        Log.i(TAG, "onStart");
 
 
         Log.i(TAG, "Returning view");
+
         return view;
 
         }
@@ -125,7 +132,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     @Override
     public void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart");
+
     }
 
     @Override

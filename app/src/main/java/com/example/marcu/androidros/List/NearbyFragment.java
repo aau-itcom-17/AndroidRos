@@ -89,6 +89,7 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(true);
         adapter.setOnEventClickListener(NearbyFragment.this);
 
 
