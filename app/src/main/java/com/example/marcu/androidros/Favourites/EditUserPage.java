@@ -175,7 +175,8 @@ public class EditUserPage extends AppCompatActivity {
                     myDatabaseRef.child("users").child(firebaseUser.getUid()).child("lastName").setValue(editLastName.getText().toString().trim());
                     myDatabaseRef.child("users").child(firebaseUser.getUid()).child("email").setValue(editEmail.getText().toString().trim());
                     //user.setProfilePicture(profilePictureRef);
-                    Log.i("PROFILE PICTURE REF", profilePictureRef);
+                    myDatabaseRef.child("users").child(firebaseUser.getUid()).child("profilePicture").setValue(picturePath);
+                    Log.i("PROFILE PICTURE REF", "REF "+ profilePictureRef);
                     Toast.makeText(getApplicationContext(), "User info is saved", Toast.LENGTH_LONG).show();
 
                 }

@@ -222,6 +222,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             uploadPhotoView.setText(nothing);
         }
     }
+
     public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);

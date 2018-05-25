@@ -155,9 +155,24 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                             String id = event.getEventID();
 
 
-                            if (event != null) {
-                                likeCount.setText(Integer.toString(event.getLikes()));
-                            }
+                            database = FirebaseDatabase.getInstance();
+                            database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
+                            {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    //int eventID = getAdapterPosition();
+                                    Event event = events.get(position);
+                                    String id = event.getEventID();
+
+                                    if (event != null) {
+                                        likeCount.setText(Long.toString(dataSnapshot.child(id).child("favourites").getChildrenCount()));
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
 
 
@@ -176,12 +191,25 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                             unFavourite.setVisibility(View.INVISIBLE);
                             favourite.setVisibility(View.VISIBLE);
 
+                            database = FirebaseDatabase.getInstance();
+                            database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
+                            {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    //int eventID = getAdapterPosition();
                                     Event event = events.get(position);
                                     String id = event.getEventID();
 
                                     if (event != null) {
-                                        likeCount.setText(Integer.toString(event.getLikes()));
+                                        likeCount.setText(Long.toString(dataSnapshot.child(id).child("favourites").getChildrenCount()));
                                     }
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
                         }
                     }
                 }
