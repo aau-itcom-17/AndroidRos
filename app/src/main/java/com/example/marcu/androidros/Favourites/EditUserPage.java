@@ -61,11 +61,7 @@ public class EditUserPage extends AppCompatActivity {
     private DatabaseReference myDatabaseRef;
     private String profilePictureRef;
     private File profilePicFile;
-
-    //Context context = getApplicationContext();
-
     public String databaseOldPassword;
-
     private static int RESULT_LOAD_IMAGE = 1;
 
 
@@ -137,14 +133,10 @@ public class EditUserPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //String firstName = editFirstName.getText().toString().trim();
-                //String lastName = editLastName.getText().toString().trim();
                 String email = editEmail.getText().toString().trim();
                 String password = editPassword.getText().toString().trim();
                 String confirmPassword = repeatEditPassword.getText().toString().trim();
                 String oldPassword = oldPasswordTextview.getText().toString().trim();
-
-
 
 
                 if (!password.isEmpty() || !confirmPassword.isEmpty() || !oldPassword.isEmpty()) {
@@ -159,7 +151,7 @@ public class EditUserPage extends AppCompatActivity {
                         } else if (!CreateAccountActivity.isValidEmail(email)) {
                             Toast.makeText(getApplicationContext(), "The email is not valid", Toast.LENGTH_SHORT).show();
                         } else {
-                            myDatabaseRef.child("users").child(firebaseUser.getUid()).child("firstName").setValue(editFirstName.getText().toString().trim()); // Changing the value from edit profil in database
+                            myDatabaseRef.child("users").child(firebaseUser.getUid()).child("firstName").setValue(editFirstName.getText().toString().trim()); // Changing the value from edit profile in database
                             myDatabaseRef.child("users").child(firebaseUser.getUid()).child("lastName").setValue(editLastName.getText().toString().trim());
                             myDatabaseRef.child("users").child(firebaseUser.getUid()).child("email").setValue(editEmail.getText().toString().trim());
                             myDatabaseRef.child("users").child(firebaseUser.getUid()).child("password").setValue(editPassword.getText().toString().trim());
@@ -196,9 +188,6 @@ public class EditUserPage extends AppCompatActivity {
         } else {
 
         }
-        //permissionToast = Toast.makeText(context,permission,toastDuration);
-        // permissionToast.show();
-
     }
 
     @Override

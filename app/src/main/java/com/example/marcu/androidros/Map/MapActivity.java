@@ -131,68 +131,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         Log.i(TAG, "onCreate");
 
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
-        //drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //headerView = navigationView.getHeaderView(0);
-        //drawerImage = (ImageView) headerView.findViewById(R.id.drawerImage);
-        //drawerName = (TextView) headerView.findViewById(R.id.drawerName);
-        //drawerMessage = (TextView) headerView.findViewById(R.id.drawerMessage);
         imageButton = (ImageButton) findViewById(R.id.event_image_button);
 
-        //navigationView.setNavigationItemSelectedListener(this);
-
-        //mToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
-        //drawer.addDrawerListener(mToggle);
-        //mToggle.syncState();
         ChildEventListener mChildEventListener;
-
-/*
-
-        //Access data in database
-        database = FirebaseDatabase.getInstance();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                if (firebaseUser != null) {
-                    String uid = firebaseUser.getUid();
-                    Log.i("Firebase", "uid: " + uid);
-                    User user = dataSnapshot.child(uid).getValue(User.class);
-                    if (user != null) {
-                        fullName = user.getFirstName() + " " + user.getLastName();
-                        email = user.getEmail();
-                        profilePictureRef = user.getProfilePicture();
-                        Log.i("Firebase", "Profile picture reference: " + profilePictureRef);
-                        Log.i("Firebase", "Full name: " + fullName);
-                    }
-                    drawerName.setText(fullName);
-                    randomMessage();
-                    if (profilePictureRef != null) {
-                        profilePicFile = new File(profilePictureRef);
-                        if (profilePicFile.exists()) {
-                            drawerImage.setImageBitmap(BitmapFactory.decodeFile(profilePictureRef));
-                        } else {
-                            Toast.makeText(MapActivity.this, "Couldn't load profile picture... " +
-                                    "please change your profile picture in account settings.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("Firebase", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-        // access done.
-
-*/
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -407,10 +348,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onResume();
         Log.i(TAG, "onResume");
         SharedPreferences prefs = getSharedPreferences(SAVE_MAP_STATE, MODE_PRIVATE);
-        //String restoredEmail = prefs.getString("map", null);
-        //if (restoredEmail != null && emailFromCreateAccount == null) {
-        //     emailEdit.setText(restoredEmail);
-        //}
 
     }
 
@@ -437,61 +374,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.i(TAG, "onDestroy");
     }
 
-/*
 
-    // method controlling the menu buttons under the user info in the drawer.
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_userpage:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.layout_body, new UserPage()).commit();
-                Intent k = new Intent(this, UserPage.class);
-                startActivity(k);
-                break;
-            case R.id.nav_logout:
-                // logging out
-                AlertDialog.Builder builder;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(MapActivity.this, android.R.style.Theme_Material_Dialog_Alert);
-                } else {
-                    builder = new AlertDialog.Builder(MapActivity.this);
-                }
-                builder.setTitle("Logout")
-                        .setMessage("Are you sure you want to logout?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //signing out
-                                FirebaseAuth.getInstance().signOut();
-                                intent = new Intent(MapActivity.this, MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-                break;
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
-    //When the back button is pressed on the drawer only the drawer will close and not the activity you have chosen
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-
-    }
-    */
 
     private void setUpBottomNavigationView() {
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);

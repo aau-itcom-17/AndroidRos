@@ -39,6 +39,7 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /**Sorts events after closest first*/
         if (getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
 
@@ -48,8 +49,7 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
                     Collections.sort(events, new Comparator<Event>() {
                         public int compare(Event m1, Event m2) {
                             return Double.compare(m1.getDistance() , m2.getDistance());
-//                            return Double.compare(distance(m1.getLatitude(), m1.getLongitude(), latitude, longitude)
-//                                    , (distance(m2.getLatitude(), m2.getLongitude(), latitude, longitude)));
+
                         }
                     });
                 }
@@ -125,6 +125,7 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
         startActivity(eventDetailsIntent);
     }
 
+    /**How likes are added or removed:*/
     @Override
     public void onFavouriteClick(int position) {
         Event event = eventsUpdated.get(position);

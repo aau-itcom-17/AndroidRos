@@ -66,10 +66,5 @@ public class UserPage extends AppCompatActivity {
                 UserPage.this.startActivity(myIntent);
             }
         });
-
-
-
-
-
     }
 }

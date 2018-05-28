@@ -50,7 +50,7 @@ public class MyEventsFragment extends Fragment implements MyPageAdapter.OnEventC
             Log.i(TAG, "getArguments = null");
         }
 
-
+        /**Adds the events created by the user, to a new array list:*/
         for (int i = 0; i < allEvents.size(); i++)
         {
             if (allEvents.get(i) != null && allEvents.get(i).getEventOwner() != null && allEvents.get(i).getEventOwner() != null) {
@@ -92,6 +92,7 @@ public class MyEventsFragment extends Fragment implements MyPageAdapter.OnEventC
         startActivity(eventDetailsIntent);
     }
 
+    /**How likes are added or removed:*/
     @Override
     public void onFavouriteClick(int position){
 

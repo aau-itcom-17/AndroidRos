@@ -53,12 +53,10 @@ public class User {
     // using ignore to not get error.
 
     List<Event> events;
-    //List<Event> favourites;
     List<Event> invites;
 
 
     private boolean isLoggedIn;
-
 
     public boolean isLoggedIn() {
         return isLoggedIn;
@@ -76,13 +74,6 @@ public class User {
         this.events = events;
     }
 
-    /*public List<Event> getFavourites() {
-        return favourites;
-    }
-
-    public void setFavourites(List<Event> favourites) {
-        this.favourites = favourites;
-    }*/
 
     public List<Event> getInvites() {
         return invites;

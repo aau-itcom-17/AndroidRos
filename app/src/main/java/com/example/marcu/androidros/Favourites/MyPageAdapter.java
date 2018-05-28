@@ -30,7 +30,6 @@ class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.ViewHolder> {
     private FirebaseUser firebaseUser;
 
 
-
     public interface OnEventClickListener{
         void onEventClick(int position);
         void onFavouriteClick(int position);
@@ -65,6 +64,7 @@ class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.ViewHolder> {
         Picasso.get().load(imageUrl).into(holder.eventImage);
         holder.eventName.setText(title);
 
+        /**Resets like button color*/
         holder.unFavourite.setVisibility(View.INVISIBLE);
         holder.favourite.setVisibility(View.VISIBLE);
 
@@ -79,6 +79,7 @@ class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.ViewHolder> {
 
                 String id = firebaseUser.getUid();
 
+                /**Changes like button color to red, if the user has already liked the event:*/
                 if (dataSnapshot.child(id).child("favourites").hasChild(event.getEventID()))
                 {
                     holder.favourite.setVisibility(View.INVISIBLE);
@@ -116,6 +117,7 @@ class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.ViewHolder> {
             likeCount = (TextView) itemView.findViewById(R.id.like_count_view);
 
 
+            /**Changing the color of the like button, when pressing like:*/
             favourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -133,6 +135,7 @@ class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.ViewHolder> {
                 }
             });
 
+            /**Changing the color of the like button, when pressing unLike:*/
             unFavourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

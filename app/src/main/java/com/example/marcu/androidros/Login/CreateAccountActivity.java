@@ -121,7 +121,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         myDatabaseRef = database.getReference();
 
-
         // make app update data in real time.
     }
 
@@ -168,9 +167,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         }else {
 
         }
-        //permissionToast = Toast.makeText(context,permission,toastDuration);
-       // permissionToast.show();
-
     }
 
     @Override

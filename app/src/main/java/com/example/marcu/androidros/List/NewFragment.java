@@ -47,6 +47,7 @@ public class NewFragment extends Fragment implements MainAdapter.OnEventClickLis
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
 
+        /**Sorts events after newest first*/
         if(getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
             Collections.sort(events, new Comparator<Event>() {
@@ -85,6 +86,7 @@ public class NewFragment extends Fragment implements MainAdapter.OnEventClickLis
         startActivity(eventDetailsIntent);
     }
 
+    /**How likes are added or removed:*/
     @Override
     public void onFavouriteClick(int position) {
         Event event = events.get(position);

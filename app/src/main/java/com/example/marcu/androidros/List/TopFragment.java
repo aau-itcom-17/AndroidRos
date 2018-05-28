@@ -52,6 +52,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /**Sorts events after most liked first*/
         if (getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
         }
@@ -126,7 +127,6 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -155,6 +155,7 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         startActivity(eventDetailsIntent);
     }
 
+    /**How likes are added or removed:*/
     @Override
     public void onFavouriteClick(int position){
 
@@ -178,18 +179,4 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
         event.setLikes(event.getLikes()-1);
     }
-
-
-
-
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            //case R.id.event_button:
-//            //   startActivity(new Intent(getActivity(), EventPopUp.class));
-//            //   break;
-//        }
-//    }
-
 }

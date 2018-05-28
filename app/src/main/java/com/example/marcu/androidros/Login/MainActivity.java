@@ -31,12 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static List<Event> favourites;
     public static List<Event> invites;
-
     public static final String TAG = "AnonymousAuth";
-
     private static final String EMAIL = "email";
 
-    //private Prefs prefs;
 
     SharedPreferences prefs = null;
     FirebaseAuth auth;

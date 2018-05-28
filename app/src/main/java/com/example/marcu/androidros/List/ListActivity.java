@@ -116,9 +116,6 @@ public class ListActivity extends AppCompatActivity{
 
             }
         });
-
-
-
     }
 
 
@@ -137,8 +134,6 @@ public class ListActivity extends AppCompatActivity{
         tabLayout.getTabAt(0).setText(R.string.title_fragment_top);
         tabLayout.getTabAt(1).setText(R.string.title_fragment_nearby);
         tabLayout.getTabAt(2).setText(R.string.title_fragment_new);
-
-
     }
 
     private void setUpBottomNavigationView(){
@@ -164,6 +159,4 @@ public class ListActivity extends AppCompatActivity{
 
         return d;
     }
-
-
 }

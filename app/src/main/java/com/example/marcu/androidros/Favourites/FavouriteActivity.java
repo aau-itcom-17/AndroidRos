@@ -34,15 +34,6 @@ import java.util.List;
 
 public class FavouriteActivity extends AppCompatActivity {
 
-    /*@Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favourites);
-
-        setUpBottomNavigationView();
-        setUpViewPager();
-    }*/
-
 
     FirebaseDatabase database;
     String TAG = "FavouriteActivity";
@@ -103,21 +94,7 @@ public class FavouriteActivity extends AppCompatActivity {
                 }
 
 
-                    /*if (String.valueOf(postSnapshot.child("eventOwner").getValue()).equals(FirebaseAuth.getInstance().getUid())) {
-                        eventIDs.add(String.valueOf(postSnapshot.child("eventID").getValue()));
-                    }
 
-                    //Log.i(CLASS_TAG, "EventID " + event.getEventID());
-                }
-
-                for (int i = 0; i < eventIDs.size(); i++) {
-                    Event myEvent = dataSnapshot.child(eventIDs.get(i)).getValue(Event.class);
-                    myEvents.add(myEvent);
-                }
-
-                for (int i = 0; i < eventIDs.size(); i++) {
-                    Log.i(TAG, eventIDs.get(i));
-                }*/
 
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("key", allEvents);

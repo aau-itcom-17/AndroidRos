@@ -52,7 +52,6 @@ public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEv
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (firebaseUser != null) {
                     String id = firebaseUser.getUid();
-                    //User user = dataSnapshot.child(id).getValue(User.class);
 
 
                     if(getArguments() != null)
@@ -66,7 +65,8 @@ public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEv
                         Log.i(TAG, "getArguments = null");
                     }
 
-
+                    /**Taking events with ID's matching the ones under User in Firebase and adding them
+                    * to a new array list:*/
                     for (int i = 0; i < allEvents.size(); i++)
                     {
                         if (allEvents.get(i) != null) {
@@ -118,6 +118,7 @@ public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEv
         startActivity(eventDetailsIntent);
     }
 
+    /**How likes are added or removed:*/
     @Override
     public void onFavouriteClick(int position){
 
