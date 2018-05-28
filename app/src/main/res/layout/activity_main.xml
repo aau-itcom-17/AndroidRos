@@ -19,7 +19,7 @@
         android:lineSpacingMultiplier="0.8"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
-        android:text="Welcome to the best app ever"
+        android:text="@string/login_or_create_an_account"
 
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"

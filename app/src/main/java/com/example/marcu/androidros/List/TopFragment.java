@@ -54,13 +54,11 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
 
         if (getArguments() != null) {
             events = getArguments().getParcelableArrayList("key");
-
         }
         else
         {
             Log.i(TAG, "getArguments = null");
         }
-
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
