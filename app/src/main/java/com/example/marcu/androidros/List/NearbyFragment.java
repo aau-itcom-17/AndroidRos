@@ -128,22 +128,22 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
     @Override
     public void onFavouriteClick(int position) {
         Event event = eventsUpdated.get(position);
-        String id = event.getEventID();
+        String eventId = event.getEventID();
+        System.out.println("Favourite!");
 
-        mDatabaseRef.child("events").child(id).child("likes").setValue(event.getLikes() + 1);
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
-        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(id).setValue(id);
-
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + 1);
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
+        event.setLikes(event.getLikes()+1);
     }
 
     @Override
     public void onUnFavouriteClick(int position) {
         Event event = eventsUpdated.get(position);
-        String id = event.getEventID();
-        System.out.println("UnFavourite!!!");
+        String eventId = event.getEventID();
+        System.out.println("UnFavourite!");
 
-        mDatabaseRef.child("events").child(id).child("likes").setValue(event.getLikes()  -1);
-        mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
-        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(id).removeValue();
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() - 1);
+        mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
+        event.setLikes(event.getLikes()-1);
     }
 }

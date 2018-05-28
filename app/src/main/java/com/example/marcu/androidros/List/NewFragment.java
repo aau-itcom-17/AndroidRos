@@ -89,19 +89,21 @@ public class NewFragment extends Fragment implements MainAdapter.OnEventClickLis
     public void onFavouriteClick(int position) {
         Event event = events.get(position);
         String eventId = event.getEventID();
+        System.out.println("Favourite!");
 
         mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + 1);
-        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
-
+        event.setLikes(event.getLikes()+1);
     }
 
     @Override
     public void onUnFavouriteClick(int position) {
         Event event = events.get(position);
         String eventId = event.getEventID();
+        System.out.println("UnFavourite!");
+
         mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() - 1);
-        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
+        event.setLikes(event.getLikes()-1);
     }
 }

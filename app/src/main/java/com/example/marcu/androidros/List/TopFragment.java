@@ -163,9 +163,8 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         System.out.println("Favourite!");
 
         mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + 1);
-        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
-
+        event.setLikes(event.getLikes()+1);
     }
 
     @Override
@@ -175,9 +174,9 @@ public class TopFragment extends Fragment implements MainAdapter.OnEventClickLis
         String eventId = event.getEventID();
         System.out.println("UnFavourite!");
 
-        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + -1);
-        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() - 1);
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
+        event.setLikes(event.getLikes()-1);
     }
 
 

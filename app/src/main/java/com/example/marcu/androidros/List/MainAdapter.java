@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.marcu.androidros.Database.Event;
 import com.example.marcu.androidros.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,6 +31,7 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private ArrayList<Event> events;
     private OnEventClickListener listener;
     private FirebaseDatabase database;
+    private FirebaseUser firebaseUser;
 
 
 
@@ -87,19 +89,18 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.unFavourite.setVisibility(View.INVISIBLE);
         holder.favourite.setVisibility(View.VISIBLE);
 
-
         holder.likeCount.setText(Integer.toString(event.getLikes()));
 
         database = FirebaseDatabase.getInstance();
-        database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //int eventID = getAdapterPosition();
-                //Event event = events.get(position);
-                String id = event.getEventID();
 
-                if (dataSnapshot.child(id).child("favourites").hasChild(FirebaseAuth.getInstance().getUid()))
+                String id = firebaseUser.getUid();
+
+                if (dataSnapshot.child(id).child("favourites").hasChild(event.getEventID()))
                 {
                     holder.favourite.setVisibility(View.INVISIBLE);
                     holder.unFavourite.setVisibility(View.VISIBLE);
@@ -150,32 +151,8 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                             favourite.setVisibility(View.INVISIBLE);
                             unFavourite.setVisibility(View.VISIBLE);
 
-
                             Event event = events.get(position);
-                            String id = event.getEventID();
-
-
-                            database = FirebaseDatabase.getInstance();
-                            database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
-                            {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    //int eventID = getAdapterPosition();
-                                    Event event = events.get(position);
-                                    String id = event.getEventID();
-
-                                    if (event != null) {
-                                        likeCount.setText(Long.toString(dataSnapshot.child(id).child("favourites").getChildrenCount()));
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-
-
+                            likeCount.setText(Integer.toString(event.getLikes()));
                         }
                     }
                 }
@@ -191,25 +168,8 @@ class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                             unFavourite.setVisibility(View.INVISIBLE);
                             favourite.setVisibility(View.VISIBLE);
 
-                            database = FirebaseDatabase.getInstance();
-                            database.getReference("events").addListenerForSingleValueEvent(new ValueEventListener()
-                            {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    //int eventID = getAdapterPosition();
-                                    Event event = events.get(position);
-                                    String id = event.getEventID();
-
-                                    if (event != null) {
-                                        likeCount.setText(Long.toString(dataSnapshot.child(id).child("favourites").getChildrenCount()));
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
+                            Event event = events.get(position);
+                            likeCount.setText(Integer.toString(event.getLikes()));
                         }
                     }
                 }

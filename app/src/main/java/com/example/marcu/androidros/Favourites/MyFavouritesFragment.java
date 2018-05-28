@@ -58,8 +58,6 @@ public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEv
                     if(getArguments() != null)
                     {
                         allEvents = getArguments().getParcelableArrayList("key");
-                        System.out.println("Second: " + allEvents.size());
-
                         for (int i = 0; i < allEvents.size(); i++) {
                             Log.i(TAG, allEvents.get(i).getName());
                         }
@@ -128,8 +126,8 @@ public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEv
         System.out.println("Favourite!");
 
         mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + 1);
-        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
+        event.setLikes(event.getLikes()+1);
     }
 
     @Override
@@ -139,8 +137,8 @@ public class MyFavouritesFragment extends Fragment implements MyPageAdapter.OnEv
         String eventId = event.getEventID();
         System.out.println("UnFavourite!");
 
-        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + -1);
-        mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() - 1);
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
+        event.setLikes(event.getLikes()-1);
     }
 }
