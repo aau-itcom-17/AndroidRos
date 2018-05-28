@@ -98,6 +98,7 @@ public class MyEventsFragment extends Fragment implements MyPageAdapter.OnEventC
         String eventId = event.getEventID();
         System.out.println("Favourite!");
 
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + 1);
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).setValue(FirebaseAuth.getInstance().getUid());
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).setValue(eventId);
     }
@@ -109,6 +110,7 @@ public class MyEventsFragment extends Fragment implements MyPageAdapter.OnEventC
         String eventId = event.getEventID();
         System.out.println("UnFavourite!");
 
+        mDatabaseRef.child("events").child(eventId).child("likes").setValue(event.getLikes() + -1);
         mDatabaseRef.child("events").child(eventId).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(eventId).removeValue();
     }

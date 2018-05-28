@@ -143,7 +143,6 @@ public class NearbyFragment extends Fragment implements MainAdapter.OnEventClick
         System.out.println("UnFavourite!!!");
 
         mDatabaseRef.child("events").child(id).child("likes").setValue(event.getLikes()  -1);
-
         mDatabaseRef.child("events").child(id).child("favourites").child(FirebaseAuth.getInstance().getUid()).removeValue();
         mDatabaseRef.child("users").child(FirebaseAuth.getInstance().getUid()).child("favourites").child(id).removeValue();
     }
