@@ -213,14 +213,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Implement info_window_layout.xml - with imageview.
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
             @Override
             public View getInfoWindow(Marker arg0) {
-
                 return null;
-
             }
-
             @Override
             public View getInfoContents(Marker marker) {
                 View view = MapActivity.this.getLayoutInflater().inflate(R.layout.marker_event_info, null);
@@ -229,22 +225,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 TextView snippet = (TextView) view.findViewById(R.id.marker_event_time);
                 Event event = (Event) marker.getTag();
 
-
                 if (event != null) {
                     String path = event.getPhotoPath();
                     Log.i(TAG, path);
                     title.setText(marker.getTitle());
                     snippet.setText(marker.getSnippet());
-
                     Picasso.get().load(path).into(imageView, new MarkerCallback(marker));
-
                 }
-
-
                 return view;
             }
         });
-
         // Adding markers on map. See method down below.
         addMarkersOnMap();
     }
